@@ -1,0 +1,31 @@
+<html>
+  <head>
+  	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  	  <title> Weatherify </title>
+  	    <link rel="stylesheet" type="text/css" href="styles.css"/>
+  	    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:Light|Quicksand|Work+Sans:Extra-Light|Raleway:Extra-Light|Raleway:Normal|Raleway:Semi-Bold|Source+Sans+Pro:Extra-Light">
+  	    <script type="text/javascript" src="script.js"></script>
+  	    <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+  	</meta>
+  </head>
+  	<body>
+      <h1> Weatherify </h1>
+      <ul id='nav-bar' class="tabs">
+        <li id="t1" class="selected tab"><a href="#" onclick="switchToHome();return false;"><span>Make a New Playlist</span></a></li>
+        <li id="t2"class="unselected tab"><a href="#" onclick="switchToViewPlaylists();return false;"><span>My Playlists</span></a></li>
+        <li id="t3"class="unselected tab"><a href="#" onclick="switchToSearch();return false;"><span>Search</span></a></li>
+      </ul>
+      <hr id="top-bar-hr">
+      <div class="content">
+        <div id="home-new-playlist" class="selected body-content ">
+          <p> In home </p>
+        </div>
+        <div id="view-playlists" class="unselected body-content ">
+          <p> In View My Playlists </p>
+        </div>
+        <div id="search" class="unselected body-content">
+           <p>In Search </p>
+        </div>
+      </div>
+  	</body>
+</html>

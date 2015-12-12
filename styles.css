@@ -1,0 +1,101 @@
+/* Anna Lawson, Lauren Tom, Nina Sabado, Anfal */
+/* CITATIONS: 
+/* NOTE: basic tab html & css is from basic tab tutorial at:
+http://inspirationalpixels.com/tutorials/creating-tabs-with-html-css-and-jquery#step-html
+with adapations by us */
+
+/* Note: Select CSS modified from: http://cssdeck.com/labs/styling-select-box-with-css3 */
+
+/* General Page Styling, headers */
+body {
+	z-index: 0;
+	color: #383838;
+	font-family: 'Raleway', 'Work Sans', 'Source Sans Pro', Verdana, Arial, sans-sarif;
+	padding-left:30px;
+	max-width: 1400px;
+}
+
+h1, h2 {
+	font-weight: 200; /* thin */
+	margin-bottom: 0px;
+}
+
+/** Main content of the page (i.e. the stuff below the tab bar) */
+.content {
+	margin-top: 20px;
+	width: 768px;
+}
+
+/* Tabs */
+/* NOTE: basic tab html & css is from basic tab tutorial at:
+http://inspirationalpixels.com/tutorials/creating-tabs-with-html-css-and-jquery#step-html
+ Adapted by Anna Lawson */
+.tabs {
+	width: 460px;
+	margin-left: 340px;
+	margin-bottom:9px;
+}
+.tabs:after {
+	display:block;
+	clear:both;
+	content:'';
+}
+
+.tabs li {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 5px;
+  float:left;
+  list-style:none;
+}
+
+.tab a {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  padding-right: 15px;
+  padding-left: 15px;
+  border-radius: 4px;
+  border-style: solid;
+  border-color: #383838;
+  border-width: 1px;
+  font-size: 14px;
+  font-weight: 200;
+  color:#383838;
+  text-decoration:none;
+  transition: all linear 0.15s;
+}
+
+.tabs a:hover {
+	background:#a7cce5;
+	text-decoration:none;
+}
+
+.tabs span {
+	border-bottom: solid;
+	border-bottom-width: 1px;
+}
+
+li.selected a, li.selected a:hover {
+	background: transparent;
+	font-weight: 400;
+	color:#383838;
+}
+
+li.selected a span {
+	border-bottom-width: 3px;
+}
+/** Hide all body content except the one that corresponds to the selected tab */
+.body-content {
+	display: none;
+}
+
+.body-content.selected {
+	display:block;
+}
+
+/* Hr below tab bar */
+hr {
+	width: 735px;
+	float:left;
+	margin-top: 0px;
+}
