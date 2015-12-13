@@ -1,12 +1,5 @@
 var isDrawerOpen = false;
 
-function makeNewPlaylist() {
-    console.log("changing screens");
-    document.getElementById('home-intro-screen').setAttribute('class', 'unselected home-content');
-    document.getElementById('home-new-playlist').setAttribute('class', 'selected home-content');
-    closeDrawer();
-    return false;
-}
 
 function toggleDrawer() {
 	isDrawerOpen = !isDrawerOpen;
@@ -19,8 +12,10 @@ function toggleDrawer() {
 
 function openDrawer() {
     document.getElementById('options-window').style.display = "block";
+    document.getElementById('fine-tune-span').innerHTML = "&#9650 Fine tune my playlist";
 }
 
 function closeDrawer() {
     document.getElementById('options-window').style.display = "none";	
+    document.getElementById('fine-tune-span').innerHTML = "&#9660 Fine tune my playlist";
 }

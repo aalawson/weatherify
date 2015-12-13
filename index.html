@@ -48,11 +48,11 @@
         </div>
         <div id="home-new-playlist"  class="unselected home-content ">
         <h2 id="weather-report"> Today in New York it's 68 and sunny </h2>
-        <a id='options-tab' href="#" onclick="toggleDrawer();return false;"><span>&#9660 Fine tune my playlist</span></a>
+        <a id='options-tab' href="#" onclick="toggleDrawer();return false;"><span id="fine-tune-span">&#9660 Fine tune my playlist</span></a>
         <div id="options-window">
           <div id="options" class "selected body-content ">
           <h3>options</h3>
-          <form>
+          <form onsubmit="return getWeather();">
             <b>time period  </b>
             past  
             <input type ="range" value="50", min="0", max="100">
@@ -74,6 +74,9 @@
             <input type="submit" class="g-button" value="Weatherify!" onclick="return getWeather();">
           </form>
         </div>
+        </div>
+        <div id="playlist-results">
+          <p> Results </p>
         </div>
       </div>
     </div>
