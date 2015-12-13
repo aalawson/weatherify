@@ -5,6 +5,7 @@
   	    <link rel="stylesheet" type="text/css" href="styles.css"/>
   	    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:Light|Quicksand|Work+Sans:Extra-Light|Raleway:Extra-Light|Raleway:Normal|Raleway:Semi-Bold|Source+Sans+Pro:Extra-Light">
   	    <script type="text/javascript" src="script.js"></script>
+        <script type="text/javascript" src="playlist.js"></script>
   	    <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
   	</meta>
   </head>
@@ -17,9 +18,65 @@
       </ul>
       <hr id="top-bar-hr">
       <div class="content">
-        <div id="home-new-playlist" class="selected body-content ">
-          <p> In home </p>
+        <div id="home" class="selected body-content">
+        <div id="home-intro-screen" class="selected home-content ">
+          <p id='intro-p'> Welcome to Weatherify, where you can make playlists to suit the weather. Not feeling like the weather outside? Pick a different location or choose a weather that matches your mood! </p>
+          <form id="playlist-type-form" onsubmit="return makeNewPlaylist();">
+              <div id='rad-typ'>
+                <input id='loc-rad' type='radio' name='p-typ' value='loc' checked='checked' onclick="return changeToLocationPlayList();";> Use a location's weather
+                <input id='mood-rad' type='radio' name='p-typ' value='location' onclick="return changeToMoodPlaylist()";> Use my "weather" mood
+              </div>
+            <fieldset id='loc-playlist' class='selected type-form'>
+              <legend> Location </legend>
+              <input type="text" id="loc" class="form-box" value="" placeholder="Default location"/>
+              <input type="submit" id="weatherify-loc" class="g-button form-box" value="Make me a playlist" onclick="return makeNewPlaylist();">
+              <p> We've defaulted to your current location, but if you'd rather be somewhere else, feel free to enter it!</p>
+            </fieldset>
+            <fieldset id='mood-playlist' class='unselected type-form'>
+              <legend> Mood </legend>
+              <label>
+                <select id="mood">
+                  <option selected> I'm feeling... </option>
+                  <option> Sunny </option>
+                  <option> Rainy </option>
+                  <option> Happy </option>
+                </select>
+              </label>
+              <input type="submit" id="weatherify-loc" class="g-button form-box" value="Make me a playlist" onclick="return makeNewPlaylist();">
+            </fieldset>
+          </form>
         </div>
+        <div id="home-new-playlist"  class="unselected home-content ">
+        <h2 id="weather-report"> Today in New York it's 68 and sunny </h2>
+        <a id='options-tab' href="#" onclick="toggleDrawer();return false;"><span>&#9660 Fine tune my playlist</span></a>
+        <div id="options-window">
+          <div id="options" class "selected body-content ">
+          <h3>options</h3>
+          <form>
+            <b>time period  </b>
+            past  
+            <input type ="range" value="50", min="0", max="100">
+            present
+            <br><br>
+
+            <b>popularity  </b>
+            not  
+            <input type ="range" value="50", min="0", max="100">
+            popular
+            <br><br>
+
+            <b>wordiness  </b>
+            no words  
+            <input type ="range" value="50", min="0", max="100">
+            many words
+            <br><br>
+
+            <input type="submit" class="g-button" value="Weatherify!" onclick="return getWeather();">
+          </form>
+        </div>
+        </div>
+      </div>
+    </div>
         <div id="view-playlists" class="unselected body-content ">
           <p> In View My Playlists </p>
         </div>

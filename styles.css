@@ -20,10 +20,85 @@ h1, h2 {
 	margin-bottom: 0px;
 }
 
+#weather-report {
+	display:inline-block;
+}
+
+p {
+	font-size: 12px;
+}
+
+#intro-p {
+	font-size: 14px;
+	margin-top: 40px;
+}
+
+a {
+	text-decoration: underline;
+	color:black;
+}
+
 /** Main content of the page (i.e. the stuff below the tab bar) */
 .content {
 	margin-top: 20px;
-	width: 768px;
+	width: 748px;
+}
+
+/** Hide all body content except the one that corresponds to the selected tab */
+.body-content {
+	display: none;
+}
+
+.body-content.selected {
+	display:block;
+}
+
+.home-content {
+	display: none;
+}
+
+.home-content.selected {
+	display:block;
+}
+
+/* General button styling */
+.g-button {
+	border-radius: 10px;
+	border-style: solid;
+    border-color: #383838;
+    background-color: transparent;
+    color: #383838;
+    border-width: 1px;
+    font-size: 12px;
+    height: 22px;
+}
+
+/*************** Form Inputs **********************/
+/* Form inputs */
+.form-box {
+	border-radius: 10px; 
+	border: 1px solid #383838;
+	height: 22px;
+	/* In case somebody has a really old chrome/firefox/safari browser */
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px; 
+	margin-right: 1px;
+	padding-left: 5px;
+	font-size: 12px;
+	background-color: transparent;
+}
+
+.type-form {
+	width: 375px;
+	display: none;
+}
+
+.type-form.selected {
+	display:block;
+}
+
+#loc {
+	width: 200px;
 }
 
 /* Tabs */
@@ -84,18 +159,64 @@ li.selected a, li.selected a:hover {
 li.selected a span {
 	border-bottom-width: 3px;
 }
-/** Hide all body content except the one that corresponds to the selected tab */
-.body-content {
-	display: none;
-}
-
-.body-content.selected {
-	display:block;
-}
 
 /* Hr below tab bar */
 hr {
 	width: 735px;
 	float:left;
 	margin-top: 0px;
+}
+
+/* Note: Select CSS modified from: http://cssdeck.com/labs/styling-select-box-with-css3 */
+select {
+    height:25px;
+    padding:3px;
+    margin: 0;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    -webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+    -moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+    box-shadow: 0 3px 0 white, 0 -1px #383838 inset;
+    background: white;
+    color:#383838;
+    border-color: #383838;
+    outline:none;
+    display: inline-block;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+    cursor:pointer;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    select {padding-right:25px}
+}
+
+select {
+	padding-right: 30px;
+}
+
+label {position:relative}
+label:after {
+    content:'<>';
+    font:11px "Consolas", monospace;
+    color:#383838;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform:rotate(90deg);
+    right:8px; top:2px;
+    padding:0 0 2px;
+    border-bottom:1px solid #383838;
+    position:absolute;
+    pointer-events:none;
+}
+label:before {
+    content:'';
+    right:6px; top:0px;
+    width:20px; height:20px;
+    position:absolute;
+    pointer-events:none;
+    display:block;
 }

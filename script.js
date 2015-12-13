@@ -1,4 +1,13 @@
 
+function changeToLocationPlayList() {
+    document.getElementById('loc-playlist').setAttribute('class', 'selected type-form');
+    document.getElementById('mood-playlist').setAttribute('class', 'unselected type-form');   
+}
+
+function changeToMoodPlaylist() {
+    document.getElementById('loc-playlist').setAttribute('class', 'unselected type-form');
+    document.getElementById('mood-playlist').setAttribute('class', 'selected type-form');   
+}
 // Switch Tab to Manage Groups
 function switchToHome() {
     // Set group tab to selected
@@ -7,7 +16,7 @@ function switchToHome() {
     document.getElementById('t3').setAttribute('class', 'unselected tab');
 
     // Set group display to selected
-    document.getElementById('home-new-playlist').setAttribute('class', 'selected body-content');
+    document.getElementById('home').setAttribute('class', 'selected body-content');
     document.getElementById('view-playlists').setAttribute('class', 'unselected body-content');
     document.getElementById('search').setAttribute('class', 'unselected body-content');
 }
@@ -19,7 +28,7 @@ function switchToViewPlaylists() {
 
 
     // Set group display to selected
-    document.getElementById('home-new-playlist').setAttribute('class', 'unselected body-content');
+    document.getElementById('home').setAttribute('class', 'unselected body-content');
     document.getElementById('view-playlists').setAttribute('class', 'selected body-content');
     document.getElementById('search').setAttribute('class', 'unselected body-content');
 }
@@ -33,7 +42,7 @@ function switchToSearch() {
 
 
     // Set group display to selected
-    document.getElementById('home-new-playlist').setAttribute('class', 'unselected body-content');
+    document.getElementById('home').setAttribute('class', 'unselected body-content');
     document.getElementById('view-playlists').setAttribute('class', 'unselected body-content');
     document.getElementById('search').setAttribute('class', 'selected body-content');
 }
