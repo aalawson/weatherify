@@ -52,6 +52,20 @@ function makeNewPlaylist() {
     console.log("changing screens");
     var location = document.getElementById('loc').value;
     getLocation(location);
+
+    var playerHtml = '<iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
+
+    //adds 20 songs to the playlist 
+    // for (var i = 0; i < 20; i++) {
+    //   playerHtml += SONG URI ;
+    // }
+
+    playerHtml += '5Z7ygHQo02SUrFmcgpwsKW,1x6ACsKV4UdWS2FMuPFUiT,4bi73jCM02fMpkI11Lqmfe';
+
+    playerHtml += '" frameborder="0" allowtransparency="true"></iframe>';
+
+    $('playlist-results').append(playerHtml);
+
     return false;
 }
 
@@ -78,7 +92,7 @@ function findMe() {
           reverseGeocode(data['lat'], data['lon']);
           return false;
         }
-  });   
+  });
 }
 
 function reverseGeocode(lat, lng) {
@@ -109,6 +123,7 @@ function reverseGeocode(lat, lng) {
       }
     });  
 }
+
 function getLocation(location) {
   $.ajax ({
     'url': 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + GOOGLE_API_KEY,
@@ -133,6 +148,7 @@ function getLocation(location) {
       }
     });
 }
+
 function searchLocation(results) {
   // In rare case of multiple results, Google Maps geocoder returns
   // most meaningful result first, so I just use index 0.
@@ -147,4 +163,18 @@ function searchLocation(results) {
   console.log(document.getElementById('options-window').style.display); 
   getWeather(lat, lng);
   return false;
+}
+
+function editPlaylist(){
+  var timeP = (getElementById('timePeriod').value);
+  var popularity = (getElementById('popularity').value)/100;
+  var wordiness = (getElementById('wordiness').value)/100;
+
+  console.log("time period: " + timeP);
+  console.log("popularity " + popularity);
+  console.log("wordiness " + wordiness)
+
+
+
+  return false; 
 }

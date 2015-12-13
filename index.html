@@ -57,28 +57,28 @@
           <form>
             <b>time period  </b>
             past  
-            <input type ="range" value="50", min="0", max="100">
+            <input type ="range" id="timePeriod" value="2015", min="1900", max="2015">
             present
             <br><br>
 
             <b>popularity  </b>
             not  
-            <input type ="range" value="50", min="0", max="100">
+            <input type ="range" id="popularity" value="50", min="0", max="100">
             popular
             <br><br>
 
             <b>wordiness  </b>
             no words  
-            <input type ="range" value="50", min="0", max="100">
+            <input type ="range" id="wordiness" value="50", min="0", max="100">
             many words
             <br><br>
 
-            <button type="button" class="g-button" onclick="return getWeather();">"Weatherify!"</button>
+            <button type="button" class="g-button" onclick="return editPlaylist();">"Weatherify!"</button>
           </form>
         </div>
         </div>
         <div id="playlist-results">
-          <p> Results </p>
+          this is the playlist
         </div>
       </div>
     </div>
