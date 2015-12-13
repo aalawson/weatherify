@@ -18,14 +18,47 @@
       <hr id="top-bar-hr">
       <div class="content">
         <div id="home-new-playlist" class="selected body-content ">
-          <p> In home </p>
+          <h2> Today is... </h2>
+          <form>
+            cold  
+            <input type ="range" value="50", min="0", max="100">
+            hot
+            <input type="submit" value="Weatherify!" onclick="FUNCTION();">
+          </form>
         </div>
+
+        <div id="options" class "selected body-content ">
+          <h3>options</h3>
+          <form>
+            <b>time period  </b>
+            past  
+            <input type ="range" value="50", min="0", max="100">
+            present
+            <br><br>
+
+            <b>popularity  </b>
+            not  
+            <input type ="range" value="50", min="0", max="100">
+            popular
+            <br><br>
+
+            <b>wordiness  </b>
+            no words  
+            <input type ="range" value="50", min="0", max="100">
+            many words
+            <br><br>
+
+            <input type="submit" value="Weatherify!" onclick="FUNCTION();">
+          </form>
+        </div>
+
         <div id="view-playlists" class="unselected body-content ">
           <p> In View My Playlists </p>
         </div>
         <div id="search" class="unselected body-content">
            <p>In Search </p>
         </div>
+
       </div>
   	</body>
 </html>
