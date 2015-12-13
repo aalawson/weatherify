@@ -148,19 +148,3 @@ function searchLocation(results) {
   getWeather(lat, lng);
   return false;
 }
-
-function getWeather(lat, lng) {
-    $.ajax({
-        'url': 'http://api.openweathermap.org/data/2.5/weather',
-        'data': {
-            'lat': lat,
-            'lon': lng,
-            'units': 'imperial',
-            'appid': '670b2cbcd683c42c5e41a0ed424b537b'
-        },
-        'success': function(results) {
-            console.log(results);
-        }
-    });
-    return false;
-}
