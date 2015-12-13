@@ -6,7 +6,9 @@ with adapations by us */
 
 /* Note: Select CSS modified from: http://cssdeck.com/labs/styling-select-box-with-css3 */
 
-/* General Page Styling, headers */
+/******************** General Page Styling *********************/
+
+/* Fonts, colors, widths */
 body {
 	z-index: 0;
 	color: #383838;
@@ -15,22 +17,14 @@ body {
 	max-width: 1400px;
 }
 
+/* Headers */
 h1, h2 {
 	font-weight: 200; /* thin */
 	margin-bottom: 0px;
 }
 
-#weather-report {
-	display:inline-block;
-}
-
 p {
 	font-size: 12px;
-}
-
-#intro-p {
-	font-size: 14px;
-	margin-top: 40px;
 }
 
 a {
@@ -38,6 +32,19 @@ a {
 	color:black;
 }
 
+/* General button styling */
+.g-button {
+	border-radius: 10px;
+	border-style: solid;
+    border-color: #383838;
+    background-color: transparent;
+    color: #383838;
+    border-width: 1px;
+    font-size: 12px;
+    height: 22px;
+}
+
+/******************* Control Page Display ******************/
 /** Main content of the page (i.e. the stuff below the tab bar) */
 .content {
 	margin-top: 20px;
@@ -53,27 +60,7 @@ a {
 	display:block;
 }
 
-.home-content {
-	display: none;
-}
-
-.home-content.selected {
-	display:block;
-}
-
-/* General button styling */
-.g-button {
-	border-radius: 10px;
-	border-style: solid;
-    border-color: #383838;
-    background-color: transparent;
-    color: #383838;
-    border-width: 1px;
-    font-size: 12px;
-    height: 22px;
-}
-
-/*************** Form Inputs **********************/
+/*********************** Form Inputs **********************/
 /* Form inputs */
 .form-box {
 	border-radius: 10px; 
@@ -88,20 +75,7 @@ a {
 	background-color: transparent;
 }
 
-.type-form {
-	width: 375px;
-	display: none;
-}
-
-.type-form.selected {
-	display:block;
-}
-
-#loc {
-	width: 200px;
-}
-
-/* Tabs */
+/********************** Tabs ***********************/
 /* NOTE: basic tab html & css is from basic tab tutorial at:
 http://inspirationalpixels.com/tutorials/creating-tabs-with-html-css-and-jquery#step-html
  Adapted by Anna Lawson */
@@ -167,6 +141,7 @@ hr {
 	margin-top: 0px;
 }
 
+/*********************** Select Dropdowns *******************/
 /* Note: Select CSS modified from: http://cssdeck.com/labs/styling-select-box-with-css3 */
 select {
     height:25px;

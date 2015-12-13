@@ -1,0 +1,30 @@
+
+/****************** Home Page ******************/
+/* Home page Description */
+#intro-p {
+	font-size: 14px;
+	margin-top: 40px;
+}
+
+.home-content {
+	display: none;
+}
+
+.home-content.selected {
+	display:block;
+}
+
+#error-message {
+	color: red;
+}
+
+/* Form inputs */
+#loc {
+	width: 200px;
+}
+
+
+/* Description of weather */
+#weather-report {
+	display:inline-block;
+}
