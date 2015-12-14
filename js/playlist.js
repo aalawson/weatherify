@@ -156,10 +156,14 @@ function getRating(id) {
 			'62' : ['10', '9', 'hurricane']
 		}
 	}
-	console.log(categoryChart[category][rawSeverity]);
-	convertWeather(category);
-
-
+	var weatherParams = categoryChart[category][rawSeverity];
+	var defaultLevels = convertWeather(weatherParams);
+	var maxenergy = defaultLevels['max_energy'];
+	var minenergy = defaultLevels['max_energy'];	
+	var maxtempo = defaultLevels['min_tempo'];
+	var mintempo = defaultLevels['max_tempo'];
+	var maxaccousticness = defaultLevels['min_accousticness'];
+	var minaccousticness = defaultLevels['max_accousticness'];
 }
 
 function convertWeather(id) {
@@ -235,7 +239,7 @@ function convertWeather(id) {
     }
   }
 
-  console.log(musicChart[id]);
+  return (musicChart[id]);
 
 }
 

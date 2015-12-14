@@ -1,5 +1,9 @@
 var GOOGLE_API_KEY = 'AIzaSyAXZufRi7zaaC4YS7MXV8oS9sduuPcgst8';
 var LOCATE_API_KEY = 'AIzaSyDdAeQrbuEWXNgfVmafLqFyGQcJFBulgLo';
+var ECHONEST_API_KEY = 'UOLQFEZCTDHUNBF6K';
+
+
+
 function changeToLocationPlayList() {
     document.getElementById('loc-playlist').setAttribute('class', 'selected type-form');
     document.getElementById('mood-playlist').setAttribute('class', 'unselected type-form');   
@@ -146,5 +150,87 @@ function searchLocation(results) {
   document.getElementById('options-window').style.display = "none";  
   console.log(document.getElementById('options-window').style.display); 
   getWeather(lat, lng);
+  return false;
+}
+
+
+function makeNewPlaylist() {
+    console.log("changing screens");
+    var location = document.getElementById('loc').value;
+    getLocation(location);
+    $('#playlist-results').empty();
+    var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
+
+    echoNestSearch();
+    
+    // if you want:
+    //playerHtml += PLAYLIST NAME
+
+    //adds 20 songs to the playlist 
+    //need function that generates playlist based on weather 
+    playerHtml += '6t1VvXUla9YRJ4EV1SPJFZ,4HaRqrk4LRjCiQBqtMc6NE,65wx71brAmEQz66GXXF8gI,7fnnkYFOPqdzVYd339U7TM,07pChN3h9EciKJussyb8Hu';
+
+    playerHtml += '" frameborder="0" width="640px" height="400px" align="center" allowtransparency="true"></iframe>';
+
+    $('#playlist-results').append(playerHtml);
+    console.log(playerHtml);  
+    return false;
+}
+
+function echoNestSearch() {
+
+  //need to use weather input + options added to determine search query
+
+  // $.ajax ({
+  //   'url': 'http://developer.echonest.com/api/v4/playlist/static',
+  //   'data': {
+  //     'genre' : 'blues',
+  //     'bucket': [ 'id:spotify', 'tracks'], 
+  //     //'bucket' : 'id:spotify',
+  //     'type': 'genre-radio',
+  //     'api_key': ECHONEST_API_KEY
+  //   },
+  //   'success' : function(results, textStats, XMLHttpRequest) {
+
+  //     //for each valid result, create string with trackuri,trackuri,trackuri,... to send back to html
+  //     //this is also the string that should be saved to save a playlist
+
+  //     //or maybe user picks a GENRE for the playlist
+
+
+  //     console.log(results);
+  //   }, 
+  //   'error' : function(jqXHR, textStatus, errorThrown) {
+  //     console.log(errorThrown);
+  //     console.log(textStatus);
+  //   }
+
+  // });
+
+  var url = 'http://developer.echonest.com/api/v4/playlist/static';
+
+  var args = {
+    'format' : 'json',
+    'bucket': [ 'id:spotify', 'tracks'], 
+    'limit' : 'true',
+    'api_key': ECHONEST_API_KEY,
+    'genre' : 'blues',
+    'type': 'genre-radio',
+    'results': '20'
+  }
+
+
+  $.getJSON(url, args, 
+    function(data) {
+      if (!('songs' in data.response)) {
+        //no results
+      }
+      else {
+        console.log(data);
+      }
+    })
+
+
+
   return false;
 }

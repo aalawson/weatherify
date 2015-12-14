@@ -20,11 +20,10 @@
 
 /* Form inputs */
 #loc {
-	width: 300px;
+	width: 80%;
 }
 
 .type-form {
-	width: 430px;
 	display: none;
 }
 
