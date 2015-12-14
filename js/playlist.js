@@ -302,14 +302,19 @@ function getSongIds(results) {
 	songIdResults = [];			//reset results array
 	var artist;
 	var name;
+
+	console.log("^^^^^^^^^^");
+	console.log(results);
 	for (var i = 0; i < results['response']['songs'].length; i++) {
 		artist = results['response']['songs'][i]['artist_name'];
 		name = results['response']['songs'][i]['title'];
 		songIdRequests.push(getSongId(artist, name));
+
+		songIdResults
 	}
 
 	//if ()
-
+/*
 	$.when($, songIdRequests).done(function() {
         songIdResults = arguments;
         //console.log(songIdResults);
@@ -317,14 +322,13 @@ function getSongIds(results) {
         //currentPlaylist = ""; //reset current playlist
         displayPlaylist(songIdRequests);
         console.log(currentPlaylist);
-    });
+    });*/
 }
 
 function displayPlaylist(results) {
 	for (var i = 0; i < results.length; i++) {
-		console.log("*******&*******");
 		console.log(results);
-		//currentPlaylist += results[i].id;
+		currentPlaylist += results[i].id;
 		currentPlaylist += ',';
 	}
 }
@@ -368,9 +372,13 @@ var params = {
 	         console.log(numResults + "not valid");// displayBadParamsError(); // let user know that no results were found
 	        } //Valid! push to songIdResults
 	        else {
+	        	console.log("*@@@@@@@@@@@@*");
+	        	console.log(data['tracks']['items'][0]);
 	        	songIdResults.push(data['tracks']['items'][0]);
-	        	currentPlaylist += data['tracks']['items'][0];
+	        	currentPlaylist += data['tracks']['items'][0].id;
+	        	currentPlaylist += ',';
 	        	console.log(songIdResults);
+	        	console.log(currentPlaylist);
 
 	        }
 
