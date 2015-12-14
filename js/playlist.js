@@ -1,3 +1,5 @@
+var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
+
 var isDrawerOpen = false;
 
 
@@ -235,8 +237,32 @@ function convertWeather(id) {
     }
   }
 
-  console.log(musicChart[id]);
+  // console.log(musicChart[id]);
+  searchMusic(musicChart[id]);
 
 }
 
+function searchMusic(weatherMetrics) {
+
+  $.ajax({
+          'url': 'http://developer.echonest.com/api/v4/song/search',
+          'data': {
+              'api_key': ECONEST_API_KEY,
+              'format' : 'json',
+ 				'max_energy' : weatherMetrics['max_energy'],
+      			'min_energy' : weatherMetrics['min_energy'],
+      			'max_tempo' : weatherMetrics['max_tempo'],
+      			'min_tempo' : weatherMetrics['min_tempo'],
+      			'max_acousticness' : weatherMetrics['max_acousticness'],
+      			'min_acousticness' : weatherMetrics['min_acousticness'],
+          },
+          'success': function(results) {
+              console.log(results);
+          }
+      });
+      return false;
+
+
+
+}
 
