@@ -5,13 +5,13 @@ var ECHONEST_API_KEY = 'UOLQFEZCTDHUNBF6K';
 
 
 function changeToLocationPlayList() {
-    document.getElementById('loc-playlist').setAttribute('class', 'selected type-form');
-    document.getElementById('mood-playlist').setAttribute('class', 'unselected type-form');   
+  document.getElementById('loc-playlist').setAttribute('class', 'selected type-form');
+  document.getElementById('mood-playlist').setAttribute('class', 'unselected type-form');   
 }
 
 function changeToMoodPlaylist() {
-    document.getElementById('loc-playlist').setAttribute('class', 'unselected type-form');
-    document.getElementById('mood-playlist').setAttribute('class', 'selected type-form');   
+  document.getElementById('loc-playlist').setAttribute('class', 'unselected type-form');
+  document.getElementById('mood-playlist').setAttribute('class', 'selected type-form');   
 }
 // Switch Tab to Manage Groups
 function switchToHome() {
@@ -41,9 +41,9 @@ function switchToViewPlaylists() {
 // Switch Tab to Search
 function switchToSearch() {
 // Set group tab to selected
-    document.getElementById('t1').setAttribute('class', 'unselected tab');
-    document.getElementById('t2').setAttribute('class', 'unselected tab');
-    document.getElementById('t3').setAttribute('class', 'selected tab');
+document.getElementById('t1').setAttribute('class', 'unselected tab');
+document.getElementById('t2').setAttribute('class', 'unselected tab');
+document.getElementById('t3').setAttribute('class', 'selected tab');
 
 
     // Set group display to selected
@@ -53,8 +53,8 @@ function switchToSearch() {
 }
 
 function couldntFindMe() {
-  document.getElementById('loc').value = "New York"; 
-  document.getElementById('home-intro-error').innerHTML = '';
+    document.getElementById('loc').value = "New York"; 
+    document.getElementById('home-intro-error').innerHTML = '';
 }
 
 function couldntFindLocation() {
@@ -64,9 +64,8 @@ function couldntFindLocation() {
 
 function findMe() {
 
-  $.getJSON('http://ip-api.com/json/?callback=?', function(data) {
+    $.getJSON('http://ip-api.com/json/?callback=?', function(data) {
         // Check to make sure at least one song was returned
-        console.log(data);
         var isValid = data['lat'] && data['lon'];
         if (!isValid) {
           couldntFindMe(); // let user know that no results were found
@@ -74,62 +73,63 @@ function findMe() {
         else {
           reverseGeocode(data['lat'], data['lon']);
           return false;
-        }
+      }
   });   
 }
 
 function reverseGeocode(lat, lng) {
-  $.ajax ({
-    'url': 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=' + GOOGLE_API_KEY,
-    'cache':true,
-    success : function(data, textStats, XMLHttpRequest) {
+    $.ajax ({
+      'url': 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=' + GOOGLE_API_KEY,
+      'cache':true,
+      success : function(data, textStats, XMLHttpRequest) {
         // Check to make sure at least one song was returned
         console.log(data['results'][0]);
         var isValid = data['results'][0] && data['results'][0]['formatted_address'];
         if (!isValid) {
-            console.log("hi");
+          console.log("hi");
           couldntFindMe(); // let user know that no results were found
         } //Valid! Display first ten results
         else {
-            console.log(data);
+          console.log(data);
           document.getElementById('loc').value = data['results'][0]['formatted_address'];
           document.getElementById('home-intro-error').innerHTML = '';
           return false;
-        }
-
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
-        console.log(textStatus);
-        couldntFindMe();
-
       }
-    });  
+
+  },
+  error: function(jqXHR, textStatus, errorThrown) {
+    console.log(errorThrown);
+    console.log(textStatus);
+    couldntFindMe();
+
+}
+});  
 }
 function getLocation(location) {
-  $.ajax ({
-    'url': 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + GOOGLE_API_KEY,
-    'cache':true,
-    success : function(data, textStats, XMLHttpRequest) {
-        // Check to make sure at least one song was returned
-        var isValid = data['results'] && (data['results'].length > 0);
-        if (!isValid) {
-          couldntFindLocation(); // let user know that no results were found
-        } //Valid! Display first ten results
-        else {
-          searchLocation(data['results']);
-          return false;
+    $.ajax ({
+        'url': 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + GOOGLE_API_KEY,
+        'cache':true,
+        success : function(data, textStats, XMLHttpRequest) {
+            // Check to make sure at least one song was returned
+            var isValid = data['results'] && (data['results'].length > 0);
+            if (!isValid) {
+                couldntFindLocation(); // let user know that no results were found
+            } //Valid! Display first ten results
+            else {
+                searchLocation(data['results']);
+                return false;
+            }
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+            console.log(textStatus);
+            couldntFindLocation();
+
         }
-
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
-        console.log(textStatus);
-        couldntFindLocation();
-
-      }
     });
 }
+
 function searchLocation(results) {
   // In rare case of multiple results, Google Maps geocoder returns
   // most meaningful result first, so I just use index 0.
@@ -146,25 +146,3 @@ function searchLocation(results) {
   return false;
 }
 
-
-function makeNewPlaylist() {
-    console.log("changing screens");
-    var location = document.getElementById('loc').value;
-    getLocation(location);
-    $('#playlist-results').empty();
-    var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
-
-    
-    // if you want:
-    //playerHtml += PLAYLIST NAME
-
-    //adds 20 songs to the playlist 
-    //need function that generates playlist based on weather 
-    playerHtml += '6t1VvXUla9YRJ4EV1SPJFZ,4HaRqrk4LRjCiQBqtMc6NE,65wx71brAmEQz66GXXF8gI,7fnnkYFOPqdzVYd339U7TM,07pChN3h9EciKJussyb8Hu';
-
-    playerHtml += '" frameborder="0" width="640px" height="400px" align="center" allowtransparency="true"></iframe>';
-
-    $('#playlist-results').append(playerHtml);
-    console.log(playerHtml);  
-    return false;
-}

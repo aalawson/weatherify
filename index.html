@@ -1,96 +1,122 @@
 <!DOCTYPE html>
 <html>
-  <head>
-  	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  	  <title> Weatherify </title>
-        <!-- CSS -->
-  	    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
-        <link rel="stylesheet" type="text/css" href="css/home.css">
-  	</meta>
-  </head>
-  	<body onload="findMe(); return false;">
-      <h1> Weatherify </h1>
-      <ul id='nav-bar' class="tabs">
-        <li id="t1" class="selected tab"><a href="#" onclick="switchToHome();return false;"><span>Make a New Playlist</span></a></li>
-        <li id="t2"class="unselected tab"><a href="#" onclick="switchToViewPlaylists();return false;"><span>My Playlists</span></a></li>
-        <li id="t3"class="unselected tab"><a href="#" onclick="switchToSearch();return false;"><span>Search</span></a></li>
-      </ul>
-      <hr id="top-bar-hr">
-      <div class="content">
-        <div id="home" class="selected body-content">
-        <div id="home-intro-screen" class="selected home-content ">
-          <p id='intro-p'> Welcome to Weatherify, where you can make playlists to suit the weather. Not feeling like the weather outside? Pick a different location or choose a weather that matches your mood! </p>
-          <form id="playlist-type-form">
-              <div id='rad-typ'>
-                <input id='loc-rad' type='radio' name='p-typ' value='loc' checked='checked' onclick="return changeToLocationPlayList();";> Use a location's weather
-                <input id='mood-rad' type='radio' name='p-typ' value='location' onclick="return changeToMoodPlaylist()";> Use my "weather" mood
-              </div>
-            <fieldset id='loc-playlist' class='selected type-form'>
-              <legend> Location </legend>
-              <input type="text" id="loc" class="form-box" value="" placeholder="Default location"/>
-              <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(); return false;">Make me a playlist</button>
-              <p id="home-intro-error" class="error-message"></p>
-              <p> We've defaulted to your current location, but if you'd rather be somewhere else, feel free to enter it!</p>
-            </fieldset>
-            <fieldset id='mood-playlist' class='unselected type-form'>
-              <legend> Mood </legend>
-              <label>
-                <select id="mood">
-                  <option selected> I'm feeling... </option>
-                  <option> Sunny </option>
-                  <option> Rainy </option>
-                  <option> Happy </option>
-                </select>
-              </label>
-              <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(); return false;">"Make me a playlist" </button>
-            </fieldset>
-          </form>
-        </div>
-        <div id="home-new-playlist"  class="unselected home-content ">
+<head>
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+ <title> Weatherify </title>
+ <!-- CSS -->
+ <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+ <link rel="stylesheet" type="text/css" href="css/home.css">
+</meta>
+</head>
+<body onload="findMe(); return false;">
+  <h1> Weatherify </h1>
+  <ul id='nav-bar' class="tabs">
+    <li id="t1" class="selected tab"><a href="#" onclick="switchToHome();return false;"><span>Make a New Playlist</span></a></li>
+    <li id="t2"class="unselected tab"><a href="#" onclick="switchToViewPlaylists();return false;"><span>My Playlists</span></a></li>
+    <li id="t3"class="unselected tab"><a href="#" onclick="switchToSearch();return false;"><span>Search</span></a></li>
+  </ul>
+  <hr id="top-bar-hr">
+  <div class="content">
+    <div id="home" class="selected body-content">
+      <div id="home-intro-screen" class="selected home-content ">
+        <p id='intro-p'> Welcome to Weatherify, where you can make playlists to suit the weather. Not feeling like the weather outside? Pick a different location or choose a weather that matches your mood! </p>
+        <form id="playlist-type-form">
+          <div id='rad-typ'>
+            <input id='loc-rad' type='radio' name='p-typ' value='loc' checked='checked' onclick="return changeToLocationPlayList();";> Use a location's weather
+            <input id='mood-rad' type='radio' name='p-typ' value='location' onclick="return changeToMoodPlaylist()";> Use my "weather" mood
+          </div>
+          <fieldset id='loc-playlist' class='selected type-form'>
+            <legend> Location </legend>
+            <input type="text" id="loc" class="form-box" value="" placeholder="Default location"/>
+            <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(); return false;">Make me a playlist</button>
+            <p id="home-intro-error" class="error-message"></p>
+            <p> We've defaulted to your current location, but if you'd rather be somewhere else, feel free to enter it!</p>
+          </fieldset>
+          <fieldset id='mood-playlist' class='unselected type-form'>
+            <legend> Mood </legend>
+            <label>
+              <select id="mood">
+                <option selected> I'm feeling... </option>
+                <option> Sunny </option>
+                <option> Rainy </option>
+                <option> Happy </option>
+              </select>
+            </label>
+            <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(); return false;">"Make me a playlist" </button>
+          </fieldset>
+        </form>
+      </div>
+      <div id="home-new-playlist"  class="unselected home-content ">
         <h2 id="weather-report"> Today in New York it's 68 and sunny </h2>
         <a id='options-tab' href="#" onclick="toggleDrawer();return false;"><span id="fine-tune-span">&#9660 Fine tune my playlist</span></a>
         <div id="options-window">
           <div id="options" class "selected body-content ">
-          <h3>options</h3>
-          <form>
-            <b>time period  </b>
-            past  
-            <input type ="range" value="50", min="0", max="100">
-            present
-            <br><br>
+            <h3>options</h3>
+            <form>
 
-            <b>popularity  </b>
-            not  
-            <input type ="range" value="50", min="0", max="100">
-            popular
-            <br><br>
+              <b>genre </b><br>
+              <input type="checkbox" name="genre" value="pop">pop<br>
+              <input type="checkbox" name="genre" value="rock">rock<br>
+              <input type="checkbox" name="genre" value="hip-hop">hip hop<br>
+              <input type="checkbox" name="genre" value="jazz">jazz<br>
+              <input type="checkbox" name="genre" value="classical">classical<br>
+              <input type="checkbox" name="genre" value="alternative">alternative<br>
+              <input type="checkbox" name="genre" value="techno">techno<br>
+              <input type="checkbox" name="genre" value="disco">disco<br>
+              <input type="checkbox" name="genre" value="rnb">rnb<br>
+              <input type="checkbox" name="genre" value="soul">soul<br>
+              <input type="checkbox" name="genre" value="country">country<br>
+              <input type="text" name="genre" value="other"><br>
+              <br><br>
 
-            <b>wordiness  </b>
-            no words  
-            <input type ="range" value="50", min="0", max="100">
-            many words
-            <br><br>
 
-            <button type="button" class="g-button" onclick="return getWeather();">"Weatherify!"</button>
-          </form>
-        </div>
+              <b>decade  </b>
+              <select id="decade">
+                <option value="all"> all </option>
+                <option value="1930">Pre 1940s</option>
+                <option value="1940">1940s</option>
+                <option value="1950">1950s</option>
+                <option value="1960">1960s</option>
+                <option value="1970">1970s</option>
+                <option value="1980">1980s</option>
+                <option value="1990">1990s</option>
+                <option value="2000">2000s</option>
+                <option value="present">Today</option>
+              </select>
+              <br><br>
+
+              <b>artist popularity  </b>
+              less popular  
+              <input type ="range" value="50", min="0", max="100">
+              more popular
+              <br><br>
+
+              <b>wordiness  </b>
+              fewer words  
+              <input type ="range" value="50", min="0", max="100">
+              more words
+              <br><br>
+
+              <button type="button" class="g-button" onclick="return makeNewPlaylist();">"Weatherify!"</button>
+            </form>
+          </div>
         </div>
         <div id="playlist-results">
           <p> Results </p>
         </div>
       </div>
     </div>
-        <div id="view-playlists" class="unselected body-content ">
-          <p> In View My Playlists </p>
-        </div>
-        <div id="search" class="unselected body-content">
-           <p>In Search </p>
-        </div>
-      </div>
-  	</body>
-    <!-- JS -->
-    <script type="text/javascript" src="js/playlist.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
-    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <div id="view-playlists" class="unselected body-content ">
+      <p> In View My Playlists </p>
+    </div>
+    <div id="search" class="unselected body-content">
+     <p>In Search </p>
+   </div>
+ </div>
+</body>
+<!-- JS -->
+<script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/playlist.js"></script>
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 
 </html>
