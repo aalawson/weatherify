@@ -14,8 +14,12 @@ body {
 	z-index: 0;
 	color: #383838;
 	font-family: 'Raleway', 'Work Sans', 'Source Sans Pro', Verdana, Arial, sans-sarif;
-	padding-left:30px;
+  padding:30px;
 	max-width: 1400px;
+}
+div#center-div{
+  width:80%;
+  margin: 0 auto;
 }
 
 /* Headers */
@@ -31,6 +35,17 @@ p {
 a {
 	text-decoration: underline;
 	color:black;
+}
+
+/* Styling */
+button:hover{
+  outline:none;
+}
+button:focus{
+  outline:none;
+}
+input:focus{
+  outline:none;
 }
 
 /* General button styling */
