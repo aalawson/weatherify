@@ -335,10 +335,10 @@ function getSongId(artist, name) {
 	artist = artist.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
 	name = name.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
 
-var params = {
-	'artist': artist,
-	'track': name
-}
+	var params = {
+		'artist': artist,
+		'track': name
+	}
 
     //Create query string using filters
     var query = "";
