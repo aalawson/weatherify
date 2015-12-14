@@ -1,6 +1,9 @@
 var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
-
 var isDrawerOpen = false;
+
+var songIdResults;			//array of spotify ids
+var currentPlaylist ='';	//keeps in memory current playlist
+var numResults = 20;
 
 
 function toggleDrawer() {
@@ -244,10 +247,7 @@ function convertWeather(id) {
 	return (musicChart[id]);
 }
 
-var playlistIds = [];
-var songIdResults = [];
-var currentPlaylist ='';
-var numResults = 20;
+
 
 function searchMusic(weatherMetrics) {
 	
@@ -287,6 +287,7 @@ function searchMusic(weatherMetrics) {
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
+			console.log('ECHONEST RESULTS');
 			console.log(results);
 			getSongIds(results);
 		}
@@ -297,8 +298,8 @@ function searchMusic(weatherMetrics) {
 
 function getSongIds(results) {
 	playlistIds = [];
-	var songIdRequests = [];
-	var songIdResults = [];
+	var songIdRequests = [];	//reset requests array
+	songIdResults = [];			//reset results array
 	var artist;
 	var name;
 	for (var i = 0; i < results['response']['songs'].length; i++) {
@@ -311,11 +312,11 @@ function getSongIds(results) {
 
 	$.when($, songIdRequests).done(function() {
         songIdResults = arguments;
-        console.log(songIdResults);
-        console.log(songIdRequests);
+        //console.log(songIdResults);
+        //console.log(songIdRequests);
         //currentPlaylist = ""; //reset current playlist
         displayPlaylist(songIdRequests);
-        // console.log(currentPlaylist);
+        console.log(currentPlaylist);
     });
 }
 
@@ -325,8 +326,6 @@ function displayPlaylist(results) {
 		console.log(results);
 		//currentPlaylist += results[i].id;
 		currentPlaylist += ',';
-		console.log(":)");
-		console.log(currentPlaylist);
 	}
 }
 
@@ -334,9 +333,7 @@ function displayPlaylist(results) {
 
 function getSongId(artist, name) {
 	artist = artist.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
-	//artist = artist.replace(')', ' ');
 	name = name.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
-	//name = name.replace(')', ' ');
 
 var params = {
 	'artist': artist,
@@ -358,7 +355,7 @@ var params = {
 
   //artist = artist.replace(/\s/g, '+');
   //var query = name + "+artist:" + artist;
-  $.ajax ({
+  return $.ajax ({
   	'url': 'http://api.spotify.com/v1/search',
   	'data': {'q':query, 'type': 'track', 'limit' : '1', 'market':'US'},
   	'cache': true,
@@ -372,7 +369,9 @@ var params = {
 	        } //Valid! push to songIdResults
 	        else {
 	        	songIdResults.push(data['tracks']['items'][0]);
+	        	currentPlaylist += data['tracks']['items'][0];
 	        	console.log(songIdResults);
+
 	        }
 
 	    },
@@ -410,4 +409,8 @@ function makeNewPlaylist() {
 
 function saveCurrentPlaylist() {
 	//this function will add the current playlist to the database
+}
+
+function showPlaylist() {
+	//for saved playlists, location and/or weather and playlist should be saved
 }
