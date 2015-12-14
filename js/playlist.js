@@ -5,7 +5,6 @@ var songIdResults;			//array of spotify ids
 var currentPlaylist ='';	//keeps in memory current playlist
 var numResults = 20;
 
-
 /* FORMATTING SECTION */
 function toggleDrawer() {
 	isDrawerOpen = !isDrawerOpen;
@@ -54,7 +53,6 @@ function makeWeatherPlaylist(results) {
 	}
 	getRating(id);
 }
-
 
 function getRating(id) {
 	console.log(id);
@@ -223,7 +221,6 @@ function makeNewPlaylist() {
   getLocation(location);
   $('#playlist-results').empty();
   var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
-
 
     // if you want:
     //playerHtml += PLAYLIST NAME
