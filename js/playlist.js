@@ -1,3 +1,5 @@
+var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
+
 var isDrawerOpen = false;
 
 
@@ -157,13 +159,14 @@ function getRating(id) {
 		}
 	}
 	var weatherParams = categoryChart[category][rawSeverity];
-	var defaultLevels = convertWeather(weatherParams);
+	var defaultLevels = convertWeather(weatherParams[0]);
 	var maxenergy = defaultLevels['max_energy'];
 	var minenergy = defaultLevels['max_energy'];	
 	var maxtempo = defaultLevels['min_tempo'];
 	var mintempo = defaultLevels['max_tempo'];
 	var maxaccousticness = defaultLevels['min_accousticness'];
 	var minaccousticness = defaultLevels['max_accousticness'];
+	searchMusic(defaultLevels);
 }
 
 function convertWeather(id) {
@@ -238,9 +241,110 @@ function convertWeather(id) {
       'min_acousticness' : '0',
     }
   }
-
   return (musicChart[id]);
+}
 
+var playlistIds = [];
+var songIdResults = [];
+
+function searchMusic(weatherMetrics) {
+
+  $.ajax({
+          'url': 'http://developer.echonest.com/api/v4/song/search',
+          'data': {
+              'api_key': ECONEST_API_KEY,
+              'format' : 'json',
+              'bucket' : 'id:spotify',
+ 				'max_energy' : weatherMetrics['max_energy'],
+      			'min_energy' : weatherMetrics['min_energy'],
+      			'max_tempo' : weatherMetrics['max_tempo'],
+      			'min_tempo' : weatherMetrics['min_tempo'],
+      			'max_acousticness' : weatherMetrics['max_acousticness'],
+      			'min_acousticness' : weatherMetrics['min_acousticness'],
+          },
+          'success': function(results) {
+              console.log(results);
+              getSongIds(results);
+          }
+      });
+      return false;
 }
 
 
+function getSongIds(results) {
+	playlistIds = [];
+	var songIdRequests = [];
+	var songIdResults = [];
+	var artist;
+	var name;
+	for (var i = 0; i < results['response']['songs'].length; i++) {
+		artist = results['response']['songs'][i]['artist_name'];
+		name = results['response']['songs'][i]['title'];
+      	songIdRequests.push(getSongId(artist, name));
+	}
+	$.when.apply($, songIdRequests).done(function() {
+        songIdResults = arguments;
+        displayPlaylist();
+	});
+}
+
+function displayPlaylist() {
+    for (var i = 0; i < songIdResults.length; i++) {
+    	console.log(songIdResults[i]);
+    }
+}
+
+
+
+function getSongId(artist, name) {
+	artist = artist.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
+	//artist = artist.replace(')', ' ');
+	name = name.replace(/[^a-zA-Z0-9\s\:]/, ' ');
+	//name = name.replace(')', ' ');
+
+	var params = {
+		'artist': artist,
+		'track': name
+	}
+
+    //Create query string using filters
+	  var query = "";
+	  for (var key in params) {
+		  if (params[key].length > 0) {
+			  if (params[key].includes(' ')){
+				  params[key] = "\"" + params[key] + "\""; //if multiple words, put in quotes
+			  }
+        query += key + ":" + params[key] + " ";
+		  }
+	  }
+	  query = query.substring(0, query.length-1); //strip off last " "
+
+
+  //artist = artist.replace(/\s/g, '+');
+  //var query = name + "+artist:" + artist;
+  $.ajax ({
+      'url': 'http://api.spotify.com/v1/search',
+      'data': {'q':query, 'type': 'track', 'limit' : '1', 'market':'US'},
+      'cache': true,
+      success : function(data, textStats, XMLHttpRequest) {
+        // Check to make sure at least one song was returned
+        console.log(data);
+        var isValid = data['tracks'] && data['tracks']['items'] && (
+            data['tracks']['items'].length > 0);
+        if (!isValid) {
+         console.log("not valid");// displayBadParamsError(); // let user know that no results were found
+        } //Valid! Display first ten results
+        else {
+          songIdResults.push(data['tracks']['items'][0]);
+          console.log(data);
+        }
+
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+        console.log(textStatus);
+        //displayBadParamsError();
+
+      }
+    });
+}

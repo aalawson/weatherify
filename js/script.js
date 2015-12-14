@@ -52,13 +52,6 @@ function switchToSearch() {
     document.getElementById('search').setAttribute('class', 'selected body-content');
 }
 
-function makeNewPlaylist() {
-    console.log("changing screens");
-    var location = document.getElementById('loc').value;
-    getLocation(location);
-    return false;
-}
-
 function couldntFindMe() {
   document.getElementById('loc').value = "New York"; 
   document.getElementById('home-intro-error').innerHTML = '';
@@ -161,7 +154,6 @@ function makeNewPlaylist() {
     $('#playlist-results').empty();
     var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
 
-    echoNestSearch();
     
     // if you want:
     //playerHtml += PLAYLIST NAME
@@ -175,62 +167,4 @@ function makeNewPlaylist() {
     $('#playlist-results').append(playerHtml);
     console.log(playerHtml);  
     return false;
-}
-
-function echoNestSearch() {
-
-  //need to use weather input + options added to determine search query
-
-  // $.ajax ({
-  //   'url': 'http://developer.echonest.com/api/v4/playlist/static',
-  //   'data': {
-  //     'genre' : 'blues',
-  //     'bucket': [ 'id:spotify', 'tracks'], 
-  //     //'bucket' : 'id:spotify',
-  //     'type': 'genre-radio',
-  //     'api_key': ECHONEST_API_KEY
-  //   },
-  //   'success' : function(results, textStats, XMLHttpRequest) {
-
-  //     //for each valid result, create string with trackuri,trackuri,trackuri,... to send back to html
-  //     //this is also the string that should be saved to save a playlist
-
-  //     //or maybe user picks a GENRE for the playlist
-
-
-  //     console.log(results);
-  //   }, 
-  //   'error' : function(jqXHR, textStatus, errorThrown) {
-  //     console.log(errorThrown);
-  //     console.log(textStatus);
-  //   }
-
-  // });
-
-  var url = 'http://developer.echonest.com/api/v4/playlist/static';
-
-  var args = {
-    'format' : 'json',
-    'bucket': [ 'id:spotify', 'tracks'], 
-    'limit' : 'true',
-    'api_key': ECHONEST_API_KEY,
-    'genre' : 'blues',
-    'type': 'genre-radio',
-    'results': '20'
-  }
-
-
-  $.getJSON(url, args, 
-    function(data) {
-      if (!('songs' in data.response)) {
-        //no results
-      }
-      else {
-        console.log(data);
-      }
-    })
-
-
-
-  return false;
 }
