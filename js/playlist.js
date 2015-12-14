@@ -66,14 +66,14 @@ function getRating(id) {
 	}
 
 	var weatherParams = categoryChart[category][rawSeverity];
-	var defaultLevels = convertWeather(weatherParams[0]);
-	/*var maxenergy = defaultLevels['max_energy'];
-	var minenergy = defaultLevels['max_energy'];	
-	var maxtempo = defaultLevels['min_tempo'];
-	var mintempo = defaultLevels['max_tempo'];
-	var maxaccousticness = defaultLevels['min_accousticness'];
-	var minaccousticness = defaultLevels['max_accousticness'];*/
-	searchMusic(defaultLevels);
+	var weatherMetrics = convertWeather(weatherParams[0]);
+	/*var maxenergy = weatherMetrics['max_energy'];
+	var minenergy = weatherMetrics['max_energy'];	
+	var maxtempo = weatherMetrics['min_tempo'];
+	var mintempo = weatherMetrics['max_tempo'];
+	var maxaccousticness = weatherMetrics['min_accousticness'];
+	var minaccousticness = weatherMetrics['max_accousticness'];*/
+	searchMusic(weatherMetrics);
 }
 
 function convertWeather(id) {
