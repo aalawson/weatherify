@@ -157,6 +157,85 @@ function getRating(id) {
 		}
 	}
 	console.log(categoryChart[category][rawSeverity]);
+	convertWeather(category);
+
+
+}
+
+function convertWeather(id) {
+
+    var musicChart = {
+    '2' : {
+      'max_energy' : '0.7',
+      'min_energy' : '0.3',
+      'max_tempo' : '500',
+      'min_tempo' : '0',
+      'max_acousticness' : '1',
+      'min_acousticness' : '0.5',
+
+    },
+    '3' : {
+      'max_energy' : '0.4',
+      'min_energy' : '0.1',
+      'max_tempo' : '500',
+      'min_tempo' : '0',
+      'max_acousticness' : '1',
+      'min_acousticness' : '0.5',
+    },
+    '5' : {
+      'max_energy' : '0.3',
+      'min_energy' : '0.1',
+      'max_tempo' : '500',
+      'min_tempo' : '0',
+      'max_acousticness' : '1',
+      'min_acousticness' : '0.5',
+    },
+    '6' : {
+      'max_energy' : '0.5',
+      'min_energy' : '0.2',
+      'max_tempo' : '500',
+      'min_tempo' : '0',
+      'max_acousticness' : '0.7',
+      'min_acousticness' : '0.2',
+    },
+    '7' : {
+      'max_energy' : '0.4',
+      'min_energy' : '0',
+      'max_tempo' : '500',
+      'min_tempo' : '0',
+      'max_acousticness' : '1',
+      'min_acousticness' : '0.5',
+    },
+
+    '8' : {
+      'max_energy' : '0.5',
+      'min_energy' : '0.2',
+      'max_tempo' : '500',
+      'min_tempo' : '0',
+      'max_acousticness' : '1',
+      'min_acousticness' : '0.5',
+    },
+
+    '9' : {
+      'max_energy' : '1',
+      'min_energy' : '0.5',
+      'max_tempo' : '500',
+      'min_tempo' : '0',
+      'max_acousticness' : '0.5',
+      'min_acousticness' : '0',
+    },
+
+    '10' : {
+      'max_energy' : '0.5',
+      'min_energy' : '0',
+      'max_tempo' : '500',
+      'min_tempo' : '0',
+      'max_acousticness' : '1',
+      'min_acousticness' : '0',
+    }
+  }
+
+  console.log(musicChart[id]);
 
 }
 
