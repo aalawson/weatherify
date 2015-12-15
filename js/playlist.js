@@ -68,15 +68,19 @@ function searchMusic(weatherMetrics) {
 
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics) {
-	var genreSelected;
-
-	genreSelected = ($('input[name="genre"]:checked').val());
 	
-	if (!genreSelected) {
-		genreSelected = '';
+	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
+	var genreSelected = ($('input[name="genre"]:checked').val());
+	var endYear = $("#decade :selected").val();
+
+	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
+
+	if (!christmasPlaylist) {
+		songSearchURL +='christmas:false';
+	} else {
+		songSearchURL += christmasPlaylist;
 	}
 
-	var endYear = $("decade :selected").val();
 	var data = {
 			'api_key': ECONEST_API_KEY,
 			'format' : 'json',
@@ -88,20 +92,19 @@ function searchSeedSong(weatherMetrics) {
 			'max_acousticness' : weatherMetrics['max_acousticness'],
 			'min_acousticness' : weatherMetrics['min_acousticness'],
 			'results' : '1',
-
-			'artist_end_year_before' : endYear,
-
+			//'song_type' : christmasPlaylist,
 		}
-	if (genreSelected.length >= 1) {
+
+	if (genreSelected && (genreSelected != 'all')) {
 	    data.style = genreSelected;
 	    console.log(genreSelected);
 	}
-
-	console.log(data);
-
+	if (endYear != 'all') {
+		data.artist_end_year_before = endYear;		
+	} 
 	
 	$.ajax({
-		'url': 'http://developer.echonest.com/api/v4/song/search',
+		'url': songSearchURL,
 		'data': data,
 		//callback function needs to be added here 
 		'success': function(results) {
@@ -117,6 +120,8 @@ function searchSeedSong(weatherMetrics) {
 // Get Echonest playlist using seed song
 function searchPlaylist(seed) {
 	
+
+
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/playlist/static?bucket=id:spotify&bucket=tracks',
 		'data': {
