@@ -9,8 +9,8 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var currentPlaylist = '';	//keeps in memory current playlist
-var numResults = 15; //number of echonest results
+var currentPlaylist = '';		//keeps in memory current playlist
+var numResults = 15; 			//number of echonest results
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist() {
@@ -19,12 +19,10 @@ function makeNewPlaylist() {
 		toggleDrawer();
 	}
 	getLocation(location);
-	console.log("making new playlist");
     return false;
 }
 // Takes weather results and converts to a rating for getting music
 function processWeatherData(weatherResults) {
-	console.log(weatherResults);
 	var temp = weatherResults['main']['temp'];
 	var tempString = temp.toString();
 	document.getElementById('weather-report').innerHTML =
@@ -144,7 +142,6 @@ function searchPlaylist(seed) {
 		//callback function needs to be added here 
 		'success': function(results) {
 			// getSongIds(results);
-			console.log(results);
 			getAllSongIds(results);
 		}
 	});
@@ -159,20 +156,16 @@ function getAllSongIds(results) {
 	songIdResults = [];		//reset results array
 	var artist;
 	var name;
-	console.log(results['response']['songs']);
 	if (results['response'] && results['response']['songs']) {
 		numResults = results['response']['songs'].length;	
-		console.log(numResults);
 
 		for (var i = 0; i < results['response']['songs'].length; i++) {
 			artist = results['response']['songs'][i]['artist_name'];
 			name = results['response']['songs'][i]['title'];
 			songIdRequests.push(getSongId(artist, name));
 		}
-		console.log(songIdRequests.length);
 
 		$.when($, songIdRequests).done(function() {
-           console.log("done");
 	    });		
     } else {
     	console.log("error message"); //ERROR MESSAGE HERE
@@ -182,7 +175,6 @@ function getAllSongIds(results) {
 
 // Search spotify to get song id
 function getSongId(artist, name) {
-	console.log("in getSongId");
 	artist = artist.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
 	name = name.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
 
@@ -240,7 +232,6 @@ function getSongId(artist, name) {
 
 // Make playbutton with all songs in playlist
 function displayPlaylist(results) {
-	console.log("in displayPlaylist");
  	$('#playlist-results').empty();
 	var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
 
@@ -254,10 +245,6 @@ function displayPlaylist(results) {
     playerHtml += '<button type="button" id="open-search-button" class="g-button form-box" onclick="openSearchPopup(); return false;">&#43Add a song</button>';
 
     $('#playlist-results').append(playerHtml);
-}
-
-function saveCurrentPlaylist() {
-	//this function will add the current playlist to the database
 }
 
 function showPlaylist() {

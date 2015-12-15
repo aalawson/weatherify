@@ -34,8 +34,9 @@ function getWeatherRating(id) {
 	}
 	console.log(category);
 
-	var weatherParams = categoryChart[category][rawSeverity];
-	var weatherMetrics = convertWeather(weatherParams[0]);
+	var weatherParams 	= categoryChart[category][rawSeverity];
+	nameWeather			= weatherParams[2];
+	var weatherMetrics 	= musicChart[weatherParams[0]];
 	/*var maxenergy = weatherMetrics['max_energy'];
 	var minenergy = weatherMetrics['max_energy'];	
 	var maxtempo = weatherMetrics['min_tempo'];
@@ -45,9 +46,13 @@ function getWeatherRating(id) {
 	searchSeedSong(weatherMetrics);
 }
 
+function bufferSeverity(category) {
+	category = categoryChart[2]['00'];
+	console.log(category)
+	console.log(musicChart[category[0]])
 
-function convertWeather(id) {
-	return (musicChart[id]);
+	//logic for buffer here
+
 }
 
 /* VARIABLES FOR INFORMATION */
