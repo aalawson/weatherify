@@ -15,11 +15,11 @@ var nameTemp    = '';
 var currentPlaylist         = '';       //keeps in memory current playlist
 var currentPlaylistName     = '';
 var currentPlaylistID       = '';
+var currentPlaylistWeather  = '';
 
 /* VARIABLES FOR SCRIPT.JS */ 
 var isDrawerOpen = false;
 var scrollVertOffset = 0;
-
 
 function setup() {
     document.getElementById('search').style.display = "none";
@@ -163,18 +163,53 @@ function hidePopupDisplay() {
   window.scrollBy(0, scrollVertOffset);
 }
 
-// save current playlist
-function savePlaylist() {
+// save current playlist (make new one)
+function saveNewPlaylist() {
+  
+  currentPlaylistName = nameTemp + "° and " + titlecase(nameWeather);
 
-    if(!currentPlaylistID){
-        // code to make ID here
+  // if it exists, append number to it
+  if(store.get(currentPlaylistName)){
+    var hasPlaylist = true;
+    var i = 1;
+
+    while(hasPlaylist){
+      currentPlaylistName += "-" + i;
+      if(!store.get(currentPlaylistName))
+        break;
+      i++;
     }
+  }
 
-    currentPlaylistName = nameTemp + "° and " + titlecase(nameWeather);
-
+  savePlaylist();
 }
 
+// save current playlist (update one)
+function savePlaylist() {
+  store.set(currentPlaylistName, currentPlaylist);
+}
 
+// delete current playlist
+function deletePlaylist() {
+  store.remove(currentPlaylistName);
+}
+
+// delete all playlists
+function deleteAllPlaylists() {
+  // GIVE CONFIRMATION HERE!!
+  confirm("Are you sure you want to delete all playlists?");
+  confirm("Sure?");
+  confirm("REALLY REALLY sure?");
+  store.clear();
+}
+
+// 
+function getAllPlaylists(){
+  store.forEach(function(key, val){
+    // key gives the name of the playlist
+    // val gives the array
+  })
+}
 
 // taken from http://stackoverflow.com/questions/2970525/
 function titlecase(str) {
