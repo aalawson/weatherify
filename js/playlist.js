@@ -9,10 +9,10 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var currentPlaylist ='';	//keeps in memory current playlist
+var currentPlaylist = '';	//keeps in memory current playlist
 var numResults = 15; //number of echonest results
 
-// Weatherify button calls this
+// Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist() {
 	var location = document.getElementById('loc').value;
 	if (isDrawerOpen) {
@@ -36,7 +36,7 @@ function processWeatherData(weatherResults) {
 	console.log("about to get weather");
 	getWeatherRating(id);
 }
-
+/*
 function searchMusic(weatherMetrics) {
 	
 	var genreCheckboxes = document.getElementsByName('genre');
@@ -79,8 +79,80 @@ function searchMusic(weatherMetrics) {
 		}
 	});
 	return false;
+} */
+
+/* Get seed song to set up echonest playlist */
+function searchSeedSong(weatherMetrics) {
+	
+	var genreCheckboxes = document.getElementsByName('genre');
+	var genreSelected = '';
+	for(var i = 0; i < genreCheckboxes.length; i++) {
+		if(genreCheckboxes[i].checked) {
+			genreSelected += genreCheckboxes[i].defaultValue;
+			if (i>0 && i<genreCheckboxes.length) {
+				genreSelected += ',';
+			}
+		}
+	}
+	if (!genreSelected) {
+		genreSelected = 'all';
+	}
+
+	var endYear = $("decade :selected").val();
+
+	
+	$.ajax({
+		'url': 'http://developer.echonest.com/api/v4/song/search',
+		'data': {
+			'api_key': ECONEST_API_KEY,
+			'format' : 'json',
+			'bucket' : 'id:spotify',
+			'max_energy' : weatherMetrics['max_energy'],
+			'min_energy' : weatherMetrics['min_energy'],
+			'max_tempo' : weatherMetrics['max_tempo'],
+			'min_tempo' : weatherMetrics['min_tempo'],
+			'max_acousticness' : weatherMetrics['max_acousticness'],
+			'min_acousticness' : weatherMetrics['min_acousticness'],
+			'results' : '1',
+			'style' : genreSelected,
+			'artist_end_year_before' : endYear,
+			
+		},
+		//callback function needs to be added here 
+		'success': function(results) {
+			// getSongIds(results);
+			searchPlaylist(results['response']['songs'][0]['id']);
+		}
+	});
+	return false;
 }
 
+//must error check genre up to 5
+// Get Echonest playlist using seed song
+function searchPlaylist(seed) {
+	
+	$.ajax({
+		'url': 'http://developer.echonest.com/api/v4/playlist/static',
+		'data': {
+			'api_key': ECONEST_API_KEY,
+			'format' : 'json',
+			'type': 'song-radio',
+			'bucket' : 'id:spotify',
+			'song_id' : seed,
+			'results' : numResults
+		},
+		//callback function needs to be added here 
+		'success': function(results) {
+			// getSongIds(results);
+			console.log(results);
+			getAllSongIds(results);
+		}
+	});
+	return false;
+
+}
+
+// Take echonest playlist and convert to spotify song ids
 function getAllSongIds(results) {
 	playlistIds = [];
 	var songIdRequests = [];	//reset requests array
@@ -108,6 +180,7 @@ function getAllSongIds(results) {
 
 }
 
+// Search spotify to get song id
 function getSongId(artist, name) {
 	console.log("in getSongId");
 	artist = artist.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
@@ -139,35 +212,33 @@ function getSongId(artist, name) {
   		'cache': true,
   		success : function(data, textStats, XMLHttpRequest) {
 	        // Check to make sure at least one song was returned
-	        console.log("in success");
-	        console.log(data['tracks']);
 	        var isValid = data['tracks'] && data['tracks']['items'] && (
 	        	data['tracks']['items'].length > 0);
-	        console.log(isValid);
 	        if (!isValid) {
 	        	numResults--;
 	         //console.log(numResults + " not valid");// displayBadParamsError(); // let user know that no results were found
 	        } //Valid! push to songIdResults
 	        else {
-	        	console.log("in else");
 	        	songIdResults.push(data['tracks']['items'][0]);
 	        	currentPlaylist += data['tracks']['items'][0].id;
 	        	currentPlaylist += ',';
-	        	console.log(numResults);
 	        }
+
+	        // If this is the last callback, display results
 	    	if (numResults == songIdResults.length) {
 				displayPlaylist(songIdResults);
         	}
-	        console.log(numResults);
 
 	    },
 	    error: function(jqXHR, textStatus, errorThrown) {
 	        //displayBadParamsError();
+	        console.log("NEED ERROR MESSAGE HERE");
 
 	    }
 	});
 }
 
+// Make playbutton with all songs in playlist
 function displayPlaylist(results) {
 	console.log("in displayPlaylist");
  	$('#playlist-results').empty();
