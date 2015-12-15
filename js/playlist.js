@@ -9,7 +9,6 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var currentPlaylist = '';		//keeps in memory current playlist
 var numResults = 15; 			//number of echonest results
 
 // Weatherify button calls this -- makes a playlist based on weather
@@ -21,18 +20,7 @@ function makeNewPlaylist() {
 	getLocation(location);
     return false;
 }
-// Takes weather results and converts to a rating for getting music
-function processWeatherData(weatherResults) {
-	var temp = weatherResults['main']['temp'];
-	var tempString = temp.toString();
-	document.getElementById('weather-report').innerHTML =
-		"Today in " + weatherResults['name'] + " it\'s " + tempString.substring(0, tempString.indexOf('.')) + "&#176F";
-	var id = "0";
-	if (weatherResults['weather'] && weatherResults['weather'][0]['id']) {
-		id = weatherResults['weather'][0]['id'].toString();
-	}
-	getWeatherRating(id);
-}
+
 /*
 function searchMusic(weatherMetrics) {
 	
@@ -129,18 +117,15 @@ function searchSeedSong(weatherMetrics) {
 function searchPlaylist(seed) {
 	
 	$.ajax({
-		'url': 'http://developer.echonest.com/api/v4/playlist/static',
+		'url': 'http://developer.echonest.com/api/v4/playlist/static?bucket=id:spotify&bucket=tracks',
 		'data': {
 			'api_key': ECONEST_API_KEY,
-			'format' : 'json',
 			'type': 'song-radio',
-			'bucket' : 'id:spotify',
 			'song_id' : seed,
 			'results' : numResults
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
-			// getSongIds(results);
 			getAllSongIds(results);
 		}
 	});

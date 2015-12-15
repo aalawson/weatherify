@@ -12,6 +12,10 @@
 var nameWeather = '';
 var nameTemp    = '';
 
+var currentPlaylist         = '';       //keeps in memory current playlist
+var currentPlaylistName     = '';
+var currentPlaylistID       = '';
+
 /* VARIABLES FOR SCRIPT.JS */ 
 var isDrawerOpen = false;
 
@@ -87,18 +91,22 @@ function switchToSearch() {
 function savePlaylist() {
 
     console.log(nameWeather);
+    console.log("The name is: " + nameTemp + "° and " + titlecase(nameWeather));
 
-    //store.set(Math.floor(Math.random()*100), "yo this is a thing");
+    if(!currentPlaylistID){
+        // code to make ID here
+    }
 
-    // store.forEach(function(key,val){
-    //     console.log("The key (" + key + ") results in this val: " + val);
-    // });
-
-    store.clear();
+    currentPlaylistName = nameTemp + "° and " + titlecase(nameWeather);
 
 }
 
 
+
+// taken from http://stackoverflow.com/questions/2970525/
+function titlecase(str) {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
 
 
 

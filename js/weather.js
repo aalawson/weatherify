@@ -25,6 +25,20 @@ function getWeather(lat, lng) {
 	return false;
 }
 
+// Takes weather results and converts to a rating for getting music
+function processWeatherData(weatherResults) {
+	var temp 		= weatherResults['main']['temp'];
+	var tempString 	= temp.toString();
+	nameTemp		= tempString.substring(0, tempString.indexOf('.'));
+	document.getElementById('weather-report').innerHTML =
+		"Today in " + weatherResults['name'] + " it\'s " + nameTemp + + "&#176F";
+	var id = "0";
+	if (weatherResults['weather'] && weatherResults['weather'][0]['id']) {
+		id = weatherResults['weather'][0]['id'].toString();
+	}
+	getWeatherRating(id);
+}
+
 function getWeatherRating(id) {
 	var category = id.substring(0, 1);
 	var rawSeverity = id.substring(1, id.length);
