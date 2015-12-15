@@ -126,11 +126,8 @@ function getSongIds(results) {
 		name = results['response']['songs'][i]['title'];
 		songIdRequests.push(getSongId(artist, name));
 
-		//songIdResults
 	}
 
-	//if ()
-/*
 	$.when($, songIdRequests).done(function() {
         songIdResults = arguments;
         //console.log(songIdResults);
@@ -138,7 +135,7 @@ function getSongIds(results) {
         //currentPlaylist = ""; //reset current playlist
         displayPlaylist(songIdRequests);
         console.log(currentPlaylist);
-    });*/
+    });
 }
 
 function displayPlaylist(results) {
