@@ -43,5 +43,11 @@
 /* Button to search for songs to add to playlist */
 #open-search-button {
     position: fixed;
-    bottom: 40px;
+    bottom: 70px;
+}
+
+#save-playlist-button {
+	background: lightgray;
+	position: fixed;
+	bottom: 40px;
 }

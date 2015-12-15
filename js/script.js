@@ -227,8 +227,8 @@ function displayPlaylist() {
     //need function that generates playlist based on weather 
     playerHtml += currentPlaylist['playerString'];
     playerHtml += '" frameborder="0" width="640px" height="700" align="center" allowtransparency="true"></iframe>';
+    playerHtml += '<button type="button" id="save-playlist-button" class="g-button form-box" onclick="savePlaylist(); return false;">Save Playlist</button>';
     playerHtml += '<button type="button" id="open-search-button" class="g-button form-box" onclick="openSearchPopup(); return false;">&#43Add a song</button>';
-
     $('#playlist-results').append(playerHtml);
 }
 
