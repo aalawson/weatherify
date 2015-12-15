@@ -84,14 +84,12 @@ function displayErrorMessage(error) {
 }
 
 function displayNextTen() {
-  console.log("setting scroll");
   window.scrollTo(0, 100);
   offset += 10;
   getResults();
 }
 
 function displayPrevTen() {
-  console.log("setting scroll");
   window.scrollTo(0, 100);
   offset -= 10;
   getResults();

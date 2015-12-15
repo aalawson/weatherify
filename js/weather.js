@@ -27,7 +27,6 @@ function getWeather(lat, lng) {
 
 // Takes weather results and converts to a rating for getting music
 function processWeatherData(weatherResults) {
-	console.log("in weather process");
 	var temp 		= weatherResults['main']['temp'];
 	var tempString 	= temp.toString();
 	nameTemp		= tempString.substring(0, tempString.indexOf('.'));

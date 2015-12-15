@@ -205,7 +205,7 @@ function getAllPlaylists(){
   store.forEach(function(key, val){
     // key gives the name of the playlist
     // val gives the array
-  })
+  });
 }
 
 // taken from http://stackoverflow.com/questions/2970525/
