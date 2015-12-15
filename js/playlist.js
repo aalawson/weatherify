@@ -9,7 +9,7 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var numResults = 40;
+var numResults = 100;
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist() {
