@@ -96,7 +96,7 @@
                     <td><input type="radio" name="genre" value="hip hop">hip hop<br></td>
                     <td><input type="radio" name="genre" value="jazz">jazz<br></td>
                     <td><input type="radio" name="genre" value="new wave">new wave<br></td>
-                    <td><input type="radio" name="genre" value="orchestral">orchestral<br></td>
+                    <td><input type="radio" name="genre" value="">all<br></td>
                   </tr>
                 </table>
                 <br><br>
@@ -105,29 +105,19 @@
                 <b>decade</b>
                 <select id="decade">
                   <option value="all"> all </option>
-                  <option value="1930">Pre 1940s</option>
-                  <option value="1940">1940s</option>
-                  <option value="1950">1950s</option>
-                  <option value="1960">1960s</option>
-                  <option value="1970">1970s</option>
-                  <option value="1980">1980s</option>
-                  <option value="1990">1990s</option>
-                  <option value="2000">2000s</option>
+                  <option value="1945">Pre 1940s</option>
+                  <option value="1955">1940s</option>
+                  <option value="1965">1950s</option>
+                  <option value="1975">1960s</option>
+                  <option value="1985">1970s</option>
+                  <option value="1995">1980s</option>
+                  <option value="2005">1990s</option>
+                  <option value="2010">2000s</option>
                   <option value="present">Today</option>
                 </select>
                 <br><br>
 
-                <b>artist popularity  </b>
-                less popular  
-                <input type ="range" value="75", min="50", max="100">
-                more popular
-                <br><br>
-
-                <b>wordiness  </b>
-                fewer words  
-                <input type ="range" value="50", min="0", max="100">
-                more words
-                <br><br>
+                <input type="checkbox" name="christmasify" value="christmas:true">Make it a Christmas playlist!<br>
 
                 <button type="button" class="g-button" onclick="return makeNewPlaylist();">Weatherify!</button>
               </form>

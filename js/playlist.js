@@ -22,61 +22,21 @@ function makeNewPlaylist() {
     return false;
 }
 
-/*
-function searchMusic(weatherMetrics) {
-	
-	var genreCheckboxes = document.getElementsByName('genre');
-	var genreSelected = '';
-	for(var i = 0; i < genreCheckboxes.length; i++) {
-		if(genreCheckboxes[i].checked) {
-			genreSelected += genreCheckboxes[i].defaultValue;
-			if (i>0 && i<genreCheckboxes.length) {
-				genreSelected += ',';
-			}
-		}
-	}
-	if (!genreSelected) {
-		genreSelected = 'all';
-	}
-
-	var endYear = $("decade :selected").val();
-	
-	$.ajax({
-		'url': 'http://developer.echonest.com/api/v4/song/search',
-		'data': {
-			'api_key': ECONEST_API_KEY,
-			'format' : 'json',
-			'bucket' : 'id:spotify',
-			'max_energy' : weatherMetrics['max_energy'],
-			'min_energy' : weatherMetrics['min_energy'],
-			'max_tempo' : weatherMetrics['max_tempo'],
-			'min_tempo' : weatherMetrics['min_tempo'],
-			'max_acousticness' : weatherMetrics['max_acousticness'],
-			'min_acousticness' : weatherMetrics['min_acousticness'],
-			'artist_min_hotttnesss' : '.8',	
-			'results' : numResults,
-			'style' : genreSelected,
-			'artist_end_year_before' : endYear,
-		},
-		//callback function needs to be added here 
-		'success': function(results) {
-			getAllSongIds(results);
-		}
-	});
-	return false;
-} */
-
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics) {
-	var genreSelected;
-
-	genreSelected = ($('input[name="genre"]:checked').val());
 	
-	if (!genreSelected) {
-		genreSelected = '';
+	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
+	var genreSelected = ($('input[name="genre"]:checked').val());
+	var endYear = $("#decade :selected").val();
+
+	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
+
+	if (!christmasPlaylist) {
+		songSearchURL +='christmas:false';
+	} else {
+		songSearchURL += christmasPlaylist;
 	}
 
-	var endYear = $("decade :selected").val();
 	var data = {
 			'api_key': ECONEST_API_KEY,
 			'format' : 'json',
@@ -88,16 +48,19 @@ function searchSeedSong(weatherMetrics) {
 			'max_acousticness' : weatherMetrics['max_acousticness'],
 			'min_acousticness' : weatherMetrics['min_acousticness'],
 			'results' : '1',
-
-			'artist_end_year_before' : endYear,
-
+			//'song_type' : christmasPlaylist,
 		}
-	if (genreSelected.length >= 1) {
+
+	if (genreSelected && (genreSelected != 'all')) {
 	    data.style = genreSelected;
 	}
-	
+
+	if (endYear != 'all') {
+		data.artist_end_year_before = endYear;		
+	} 
+
 	$.ajax({
-		'url': 'http://developer.echonest.com/api/v4/song/search',
+		'url': songSearchURL,
 		'data': data,
 		//callback function needs to be added here 
 		'success': function(results) {
@@ -111,6 +74,8 @@ function searchSeedSong(weatherMetrics) {
 // Get Echonest playlist using seed song
 function searchPlaylist(seed) {
 	
+
+
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/playlist/static?bucket=id:spotify&bucket=tracks',
 		'data': {

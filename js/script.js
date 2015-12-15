@@ -237,6 +237,10 @@ function displayPlaylist() {
     playerHtml  += currentPlaylist['playerString']
       + '" frameborder="0" width="640px" height="700"'
       + 'align="center" allowtransparency="true"></iframe>'
+
+      + '<button type="button" id="save-playlist-button" class="g-button'
+      + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>'
+
       + '<button type="button" id="open-search-button"'
       + 'class="g-button form-box" onclick="openSearchPopup();'
       + 'return false;">&#43Add a song</button>';
