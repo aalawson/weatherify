@@ -32,7 +32,7 @@ function processWeatherData(weatherResults) {
 	var tempString 	= temp.toString();
 	nameTemp		= tempString.substring(0, tempString.indexOf('.'));
 	document.getElementById('weather-report').innerHTML =
-		"Today in " + weatherResults['name'] + " it\'s " + nameTemp + "&#176F";
+		"Today in " + weatherResults['name'] + " it\'s " + nameTemp + "&deg;F";
 	var id = "0";
 	if (weatherResults['weather'] && weatherResults['weather'][0]['id']) {
 		id = weatherResults['weather'][0]['id'].toString();
