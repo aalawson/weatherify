@@ -20,7 +20,7 @@ function getWeather(lat, lng) {
 	    'appid': '670b2cbcd683c42c5e41a0ed424b537b'
 	  },
 	  success: function(results) {
-	    makeWeatherPlaylist(results);
+	    processWeatherData(results);
 	  },
 	  error: function(results){
 	    // MAKE-ERROR-MSG!
