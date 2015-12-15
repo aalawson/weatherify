@@ -9,12 +9,22 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var currentPlaylist ='';	//keeps in memory current playlist
-var numResults = 20;
+var currentPlaylist = '';	//keeps in memory current playlist
+var numResults = 15; //number of echonest results
 
-
-// Called on when weatherify button is pressed
-function makeWeatherPlaylist(weatherResults) {
+// Weatherify button calls this -- makes a playlist based on weather
+function makeNewPlaylist() {
+	var location = document.getElementById('loc').value;
+	if (isDrawerOpen) {
+		toggleDrawer();
+	}
+	getLocation(location);
+	console.log("making new playlist");
+    return false;
+}
+// Takes weather results and converts to a rating for getting music
+function processWeatherData(weatherResults) {
+	console.log(weatherResults);
 	var temp = weatherResults['main']['temp'];
 	var tempString = temp.toString();
 	document.getElementById('weather-report').innerHTML =
@@ -23,9 +33,10 @@ function makeWeatherPlaylist(weatherResults) {
 	if (weatherResults['weather'] && weatherResults['weather'][0]['id']) {
 		id = weatherResults['weather'][0]['id'].toString();
 	}
+	console.log("about to get weather");
 	getWeatherRating(id);
 }
-
+/*
 function searchMusic(weatherMetrics) {
 	
 	var genreCheckboxes = document.getElementsByName('genre');
@@ -56,49 +67,122 @@ function searchMusic(weatherMetrics) {
 			'min_tempo' : weatherMetrics['min_tempo'],
 			'max_acousticness' : weatherMetrics['max_acousticness'],
 			'min_acousticness' : weatherMetrics['min_acousticness'],
+			'artist_min_hotttnesss' : '.8',	
 			'results' : numResults,
 			'style' : genreSelected,
 			'artist_end_year_before' : endYear,
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
-			getSongIds(results);
+			console.log(results);
+			getAllSongIds(results);
+		}
+	});
+	return false;
+} */
+
+/* Get seed song to set up echonest playlist */
+function searchSeedSong(weatherMetrics) {
+	
+	var genreCheckboxes = document.getElementsByName('genre');
+	var genreSelected = '';
+	for(var i = 0; i < genreCheckboxes.length; i++) {
+		if(genreCheckboxes[i].checked) {
+			genreSelected += genreCheckboxes[i].defaultValue;
+			if (i>0 && i<genreCheckboxes.length) {
+				genreSelected += ',';
+			}
+		}
+	}
+	if (!genreSelected) {
+		genreSelected = 'all';
+	}
+
+	var endYear = $("decade :selected").val();
+
+	
+	$.ajax({
+		'url': 'http://developer.echonest.com/api/v4/song/search',
+		'data': {
+			'api_key': ECONEST_API_KEY,
+			'format' : 'json',
+			'bucket' : 'id:spotify',
+			'max_energy' : weatherMetrics['max_energy'],
+			'min_energy' : weatherMetrics['min_energy'],
+			'max_tempo' : weatherMetrics['max_tempo'],
+			'min_tempo' : weatherMetrics['min_tempo'],
+			'max_acousticness' : weatherMetrics['max_acousticness'],
+			'min_acousticness' : weatherMetrics['min_acousticness'],
+			'results' : '1',
+			'style' : genreSelected,
+			'artist_end_year_before' : endYear,
+			
+		},
+		//callback function needs to be added here 
+		'success': function(results) {
+			// getSongIds(results);
+			searchPlaylist(results['response']['songs'][0]['id']);
 		}
 	});
 	return false;
 }
 
-function getSongIds(results) {
+//must error check genre up to 5
+// Get Echonest playlist using seed song
+function searchPlaylist(seed) {
+	
+	$.ajax({
+		'url': 'http://developer.echonest.com/api/v4/playlist/static',
+		'data': {
+			'api_key': ECONEST_API_KEY,
+			'format' : 'json',
+			'type': 'song-radio',
+			'bucket' : 'id:spotify',
+			'song_id' : seed,
+			'results' : numResults
+		},
+		//callback function needs to be added here 
+		'success': function(results) {
+			// getSongIds(results);
+			console.log(results);
+			getAllSongIds(results);
+		}
+	});
+	return false;
+
+}
+
+// Take echonest playlist and convert to spotify song ids
+function getAllSongIds(results) {
 	playlistIds = [];
 	var songIdRequests = [];	//reset requests array
-	songIdResults = [];			//reset results array
+	songIdResults = [];		//reset results array
 	var artist;
 	var name;
+	console.log(results['response']['songs']);
+	if (results['response'] && results['response']['songs']) {
+		numResults = results['response']['songs'].length;	
+		console.log(numResults);
 
-	for (var i = 0; i < results['response']['songs'].length; i++) {
-		artist = results['response']['songs'][i]['artist_name'];
-		name = results['response']['songs'][i]['title'];
-		songIdRequests.push(getSongId(artist, name));
+		for (var i = 0; i < results['response']['songs'].length; i++) {
+			artist = results['response']['songs'][i]['artist_name'];
+			name = results['response']['songs'][i]['title'];
+			songIdRequests.push(getSongId(artist, name));
+		}
+		console.log(songIdRequests.length);
 
-	}
+		$.when($, songIdRequests).done(function() {
+           console.log("done");
+	    });		
+    } else {
+    	console.log("error message"); //ERROR MESSAGE HERE
+    }
 
-	$.when($, songIdRequests).done(function() {
-		songIdResults = arguments;
-        //currentPlaylist = ""; //reset current playlist
-        displayPlaylist(songIdRequests);
-    });
 }
 
-function displayPlaylist(results) {
-	for (var i = 0; i < results.length; i++) {
-		currentPlaylist += results[i].id;
-		currentPlaylist += ',';
-	}
-}
-
-
-
+// Search spotify to get song id
 function getSongId(artist, name) {
+	console.log("in getSongId");
 	artist = artist.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
 	name = name.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
 
@@ -113,11 +197,11 @@ function getSongId(artist, name) {
     	if (params[key].length > 0) {
     		if (params[key].includes(' ')){
 				  params[key] = "\"" + params[key] + "\""; //if multiple words, put in quotes
-				}
-				query += key + ":" + params[key] + " ";
 			}
+			query += key + ":" + params[key] + " ";
 		}
-	  query = query.substring(0, query.length-1); //strip off last " "
+	}
+	query = query.substring(0, query.length-1); //strip off last " "
 
 
   	// artist = artist.replace(/\s/g, '+');
@@ -140,22 +224,24 @@ function getSongId(artist, name) {
 	        	currentPlaylist += ',';
 	        }
 
+	        // If this is the last callback, display results
+	    	if (numResults == songIdResults.length) {
+				displayPlaylist(songIdResults);
+        	}
+
 	    },
 	    error: function(jqXHR, textStatus, errorThrown) {
 	        //displayBadParamsError();
+	        console.log("NEED ERROR MESSAGE HERE");
 
 	    }
 	});
 }
 
-
-function makeNewPlaylist() {
-	var location = document.getElementById('loc').value;
-	if (isDrawerOpen) {
-		toggleDrawer();
-	}
-	getLocation(location);
-	$('#playlist-results').empty();
+// Make playbutton with all songs in playlist
+function displayPlaylist(results) {
+	console.log("in displayPlaylist");
+ 	$('#playlist-results').empty();
 	var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
 
     // if you want:
@@ -163,14 +249,11 @@ function makeNewPlaylist() {
 
     //adds 20 songs to the playlist 
     //need function that generates playlist based on weather 
-    playerHtml += '6t1VvXUla9YRJ4EV1SPJFZ,4HaRqrk4LRjCiQBqtMc6NE,65wx71brAmEQz66GXXF8gI,7fnnkYFOPqdzVYd339U7TM,07pChN3h9EciKJussyb8Hu';
     playerHtml += currentPlaylist;
     playerHtml += '" frameborder="0" width="640px" height="700" align="center" allowtransparency="true"></iframe>';
 
     $('#playlist-results').append(playerHtml);
-    return false;
 }
-
 
 function saveCurrentPlaylist() {
 	//this function will add the current playlist to the database

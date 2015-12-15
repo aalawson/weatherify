@@ -5,28 +5,24 @@
     Javascript built to house algorithms that convert weather into song types
 */
 
-/* GLOBAL VARIABLES */
-var ECHONEST_API_KEY = 'UOLQFEZCTDHUNBF6K';
-var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';  
-
 /* WEATHER SECTION */
 function getWeather(lat, lng) {
-$.ajax({
-  'url': 'http://api.openweathermap.org/data/2.5/weather',
-  'data': {
-    'lat': lat,
-    'lon': lng,
-    'units': 'imperial',
-    'appid': '670b2cbcd683c42c5e41a0ed424b537b'
-  },
-  success: function(results) {
-    makeWeatherPlaylist(results);
-  },
-  error: function(results){
-    // MAKE-ERROR-MSG!
-  }
-});
-return false;
+	$.ajax({
+	  'url': 'http://api.openweathermap.org/data/2.5/weather',
+	  'data': {
+	    'lat': lat,
+	    'lon': lng,
+	    'units': 'imperial',
+	    'appid': '670b2cbcd683c42c5e41a0ed424b537b'
+	  },
+	  success: function(results) {
+	    processWeatherData(results);
+	  },
+	  error: function(results){
+	    // MAKE-ERROR-MSG!
+	  }
+	});
+	return false;
 }
 
 function getWeatherRating(id) {
@@ -45,7 +41,7 @@ function getWeatherRating(id) {
 	var mintempo = weatherMetrics['max_tempo'];
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
-	searchMusic(weatherMetrics);
+	searchSeedSong(weatherMetrics);
 }
 
 
