@@ -1,0 +1,48 @@
+#search {
+    min-height: 400px;
+}
+#search-header {
+    padding-top: 10px;
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+#search-form {
+    margin-left: 10px;
+}
+
+.popup {
+    margin-top: 15px;
+}
+
+#search-songs-results-div {
+    margin-left: 10px;
+}
+
+/************ Next and PRev Buttons for Search Results *************/
+
+#page-control {
+	position: absolute;
+	right: 25px;
+	max-width: 300px;
+	margin-bottom: 10px;
+}
+
+#prev-div, #next-div {
+	display: inline;
+}
+
+.page-control-button { /* Next and prev page buttons */
+	border-radius: 10px;
+    border-style: solid;
+    border-color: white;
+    background-color: transparent;
+    color: white;
+    border-width: 1px;
+    width: 120px;
+    height: 21px;
+    font-size: 12px;
+    margin-right: 30px;
+    margin-bottom: 10px;
+    display: inline;
+}
