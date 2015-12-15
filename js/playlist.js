@@ -14,6 +14,7 @@ function toggleDrawer() {
 		closeDrawer();
 	}
 }
+
 function openDrawer() {
 	document.getElementById('options-window').style.display = "block";
 	document.getElementById('fine-tune-span').innerHTML = "&#9650 Fine tune my playlist";
@@ -208,6 +209,9 @@ function getSongId(artist, name) {
 
 function makeNewPlaylist() {
   var location = document.getElementById('loc').value;
+  if (isDrawerOpen) {
+  	toggleDrawer();
+  }
   getLocation(location);
   $('#playlist-results').empty();
   var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
