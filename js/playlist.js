@@ -33,6 +33,7 @@ function processWeatherData(weatherResults) {
 	if (weatherResults['weather'] && weatherResults['weather'][0]['id']) {
 		id = weatherResults['weather'][0]['id'].toString();
 	}
+	console.log("about to get weather");
 	getWeatherRating(id);
 }
 

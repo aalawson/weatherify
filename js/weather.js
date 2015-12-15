@@ -45,7 +45,7 @@ function getWeatherRating(id) {
 	var mintempo = weatherMetrics['max_tempo'];
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
-	searchMusic(weatherMetrics);
+	searchWeatherMusic(weatherMetrics);
 }
 
 
@@ -118,6 +118,7 @@ function searchPlaylist(seed) {
 		'success': function(results) {
 			// getSongIds(results);
 			console.log(results);
+			getAllSongIds(results);
 		}
 	});
 	return false;
