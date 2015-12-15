@@ -35,6 +35,7 @@
 
 
 	function searchMusic(weatherMetrics) {
+		weatherMetrics = musicChart['10'];
 		
 		var genreCheckboxes = document.getElementsByName('genre');
 		var genreSelected = '';
@@ -67,10 +68,82 @@
 				'results' : numResults,
 				'style' : genreSelected,
 				'artist_end_year_before' : endYear,
+
 			},
 			//callback function needs to be added here 
 			'success': function(results) {
-				getSongIds(results);
+				// getSongIds(results);
+				console.log(results['response']);
+			}
+		});
+		return false;
+	}
+
+
+	function searchMusic(weatherMetrics) {
+		
+		var genreCheckboxes = document.getElementsByName('genre');
+		var genreSelected = '';
+		for(var i = 0; i < genreCheckboxes.length; i++) {
+			if(genreCheckboxes[i].checked) {
+				genreSelected += genreCheckboxes[i].defaultValue;
+				if (i>0 && i<genreCheckboxes.length) {
+					genreSelected += ',';
+				}
+			}
+		}
+		if (!genreSelected) {
+			genreSelected = 'all';
+		}
+
+		var endYear = $("decade :selected").val();
+
+		
+		$.ajax({
+			'url': 'http://developer.echonest.com/api/v4/song/search',
+			'data': {
+				'api_key': ECONEST_API_KEY,
+				'format' : 'json',
+				'bucket' : 'id:spotify',
+				'max_energy' : weatherMetrics['max_energy'],
+				'min_energy' : weatherMetrics['min_energy'],
+				'max_tempo' : weatherMetrics['max_tempo'],
+				'min_tempo' : weatherMetrics['min_tempo'],
+				'max_acousticness' : weatherMetrics['max_acousticness'],
+				'min_acousticness' : weatherMetrics['min_acousticness'],
+				'results' : '1',
+				'style' : genreSelected,
+				'artist_end_year_before' : endYear,
+				
+			},
+			//callback function needs to be added here 
+			'success': function(results) {
+				// getSongIds(results);
+				searchPlaylist(results['response']['songs'][0]['id']);
+			}
+		});
+		return false;
+	}
+
+//must error check genre up to 5
+	function searchPlaylist(seed) {
+		
+		$.ajax({
+			'url': 'http://developer.echonest.com/api/v4/playlist/static',
+			'data': {
+				'api_key': ECONEST_API_KEY,
+				'format' : 'json',
+				'type': 'song-radio',
+				'bucket' : 'id:spotify',
+				'song_id' : seed,
+				'results' : numResults
+				
+				
+			},
+			//callback function needs to be added here 
+			'success': function(results) {
+				// getSongIds(results);
+				console.log(results);
 			}
 		});
 		return false;
