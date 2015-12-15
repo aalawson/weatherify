@@ -5,6 +5,12 @@
     Javascript built to house algorithms that convert weather into song types
 */
 
+/* VARIABLES DEALING WITH PLAYLIST */
+	var buffer_val = .01;
+	var bufferMetrics = ['max_energy', 'min_energy', 'max_acousticness', 'min_acousticness'];
+
+
+
 /* WEATHER SECTION */
 function getWeather(lat, lng) {
 	$.ajax({
@@ -27,7 +33,6 @@ function getWeather(lat, lng) {
 
 // Takes weather results and converts to a rating for getting music
 function processWeatherData(weatherResults) {
-	console.log(weatherResults);
 	var temp 		= weatherResults['main']['temp'];
 	var tempString 	= temp.toString();
 	nameTemp		= tempString.substring(0, tempString.indexOf('.'));
@@ -63,8 +68,27 @@ function getWeatherRating(id) {
 }
 
 function bufferSeverity(category) {
-	category = categoryChart[2]['00'];
-	//logic for buffer here
+
+
+	//done to remove 0-index
+	cat_val = parseInt(category[1]) + 1;
+
+	//multiplies by current buffer val
+	mbuff = (cat_val * buffer_val);
+
+	//holds weatherMetrics pre-buffering
+	weatherMetrics = musicChart[category[0]];
+
+	for(var i in bufferMetrics) {
+
+		if (parseFloat(weatherMetrics[bufferMetrics[i]]) >= .1){
+			weatherMetrics[bufferMetrics[i]] = ''+(parseFloat(weatherMetrics[bufferMetrics[i]] - .1) + mbuff);
+		}
+	}
+	
+	// console.log(weatherMetrics);
+	return weatherMetrics;
+
 
 }
 

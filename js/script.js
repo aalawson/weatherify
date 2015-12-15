@@ -77,6 +77,7 @@ function switchToCurrentPlaylist() {
     document.getElementById('view-all').setAttribute('class', 'unselected body-content');
 }
 
+// Switch Tab to Playlist
 function switchToViewPlaylists() {
     document.getElementById('t1').setAttribute('class', 'unselected tab');
     document.getElementById('t2').setAttribute('class', 'unselected tab');
@@ -87,7 +88,7 @@ function switchToViewPlaylists() {
     document.getElementById('home').setAttribute('class', 'unselected body-content');
     document.getElementById('view-one').setAttribute('class', 'unselected body-content');
     document.getElementById('view-all').setAttribute('class', 'selected body-content');
-    getAllPlaylists();
+    showAllPlaylists();
 }
 
 // Switch Tab to Search
@@ -199,6 +200,7 @@ function choosePlaylist(name) {
   currentPlaylist     = store.get(name);
 
   displayPlaylist();
+  switchToCurrentPlaylist();
 }
 
 // delete all playlists
@@ -211,7 +213,7 @@ function deleteAllPlaylists() {
 }
 
 // get all playlists
-function getAllPlaylists(){
+function showAllPlaylists(){
     var viewAllHtml = '<h2> My Playlists </h2>';
     store.forEach(function(key, val){
         console.log(key);
@@ -239,7 +241,6 @@ function switchToViewOneWrapper(id) {
         $('#playlist-results').empty();
         $('#playlist-results').append("<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist</p>");
     }
-
 }
 
 // taken from http://stackoverflow.com/questions/2970525/

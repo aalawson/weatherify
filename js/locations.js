@@ -36,16 +36,24 @@ function reverseGeocode(lat, lng) {
     'url': 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=' + GOOGLE_API_KEY,
     'cache':true,
     success : function(data, textStats, XMLHttpRequest) {
+
       // Check to make sure at least one song was returned
-      var isValid = data['results'][0] && data['results'][0]['formatted_address'];
+      var isValid = data['results'][0] 
+        && data['results'][0]['address_components'][3]  // sublocality
+        && data['results'][0]['address_components'][4]; // locality
+      
       if (!isValid) {
         couldntFindMe(); // let user know that no results were found
       } //Valid! Display first ten results
+      
       else {
-        document.getElementById('loc').value = data['results'][0]['formatted_address'];
+        document.getElementById('loc').value 
+          = data['results'][0]['address_components'][3]['long_name'] + ", "
+          + data['results'][0]['address_components'][4]['long_name'];
         document.getElementById('home-intro-error').innerHTML = '';
         return false;
       }
+    
     },
     error: function(jqXHR, textStatus, errorThrown) {
       couldntFindMe();
