@@ -47,6 +47,7 @@ function searchSeedSong(weatherMetrics) {
 			'min_tempo' : weatherMetrics['min_tempo'],
 			'max_acousticness' : weatherMetrics['max_acousticness'],
 			'min_acousticness' : weatherMetrics['min_acousticness'],
+			'song_min_hotttnesss' : '0.5',
 			'results' : '1',
 			//'song_type' : christmasPlaylist,
 		}
@@ -74,14 +75,13 @@ function searchSeedSong(weatherMetrics) {
 // Get Echonest playlist using seed song
 function searchPlaylist(seed) {
 	
-
-
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/playlist/static?bucket=id:spotify&bucket=tracks',
 		'data': {
 			'api_key': ECONEST_API_KEY,
 			'type': 'song-radio',
 			'song_id' : seed,
+			'song_min_hotttnesss' : '0.5',
 			'results' : numResults,
 		},
 		//callback function needs to be added here 
