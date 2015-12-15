@@ -27,7 +27,6 @@ function getWeather(lat, lng) {
 
 // Takes weather results and converts to a rating for getting music
 function processWeatherData(weatherResults) {
-	console.log(weatherResults);
 	var temp 		= weatherResults['main']['temp'];
 	var tempString 	= temp.toString();
 	nameTemp		= tempString.substring(0, tempString.indexOf('.'));
@@ -57,8 +56,7 @@ function getWeatherRating(id) {
 	var mintempo = weatherMetrics['max_tempo'];
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
-	console.log(weatherParams);
-	console.log(getOppositeDayMetrics(weatherParams));
+
 	searchSeedSong(weatherMetrics);
 }
 
