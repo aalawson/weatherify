@@ -100,7 +100,6 @@ function searchMusic(weatherMetrics) {
 
 	var endYear = $("decade :selected").val();
 		
-
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/song/search',
 		'data': {
@@ -185,19 +184,20 @@ function getSongId(artist, name) {
 	  query = query.substring(0, query.length-1); //strip off last " "
 
 
-  //artist = artist.replace(/\s/g, '+');
-  //var query = name + "+artist:" + artist;
-  return $.ajax ({
-  	'url': 'http://api.spotify.com/v1/search',
-  	'data': {'q':query, 'type': 'track', 'limit' : '1', 'market':'US'},
-  	'cache': true,
-  	success : function(data, textStats, XMLHttpRequest) {
+  	// artist = artist.replace(/\s/g, '+');
+  	// var query = name + "+artist:" + artist;
+	return $.ajax ({
+	  	'url': 'http://api.spotify.com/v1/search',
+	  	'data': {'q':query, 'type': 'track', 'limit' : '1', 'market':'US'},
+	  	'cache': true,
+	  	success : function(data, textStats, XMLHttpRequest) {
+	  		console.log(data);
 	        // Check to make sure at least one song was returned
 	        var isValid = data['tracks'] && data['tracks']['items'] && (
 	        	data['tracks']['items'].length > 0);
 	        if (!isValid) {
 	         numResults--;
-	         console.log(numResults + "not valid");// displayBadParamsError(); // let user know that no results were found
+	         console.log(numResults + " not valid");// displayBadParamsError(); // let user know that no results were found
 	        } //Valid! push to songIdResults
 	        else {
 	        	songIdResults.push(data['tracks']['items'][0]);
