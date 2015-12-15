@@ -60,8 +60,6 @@ function getResults() {
 
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
-        console.log(textStatus);
         displayBadParamsError();
 
       }
@@ -84,14 +82,12 @@ function displayErrorMessage(error) {
 }
 
 function displayNextTen() {
-  console.log("setting scroll");
   window.scrollTo(0, 0);
   offset += 10;
   getResults();
 }
 
 function displayPrevTen() {
-  console.log("setting scroll");
   window.scrollTo(0, 0);
   offset -= 10;
   getResults();

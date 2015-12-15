@@ -94,19 +94,13 @@ function searchSeedSong(weatherMetrics) {
 		}
 	if (genreSelected.length >= 1) {
 	    data.style = genreSelected;
-	    console.log(genreSelected);
 	}
-
-	console.log(data);
-
 	
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/song/search',
 		'data': data,
 		//callback function needs to be added here 
 		'success': function(results) {
-			// getSongIds(results);
-			console.log(results);
 			searchPlaylist(results['response']['songs'][0]['id']);
 		}
 	});
@@ -143,7 +137,6 @@ function getPlayerString(songs) {
 }
 
 function createPlaylist(results) {
-	console.log(results);
     currentPlaylist = {
         'name' : 'test-playlist',
         'weather' : '68-and-sunny',
@@ -152,7 +145,6 @@ function createPlaylist(results) {
     }
     for (var i = 0; i < results['response']['songs'].length; i++) {
         if (results['response']['songs'][i]['tracks'][0]) {
-            console.log(results['response']['songs'][i]['tracks']);
             currentPlaylist['songs'].push( {
             'songName' : results['response']['songs'][i]['title'],
             'artist' : results['response']['songs'][i]['artist_name'],
