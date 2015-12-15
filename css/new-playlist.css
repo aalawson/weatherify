@@ -3,41 +3,30 @@
     by Anna Lawson, Anfal Boussayoud, Lauren Tom, Nina Sabado 
 */
 
-/****************** Home Page ******************/
-/* Home page Description */
+/********** Current Playlist **************/
 
+/* Enclosing div */
 #view-one {
 	width: 640px;
 }
 
+/* Headers w/ basic info*/
 #playlist-top-bar {
 	width: 640px;
+}
+
+#intro-p {
+	font-size: 14px;
+	margin-top: 40px;
 }
 
 #options-tab {
 	float: right;
 	margin-top: 30px;
 }
-#intro-p {
-	font-size: 14px;
-	margin-top: 40px;
-}
-
-.home-content {
-	display: none;
-}
-
-.home-content.selected {
-	display:block;
-}
 
 #error-message {
 	color: red;
-}
-
-/* Form inputs */
-#loc {
-	width: 200px;
 }
 
 #loading-message {

@@ -27,6 +27,10 @@
 	width: 80%;
 }
 
+#loc {
+  width: 200px;
+}
+
 .type-form {
 	display: none;
 }

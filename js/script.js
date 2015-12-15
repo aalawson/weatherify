@@ -12,10 +12,7 @@
 var nameWeather = '';
 var nameTemp    = '';
 
-var currentPlaylist         = '';       //keeps in memory current playlist
-var currentPlaylistName     = '';
-var currentPlaylistID       = '';
-var currentPlaylistWeather  = '';
+var currentPlaylist = {};       //keeps in memory current playlist
 
 /* VARIABLES FOR SCRIPT.JS */ 
 var isDrawerOpen = false;
@@ -214,6 +211,29 @@ function getAllPlaylists(){
 // taken from http://stackoverflow.com/questions/2970525/
 function titlecase(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+// Make playbutton with all songs in playlist
+function displayPlaylist() {
+
+    $('#playlist-results').empty();
+
+    var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
+
+    // if you want:
+    //playerHtml += PLAYLIST NAME
+
+    //adds 20 songs to the playlist 
+    //need function that generates playlist based on weather 
+    playerHtml += currentPlaylist['playerString'];
+    playerHtml += '" frameborder="0" width="640px" height="700" align="center" allowtransparency="true"></iframe>';
+    playerHtml += '<button type="button" id="open-search-button" class="g-button form-box" onclick="openSearchPopup(); return false;">&#43Add a song</button>';
+
+    $('#playlist-results').append(playerHtml);
+}
+
+function showPlaylist() {
+    //for saved playlists, location and/or weather and playlist should be saved
 }
 
 

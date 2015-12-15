@@ -10,7 +10,6 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
 var numResults = 40;
-var currentPlaylist;	//number of echonest results
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist() {
@@ -128,7 +127,7 @@ function searchPlaylist(seed) {
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
-			displayPlaylist(results);
+			createPlaylist(results);
 		}
 	});
 	return false;
@@ -143,46 +142,27 @@ function getPlayerString(songs) {
     return playerString;
 }
 
-// Make playbutton with all songs in playlist
-function displayPlaylist(results) {
+function createPlaylist(results) {
 	console.log(results);
-	currentPlaylist = {
-	    'name' : 'test-playlist',
-	    'weather' : '68-and-sunny',
-	    'songs' : [],
-	    'playerString' : ''
-	}
-	for (var i = 0; i < results['response']['songs'].length; i++) {
-		if (results['response']['songs'][i]['tracks'][0]) {
-		    console.log(results['response']['songs'][i]['tracks']);
+    currentPlaylist = {
+        'name' : 'test-playlist',
+        'weather' : '68-and-sunny',
+        'songs' : [],
+        'playerString' : ''
+    }
+    for (var i = 0; i < results['response']['songs'].length; i++) {
+        if (results['response']['songs'][i]['tracks'][0]) {
+            console.log(results['response']['songs'][i]['tracks']);
             currentPlaylist['songs'].push( {
-         	'songName' : results['response']['songs'][i]['title'],
-         	'artist' : results['response']['songs'][i]['artist_name'],
-         	'artistId' : results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id'],
+            'songName' : results['response']['songs'][i]['title'],
+            'artist' : results['response']['songs'][i]['artist_name'],
+            'artistId' : results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id'],
             'songId' : results['response']['songs'][i]['tracks'][0]['foreign_id'].replace('spotify:track:', ''),
-         });	
-		}
-	}
-
-	currentPlaylist['playerString'] = getPlayerString(currentPlaylist['songs']);
- 	$('#playlist-results').empty();
-
-	var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
-
-    // if you want:
-    //playerHtml += PLAYLIST NAME
-
-    //adds 20 songs to the playlist 
-    //need function that generates playlist based on weather 
-    playerHtml += currentPlaylist['playerString'];
-    playerHtml += '" frameborder="0" width="640px" height="700" align="center" allowtransparency="true"></iframe>';
-    playerHtml += '<button type="button" id="open-search-button" class="g-button form-box" onclick="openSearchPopup(); return false;">&#43Add a song</button>';
-
-    $('#playlist-results').append(playerHtml);
-}
-
-function showPlaylist() {
-	//for saved playlists, location and/or weather and playlist should be saved
+         });    
+        }
+    }
+    currentPlaylist['playerString'] = getPlayerString(currentPlaylist['songs']);
+    displayPlaylist();
 }
 
 	
