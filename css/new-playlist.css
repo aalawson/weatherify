@@ -35,6 +35,11 @@
 	width: 200px;
 }
 
+#loading-message {
+	margin-top: 40px;
+	margin-left: 40px;
+}
+
 
 /* Description of weather */
 #weather-report {

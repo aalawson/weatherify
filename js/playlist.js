@@ -14,6 +14,7 @@ var numResults = 40; 			//number of echonest results
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist() {
+	document.getElementById('playlist-results').innerHTML = "<p id=\"loading-message\">...Loading...</p>";
 	var location = document.getElementById('loc').value;
 	if (isDrawerOpen) {
 		toggleDrawer();

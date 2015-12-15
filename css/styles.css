@@ -111,7 +111,7 @@ http://inspirationalpixels.com/tutorials/creating-tabs-with-html-css-and-jquery#
  Adapted by Anna Lawson */
 .tabs {
 	width: 460px;
-	margin-left: 300px;
+	margin-left: 380px;
 	margin-bottom:9px;
 }
 .tabs:after {
