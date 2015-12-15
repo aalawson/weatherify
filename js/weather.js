@@ -45,6 +45,15 @@ function getWeatherRating(id) {
 	searchSeedSong(weatherMetrics);
 }
 
+function bufferSeverity(category) {
+	category = categoryChart[2]['00'];
+	console.log(category)
+	console.log(musicChart[category[0]])
+
+	//logic for buffer here
+
+}
+
 /* VARIABLES FOR INFORMATION */
 var categoryChart = {
 	'2' : {
