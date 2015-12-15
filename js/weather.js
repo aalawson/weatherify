@@ -1,15 +1,13 @@
 /* 
-    Script.js
+    Weather.js
     by Anna Lawson, Anfal Boussayoud, Lauren Tom, Nina Sabado 
 
-    Javascript built to deal with any HTML behavior, and contains API keys as global variables
+    Javascript built to house algorithms that convert weather into song types
 */
 
-    /* GLOBAL VARIABLIES */
+    /* GLOBAL VARIABLES */
     var ECHONEST_API_KEY = 'UOLQFEZCTDHUNBF6K';
     var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';  
-
-
 
 	function getRating(id) {
 		console.log(id);
@@ -83,8 +81,6 @@
 		});
 		return false;
 	}
-
-
 
 	/* VARIABLES FOR INFORMATION */
 	var categoryChart = {
