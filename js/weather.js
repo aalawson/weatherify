@@ -62,8 +62,9 @@ function getWeatherRating(id) {
 	var mintempo = weatherMetrics['max_tempo'];
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
-
-	searchSeedSong(weatherMetrics);
+	console.log(weatherParams);
+	console.log(getOppositeDayMetrics(weatherParams));
+	searchSeedSong(weatherMetrics, '.5');
 }
 
 function bufferSeverity(category) {
@@ -260,11 +261,14 @@ var musicChart = {
 function getOppositeDayMetrics(weatherMetric) {
 	var category = weatherMetric[0];
 	var severity = weatherMetric[1];
+	var tempDiff = 50 - Number(nameTemp);
+	var oppositeTemp = 50 + tempDiff;
+	console.log(oppositeTemp);
 	// Clear and calm map to violent storm
 	if (category == '1' || category == '10') {
 		return ['11', '9', 'violent storm'];
 	} // Precipitations maps to clear skies
-	else if (category == '3' || category == '5' || category == '6' || category == '7') {
+	else if (category == '3' || category == '5' || category == '6' || category == '7' || category == '8') {
 		return ['8', '0', 'sky is clear'];
 	} // Severe weather maps to calm
 	else if (category == '11') {

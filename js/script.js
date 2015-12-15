@@ -88,10 +88,7 @@ function switchToViewPlaylists() {
     document.getElementById('home').setAttribute('class', 'unselected body-content');
     document.getElementById('view-one').setAttribute('class', 'unselected body-content');
     document.getElementById('view-all').setAttribute('class', 'selected body-content');
-
-    $('#view-all').empty();
     showAllPlaylists();
-
 }
 
 // Switch Tab to Search
@@ -169,13 +166,13 @@ function hidePopupDisplay() {
 function saveNewPlaylist() {
   
   // if it exists, append number to it
-  if(store.get(currentPlaylistName)){
+  if(store.get(currentPlaylist['name'])){
     var hasPlaylist = true;
     var i = 1;
 
     while(hasPlaylist){
-      currentPlaylistName += "-" + i;
-      if(!store.get(currentPlaylistName))
+      currentPlaylist['name'] += "-" + i;
+      if(!store.get(currentPlaylist['name']))
         break;
       i++;
     }
@@ -186,12 +183,12 @@ function saveNewPlaylist() {
 
 // save current playlist (update one)
 function savePlaylist() {
-  store.set(currentPlaylistName, currentPlaylist);
+  store.set(currentPlaylist['name'], currentPlaylist);
 }
 
 // delete current playlist
 function deletePlaylist() {
-  store.remove(currentPlaylistName);
+  store.remove(currentPlaylist['name']);
 }
 
 // given the name of the Playlist, a new one is loaded
@@ -200,8 +197,6 @@ function choosePlaylist(name) {
     // ERROR MESSAGE HERE
     return;
   }
-  
-  currentPlaylistName = name;
   currentPlaylist     = store.get(name);
 
   displayPlaylist();
@@ -219,25 +214,33 @@ function deleteAllPlaylists() {
 
 // get all playlists
 function showAllPlaylists(){
-
-  var playlistsHtml = '<table>';
-
-  store.forEach(function(key, val){
-    // key gives the name of the playlist
-    // val gives the array
-
-    playlistsHtml += '<tr>'
-      + '<td><a href="#" onclick="choosePlaylist(\'' + key + '\');">' 
-      + key + '</a></td>'
-      + '<td>' + val['temp'] + '</td>'
-      + '<td>' + val['weather'] + '</td>'
-      + '</tr></a>';
-
+    var viewAllHtml = '<h2> My Playlists </h2>';
+    store.forEach(function(key, val){
+        console.log(key);
+        console.log(val);
+        viewAllHtml += '<div class=\"one-of-many-playlist-div\"><a id=\'playlist-' + key + '\' href="#" onclick=\"switchToViewOneWrapper(this.id);return false;\"><span>' + key + '</span></a></div>';
+        // key gives the name of the playlist
+        // val gives the array
   });
+  document.getElementById('view-all').innerHTML = viewAllHtml;
+}
 
-  playlistsHtml += '</table>';
-
-  $('#view-all').append(playlistsHtml);
+function switchToViewOneWrapper(id) {
+    console.log(id);
+    id = id.replace('playlist-', '');
+    currentPlaylist = {};
+    store.forEach(function(key, val){
+        if (key == id) {
+            currentPlaylist = val;
+        }
+    });
+    switchToCurrentPlaylist();
+    if (currentPlaylist != {}) {
+        displayPlaylist();
+    } else {
+        $('#playlist-results').empty();
+        $('#playlist-results').append("<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist</p>");
+    }
 }
 
 // taken from http://stackoverflow.com/questions/2970525/
@@ -250,7 +253,7 @@ function displayPlaylist() {
 
     $('#playlist-results').empty();
 
-    var playerHtml  = '<br/><h3>' + currentPlaylistName.toUpperCase()
+    var playerHtml  = '<br/><h3>' + currentPlaylist['name'].toUpperCase()
       + '</h3 align="center"><br/><br/><iframe '
       + 'src="https://embed.spotify.com/?uri=spotify:trackset:';
 
@@ -267,6 +270,11 @@ function displayPlaylist() {
       + 'return false;">&#43Add a song</button>';
 
     $('#playlist-results').append(playerHtml);
+}
+
+function displayNoPlaylistResultsError() {
+    $('#playlist-results').empty();
+    $('#playlist-results').append("<p id=\"error-message\"> Oops! No songs found matching your search parameters. Please try again. </p>");
 }
 
 
