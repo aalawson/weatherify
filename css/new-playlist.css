@@ -5,6 +5,14 @@
 
 /****************** Home Page ******************/
 /* Home page Description */
+
+#view-one {
+	width: 640px;
+}
+
+#options-tab {
+	margin-left: 150px;
+}
 #intro-p {
 	font-size: 14px;
 	margin-top: 40px;
@@ -31,4 +39,10 @@
 /* Description of weather */
 #weather-report {
 	display:inline-block;
+}
+
+/* Button to search for songs to add to playlist */
+#open-search-button {
+    position: fixed;
+    bottom: 40px;
 }

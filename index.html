@@ -11,8 +11,10 @@
   <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="css/styles.css"/>
     <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="css/new-playlist.css">
+    <link rel="stylesheet" type="text/css" href="css/search.css">
 </head>
-<body onload="findMe(); return false;">
+<body onload="setup(); return false;">
   <div id="center-div">
     
     <!-- title -->
@@ -20,16 +22,16 @@
     
     <!-- nav bar -->
     <ul id='nav-bar' class="tabs">
-      <li id="t1" class="selected tab"><a href="#" onclick="switchToHome();return false;"><span>Make a New Playlist</span></a></li>
-      <li id="t2"class="unselected tab"><a href="#" onclick="switchToViewPlaylists();return false;"><span>My Playlists</span></a></li>
-      <li id="t3"class="unselected tab"><a href="#" onclick="switchToSearch();return false;"><span>Search</span></a></li>
+      <li id="t1" class="selected tab"><a href="#" onclick="switchToHome();return false;"><span>Home</span></a></li>
+      <li id="t2" class="unselected tab"><a href="#" onclick="switchToCurrentPlaylist();return false;"><span>Current Playlist</span></a></li>
+      <li id="t3"class="unselected tab"><a href="#" onclick="switchToViewPlaylists();return false;"><span>My Playlists</span></a></li>
     </ul>
 
     <!-- tab 1: make a new playlist -->
     <hr id="top-bar-hr">
     <div class="content">
+      <!-- ************** Home ************** -->
       <div id="home" class="selected body-content">
-        <div id="home-intro-screen" class="selected home-content ">
           <p id='intro-p'> Welcome to Weatherify, where you can make playlists to suit the weather. Not feeling like the weather outside? Pick a different location or choose a weather that matches your mood! </p>
           <form id="playlist-type-form">
             <div id='rad-typ'>
@@ -61,8 +63,10 @@
             </fieldset>
           </form>
         </div>
-        <div id="home-new-playlist"  class="unselected home-content ">
-          <h2 id="weather-report"> Today in New York it's 68 and sunny </h2><br/>
+
+      <!-- *************** View one playlist ************ -->
+      <div id="view-one" class="unselected body-content">
+          <h2 id="weather-report"> Today in New York it's 68 and sunny </h2>
           <a id='options-tab' href="#" onclick="toggleDrawer();return false;"><span id="fine-tune-span">&#9660   Fine tune my playlist</span></a>
           <div id="options-window">
             <div id="options" class "selected body-content ">
@@ -131,19 +135,24 @@
             <p> Results </p>
           </div>
         </div>
-      </div> <!-- #home -->
-
 
       <!-- tab 2: view my playlists -->
-      <div id="view-playlists" class="unselected body-content ">
+      <div id="view-all" class="unselected body-content ">
         <p> In View My Playlists </p>
-      </div> <!-- #view-playlists -->
-
-      <!-- tab 3: search songs -->
-      <div id="search" class="unselected body-content">
-       <p>In Search </p>
-     </div> <!-- #search -->
-
+      </div> <!-- #view-all -->
+      <div id="search">
+        <div id='close-button-div'><input type='button' id='close-button'
+                  class='g-button form-box' value='&times' onclick='closeSearchPopup()';/></div>
+        <h2 id="search-header" class="top-bar">Search for songs</h2>
+        <form id="search-form" class="top-bar">
+        <input type="text" id="artist" class="form-box search-input" value="" placeholder="artist"/>
+        <input type="text" id="song" class="form-box search-input" value=""placeholder="song"/>
+        <input type="text" id="album" class="form-box search-input"value="" placeholder="album"/>
+        <input type="button" id="search-button" class="form-box" value="Search" onclick="search();"/>
+        </form>
+        <h2 id="search-songs-results-header"></h2>
+        <div id="search-songs-results-div"></h2>
+      </div>
    </div> <!-- .content -->
  </div> <!-- #center-div-->
 </body>
@@ -164,4 +173,5 @@ function init() {
   <script type="text/javascript" src="js/locations.js"></script>
   <script type="text/javascript" src="js/weather.js"></script>
   <script type="text/javascript" src="js/playlist.js"></script>
+  <script type="text/javascript" src="js/search.js"></script>
 </html>

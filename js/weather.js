@@ -32,6 +32,7 @@ function getWeatherRating(id) {
 	if (category == '9' && Number(rawSeverity) >= 50) {
 		category = '10';
 	}
+	console.log(category);
 
 	var weatherParams = categoryChart[category][rawSeverity];
 	var weatherMetrics = convertWeather(weatherParams[0]);
