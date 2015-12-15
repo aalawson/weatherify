@@ -10,7 +10,7 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
 var currentPlaylist = '';		//keeps in memory current playlist
-var numResults = 15; 			//number of echonest results
+var numResults = 40; 			//number of echonest results
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist() {
@@ -80,17 +80,10 @@ function searchMusic(weatherMetrics) {
 
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics) {
+	var genreSelected;
+
+	genreSelected = ($('input[name="genre"]:checked').val());
 	
-	var genreCheckboxes = document.getElementsByName('genre');
-	var genreSelected = '';
-	for(var i = 0; i < genreCheckboxes.length; i++) {
-		if(genreCheckboxes[i].checked) {
-			genreSelected += genreCheckboxes[i].defaultValue;
-			if (i>0 && i<genreCheckboxes.length) {
-				genreSelected += ',';
-			}
-		}
-	}
 	if (!genreSelected) {
 		genreSelected = 'all';
 	}
@@ -113,7 +106,7 @@ function searchSeedSong(weatherMetrics) {
 			'results' : '1',
 			'style' : genreSelected,
 			'artist_end_year_before' : endYear,
-			
+
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
@@ -136,7 +129,7 @@ function searchPlaylist(seed) {
 			'type': 'song-radio',
 			'bucket' : 'id:spotify',
 			'song_id' : seed,
-			'results' : numResults
+			'results' : numResults,
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
@@ -176,6 +169,7 @@ function getAllSongIds(results) {
 function getSongId(artist, name) {
 	artist = artist.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
 	name = name.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
+	currentPlaylist = '';
 
 	var params = {
 		'artist': artist,
@@ -232,6 +226,7 @@ function getSongId(artist, name) {
 // Make playbutton with all songs in playlist
 function displayPlaylist(results) {
  	$('#playlist-results').empty();
+
 	var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
 
     // if you want:
