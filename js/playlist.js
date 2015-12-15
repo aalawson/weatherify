@@ -14,6 +14,7 @@ function toggleDrawer() {
 		closeDrawer();
 	}
 }
+
 function openDrawer() {
 	document.getElementById('options-window').style.display = "block";
 	document.getElementById('fine-tune-span').innerHTML = "&#9650 Fine tune my playlist";
@@ -23,23 +24,6 @@ function closeDrawer() {
 	document.getElementById('fine-tune-span').innerHTML = "&#9660 Fine tune my playlist";
 }
 
-/* WEATHER SECTION */
-function getWeather(lat, lng) {
-	$.ajax({
-		'url': 'http://api.openweathermap.org/data/2.5/weather',
-		'data': {
-			'lat': lat,
-			'lon': lng,
-			'units': 'imperial',
-			'appid': '670b2cbcd683c42c5e41a0ed424b537b'
-		},
-		'success': function(results) {
-			console.log(results);
-			makeWeatherPlaylist(results);
-		}
-	});
-	return false;
-}
 
 /* PLAYLIST SECTION */
 function makeWeatherPlaylist(results) {
@@ -133,13 +117,15 @@ function getSongIds(results) {
 	songIdResults = [];			//reset results array
 	var artist;
 	var name;
+
+	console.log("^^^^^^^^^^");
+	console.log(results);
 	for (var i = 0; i < results['response']['songs'].length; i++) {
 		artist = results['response']['songs'][i]['artist_name'];
 		name = results['response']['songs'][i]['title'];
 		songIdRequests.push(getSongId(artist, name));
-	}
 
-	//if ()
+	}
 
 	$.when($, songIdRequests).done(function() {
         songIdResults = arguments;
@@ -153,9 +139,8 @@ function getSongIds(results) {
 
 function displayPlaylist(results) {
 	for (var i = 0; i < results.length; i++) {
-		console.log("*******&*******");
 		console.log(results);
-		//currentPlaylist += results[i].id;
+		currentPlaylist += results[i].id;
 		currentPlaylist += ',';
 	}
 }
@@ -200,8 +185,11 @@ function getSongId(artist, name) {
 	         console.log(numResults + " not valid");// displayBadParamsError(); // let user know that no results were found
 	        } //Valid! push to songIdResults
 	        else {
+	        	console.log("*@@@@@@@@@@@@*");
+	        	console.log(data['tracks']['items'][0]);
 	        	songIdResults.push(data['tracks']['items'][0]);
-	        	currentPlaylist += data['tracks']['items'][0];
+	        	currentPlaylist += data['tracks']['items'][0].id;
+	        	currentPlaylist += ',';
 	        	console.log(songIdResults);
 	        }
 
@@ -218,6 +206,9 @@ function getSongId(artist, name) {
 
 function makeNewPlaylist() {
   var location = document.getElementById('loc').value;
+  if (isDrawerOpen) {
+  	toggleDrawer();
+  }
   getLocation(location);
   $('#playlist-results').empty();
   var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
