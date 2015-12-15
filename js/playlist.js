@@ -137,10 +137,13 @@ function getPlayerString(songs) {
 }
 
 function createPlaylist(results) {
+	currentPlaylistName = nameTemp + "° and " + titlecase(nameWeather);
+    
     currentPlaylist = {
-        'name' : 'test-playlist',
-        'weather' : '68-and-sunny',
-        'songs' : [],
+        'name' 		: currentPlaylistName,
+        'temp' 		: nameTemp,
+        'weather'	: nameWeather,
+        'songs' 	: [],
         'playerString' : ''
     }
     for (var i = 0; i < results['response']['songs'].length; i++) {
