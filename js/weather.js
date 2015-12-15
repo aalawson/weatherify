@@ -33,8 +33,9 @@ function getWeatherRating(id) {
 		category = '10';
 	}
 
-	var weatherParams = categoryChart[category][rawSeverity];
-	var weatherMetrics = convertWeather(weatherParams[0]);
+	var weatherParams 	= categoryChart[category][rawSeverity];
+	nameWeather			= weatherParams[2];
+	var weatherMetrics 	= musicChart[weatherParams[0]];
 	/*var maxenergy = weatherMetrics['max_energy'];
 	var minenergy = weatherMetrics['max_energy'];	
 	var maxtempo = weatherMetrics['min_tempo'];
@@ -42,11 +43,6 @@ function getWeatherRating(id) {
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
 	searchSeedSong(weatherMetrics);
-}
-
-
-function convertWeather(id) {
-	return (musicChart[id]);
 }
 
 /* VARIABLES FOR INFORMATION */

@@ -8,6 +8,10 @@
     Javascript built to deal with any HTML behavior, and contains API keys as global variables
 */
 
+/* VARIABLES FOR ENTIRE PROGRAM, SAVING OF PROGRAM */
+var nameWeather = '';
+var nameTemp    = '';
+
 /* VARIABLES FOR SCRIPT.JS */ 
 var isDrawerOpen = false;
 
@@ -78,6 +82,22 @@ function switchToSearch() {
     document.getElementById('view-playlists').setAttribute('class', 'unselected body-content');
     document.getElementById('search').setAttribute('class', 'selected body-content');
 }
+
+// save current playlist
+function savePlaylist() {
+
+    console.log(nameWeather);
+
+    //store.set(Math.floor(Math.random()*100), "yo this is a thing");
+
+    // store.forEach(function(key,val){
+    //     console.log("The key (" + key + ") results in this val: " + val);
+    // });
+
+    store.clear();
+
+}
+
 
 
 
