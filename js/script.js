@@ -163,8 +163,6 @@ function hidePopupDisplay() {
 // save current playlist (make new one)
 function saveNewPlaylist() {
   
-  currentPlaylistName = nameTemp + "° and " + titlecase(nameWeather);
-
   // if it exists, append number to it
   if(store.get(currentPlaylistName)){
     var hasPlaylist = true;
@@ -191,6 +189,19 @@ function deletePlaylist() {
   store.remove(currentPlaylistName);
 }
 
+// given the name of the Playlist, a new one is loaded
+function choosePlaylist(name) {
+  if(!store.get(name)){
+    // ERROR MESSAGE HERE
+    return;
+  }
+  
+  currentPlaylistName = name;
+  currentPlaylist     = store.get(name);
+
+  displayPlaylist();
+}
+
 // delete all playlists
 function deleteAllPlaylists() {
   // GIVE CONFIRMATION HERE!!
@@ -200,12 +211,12 @@ function deleteAllPlaylists() {
   store.clear();
 }
 
-// 
+// get all playlists
 function getAllPlaylists(){
   store.forEach(function(key, val){
     // key gives the name of the playlist
     // val gives the array
-  })
+  });
 }
 
 // taken from http://stackoverflow.com/questions/2970525/
@@ -218,16 +229,21 @@ function displayPlaylist() {
 
     $('#playlist-results').empty();
 
-    var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
+    var playerHtml  = '<br/><h3>' + currentPlaylistName.toUpperCase()
+      + '</h3 align="center"><br/><br/><iframe '
+      + 'src="https://embed.spotify.com/?uri=spotify:trackset:';
 
-    // if you want:
-    //playerHtml += PLAYLIST NAME
+    // adds songs to the player
+    playerHtml  += currentPlaylist['playerString']
+      + '" frameborder="0" width="640px" height="700"'
+      + 'align="center" allowtransparency="true"></iframe>'
 
-    //adds 20 songs to the playlist 
-    //need function that generates playlist based on weather 
-    playerHtml += currentPlaylist['playerString'];
-    playerHtml += '" frameborder="0" width="640px" height="700" align="center" allowtransparency="true"></iframe>';
-    playerHtml += '<button type="button" id="open-search-button" class="g-button form-box" onclick="openSearchPopup(); return false;">&#43Add a song</button>';
+      + '<button type="button" id="save-playlist-button" class="g-button'
+      + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>'
+
+      + '<button type="button" id="open-search-button"'
+      + 'class="g-button form-box" onclick="openSearchPopup();'
+      + 'return false;">&#43Add a song</button>';
 
     $('#playlist-results').append(playerHtml);
 }
