@@ -30,6 +30,7 @@ function processWeatherData(weatherResults) {
 	var id = "0";
 	if (weatherResults['weather'] && weatherResults['weather'][0]['id']) {
 		id = weatherResults['weather'][0]['id'].toString();
+		console.log(id);
 	}
 	getWeatherRating(id);
 }
@@ -209,7 +210,7 @@ function getSongId(artist, name) {
 	        	currentPlaylist += ',';
 	        }
 
-	        // If this is the last callback, display results
+	        // If this is the last callback, display results 
 	    	if (numResults == songIdResults.length) {
 				displayPlaylist(songIdResults);
         	}
@@ -236,6 +237,7 @@ function displayPlaylist(results) {
     //need function that generates playlist based on weather 
     playerHtml += currentPlaylist;
     playerHtml += '" frameborder="0" width="640px" height="700" align="center" allowtransparency="true"></iframe>';
+    playerHtml += '<button type="button" id="open-search-button" class="g-button form-box" onclick="openSearchPopup(); return false;">&#43Add a song</button>';
 
     $('#playlist-results').append(playerHtml);
 }

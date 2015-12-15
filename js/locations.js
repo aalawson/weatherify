@@ -84,8 +84,7 @@ function searchLocation(results) {
   var lat = results[0]['geometry']['location']['lat'];
   var lng = results[0]['geometry']['location']['lng'];
   var address = results[0]['formatted_address'];
-  document.getElementById('home-intro-screen').setAttribute('class', 'unselected home-content');
-  document.getElementById('home-new-playlist').setAttribute('class', 'selected home-content');
+  switchToCurrentPlaylist();
   document.getElementById('options-window').style.display = "none";  
   getWeather(lat, lng);
   return false;
