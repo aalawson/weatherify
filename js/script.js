@@ -77,6 +77,7 @@ function switchToCurrentPlaylist() {
     document.getElementById('view-all').setAttribute('class', 'unselected body-content');
 }
 
+// Switch Tab to Playlist
 function switchToViewPlaylists() {
     document.getElementById('t1').setAttribute('class', 'unselected tab');
     document.getElementById('t2').setAttribute('class', 'unselected tab');
@@ -87,6 +88,10 @@ function switchToViewPlaylists() {
     document.getElementById('home').setAttribute('class', 'unselected body-content');
     document.getElementById('view-one').setAttribute('class', 'unselected body-content');
     document.getElementById('view-all').setAttribute('class', 'selected body-content');
+
+    $('#view-all').empty();
+    showAllPlaylists();
+
 }
 
 // Switch Tab to Search
@@ -200,6 +205,7 @@ function choosePlaylist(name) {
   currentPlaylist     = store.get(name);
 
   displayPlaylist();
+  switchToCurrentPlaylist();
 }
 
 // delete all playlists
@@ -212,11 +218,26 @@ function deleteAllPlaylists() {
 }
 
 // get all playlists
-function getAllPlaylists(){
+function showAllPlaylists(){
+
+  var playlistsHtml = '<table>';
+
   store.forEach(function(key, val){
     // key gives the name of the playlist
     // val gives the array
+
+    playlistsHtml += '<tr>'
+      + '<td><a href="#" onclick="choosePlaylist(\'' + key + '\');">' 
+      + key + '</a></td>'
+      + '<td>' + val['temp'] + '</td>'
+      + '<td>' + val['weather'] + '</td>'
+      + '</tr></a>';
+
   });
+
+  playlistsHtml += '</table>';
+
+  $('#view-all').append(playlistsHtml);
 }
 
 // taken from http://stackoverflow.com/questions/2970525/
@@ -246,10 +267,6 @@ function displayPlaylist() {
       + 'return false;">&#43Add a song</button>';
 
     $('#playlist-results').append(playerHtml);
-}
-
-function showPlaylist() {
-    //for saved playlists, location and/or weather and playlist should be saved
 }
 
 
