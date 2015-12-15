@@ -24,11 +24,8 @@
 
 /* Form inputs */
 #loc {
-	width: 80%;
-}
-
-#loc {
-  width: 200px;
+	width: 580px;
+	height: 18px;
 }
 
 .type-form {

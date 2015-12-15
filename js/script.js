@@ -205,7 +205,7 @@ function getAllPlaylists(){
   store.forEach(function(key, val){
     // key gives the name of the playlist
     // val gives the array
-  })
+  });
 }
 
 // taken from http://stackoverflow.com/questions/2970525/
@@ -227,8 +227,8 @@ function displayPlaylist() {
     //need function that generates playlist based on weather 
     playerHtml += currentPlaylist['playerString'];
     playerHtml += '" frameborder="0" width="640px" height="700" align="center" allowtransparency="true"></iframe>';
+    playerHtml += '<button type="button" id="save-playlist-button" class="g-button form-box" onclick="savePlaylist(); return false;">Save Playlist</button>';
     playerHtml += '<button type="button" id="open-search-button" class="g-button form-box" onclick="openSearchPopup(); return false;">&#43Add a song</button>';
-
     $('#playlist-results').append(playerHtml);
 }
 

@@ -22,50 +22,6 @@ function makeNewPlaylist() {
     return false;
 }
 
-/*
-function searchMusic(weatherMetrics) {
-	
-	var genreCheckboxes = document.getElementsByName('genre');
-	var genreSelected = '';
-	for(var i = 0; i < genreCheckboxes.length; i++) {
-		if(genreCheckboxes[i].checked) {
-			genreSelected += genreCheckboxes[i].defaultValue;
-			if (i>0 && i<genreCheckboxes.length) {
-				genreSelected += ',';
-			}
-		}
-	}
-	if (!genreSelected) {
-		genreSelected = 'all';
-	}
-
-	var endYear = $("decade :selected").val();
-	
-	$.ajax({
-		'url': 'http://developer.echonest.com/api/v4/song/search',
-		'data': {
-			'api_key': ECONEST_API_KEY,
-			'format' : 'json',
-			'bucket' : 'id:spotify',
-			'max_energy' : weatherMetrics['max_energy'],
-			'min_energy' : weatherMetrics['min_energy'],
-			'max_tempo' : weatherMetrics['max_tempo'],
-			'min_tempo' : weatherMetrics['min_tempo'],
-			'max_acousticness' : weatherMetrics['max_acousticness'],
-			'min_acousticness' : weatherMetrics['min_acousticness'],
-			'artist_min_hotttnesss' : '.8',	
-			'results' : numResults,
-			'style' : genreSelected,
-			'artist_end_year_before' : endYear,
-		},
-		//callback function needs to be added here 
-		'success': function(results) {
-			getAllSongIds(results);
-		}
-	});
-	return false;
-} */
-
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics) {
 	
@@ -97,19 +53,17 @@ function searchSeedSong(weatherMetrics) {
 
 	if (genreSelected && (genreSelected != 'all')) {
 	    data.style = genreSelected;
-	    console.log(genreSelected);
 	}
+
 	if (endYear != 'all') {
 		data.artist_end_year_before = endYear;		
 	} 
-	
+
 	$.ajax({
 		'url': songSearchURL,
 		'data': data,
 		//callback function needs to be added here 
 		'success': function(results) {
-			// getSongIds(results);
-			console.log(results);
 			searchPlaylist(results['response']['songs'][0]['id']);
 		}
 	});
@@ -148,7 +102,6 @@ function getPlayerString(songs) {
 }
 
 function createPlaylist(results) {
-	console.log(results);
     currentPlaylist = {
         'name' : 'test-playlist',
         'weather' : '68-and-sunny',
@@ -157,7 +110,6 @@ function createPlaylist(results) {
     }
     for (var i = 0; i < results['response']['songs'].length; i++) {
         if (results['response']['songs'][i]['tracks'][0]) {
-            console.log(results['response']['songs'][i]['tracks']);
             currentPlaylist['songs'].push( {
             'songName' : results['response']['songs'][i]['title'],
             'artist' : results['response']['songs'][i]['artist_name'],
