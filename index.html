@@ -70,22 +70,33 @@
               <form>
 
                 <b>genre </b><br>
-                <input type="checkbox" name="genre" value="pop">pop<br>
-                <input type="checkbox" name="genre" value="rock">rock<br>
-                <input type="checkbox" name="genre" value="hip-hop">hip hop<br>
-                <input type="checkbox" name="genre" value="jazz">jazz<br>
-                <input type="checkbox" name="genre" value="classical">classical<br>
-                <input type="checkbox" name="genre" value="alternative">alternative<br>
-                <input type="checkbox" name="genre" value="techno">techno<br>
-                <input type="checkbox" name="genre" value="disco">disco<br>
-                <input type="checkbox" name="genre" value="rnb">rnb<br>
-                <input type="checkbox" name="genre" value="soul">soul<br>
-                <input type="checkbox" name="genre" value="country">country<br>
-                <input type="text" name="genre" value="other"><br>
+                <table style="width:100%">
+                  <tr>
+                    <td><input type="radio" name="genre" value="a capella">a capella<br></td>
+                    <td><input type="radio" name="genre" value="alternative rock">alternative rock<br></td>
+                    <td><input type="radio" name="genre" value="big band">big band<br></td>
+                    <td><input type="radio" name="genre" value="blues">blues<br></td>
+                    <td><input type="radio" name="genre" value="boy band">boy band<br></td>
+                  </tr>
+                  <tr>
+                    <td><input type="radio" name="genre" value="classical">classical<br></td>
+                    <td><input type="radio" name="genre" value="country">country<br></td>
+                    <td><input type="radio" name="genre" value="disco">disco<br></td>
+                    <td><input type="radio" name="genre" value="edm">edm<br></td>
+                    <td><input type="radio" name="genre" value="folk">folk<br></td>
+                  </tr>
+                  <tr>
+                    <td><input type="radio" name="genre" value="gospel">gospel<br></td>
+                    <td><input type="radio" name="genre" value="hip hop">hip hop<br></td>
+                    <td><input type="radio" name="genre" value="jazz">jazz<br></td>
+                    <td><input type="radio" name="genre" value="new wave">new wave<br></td>
+                    <td><input type="radio" name="genre" value="orchestral">orchestral<br></td>
+                  </tr>
+                </table>
                 <br><br>
 
 
-                <b>decade  </b>
+                <b>decade</b>
                 <select id="decade">
                   <option value="all"> all </option>
                   <option value="1930">Pre 1940s</option>
@@ -102,7 +113,7 @@
 
                 <b>artist popularity  </b>
                 less popular  
-                <input type ="range" value="50", min="0", max="100">
+                <input type ="range" value="75", min="50", max="100">
                 more popular
                 <br><br>
 
