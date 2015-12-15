@@ -9,7 +9,9 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var numResults = 40; 			//number of echonest results
+var numResults = 40;
+var playlists = [];	
+var currentPlaylistIndex = -1;	//number of echonest results
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist() {
@@ -73,15 +75,11 @@ function searchSeedSong(weatherMetrics) {
 	genreSelected = ($('input[name="genre"]:checked').val());
 	
 	if (!genreSelected) {
-		genreSelected = 'all';
+		genreSelected = '';
 	}
 
 	var endYear = $("decade :selected").val();
-
-	
-	$.ajax({
-		'url': 'http://developer.echonest.com/api/v4/song/search',
-		'data': {
+	var data = {
 			'api_key': ECONEST_API_KEY,
 			'format' : 'json',
 			'bucket' : 'id:spotify',
@@ -92,13 +90,25 @@ function searchSeedSong(weatherMetrics) {
 			'max_acousticness' : weatherMetrics['max_acousticness'],
 			'min_acousticness' : weatherMetrics['min_acousticness'],
 			'results' : '1',
-			'style' : genreSelected,
+
 			'artist_end_year_before' : endYear,
 
-		},
+		}
+	if (genreSelected.length >= 1) {
+	    data.style = genreSelected;
+	    console.log(genreSelected);
+	}
+
+	console.log(data);
+
+	
+	$.ajax({
+		'url': 'http://developer.echonest.com/api/v4/song/search',
+		'data': data,
 		//callback function needs to be added here 
 		'success': function(results) {
 			// getSongIds(results);
+			console.log(results);
 			searchPlaylist(results['response']['songs'][0]['id']);
 		}
 	});
@@ -119,96 +129,45 @@ function searchPlaylist(seed) {
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
-			getAllSongIds(results);
+			displayPlaylist(results);
 		}
 	});
 	return false;
 
 }
 
-// Take echonest playlist and convert to spotify song ids
-function getAllSongIds(results) {
-	playlistIds = [];
-	var songIdRequests = [];	//reset requests array
-	songIdResults = [];		//reset results array
-	var artist;
-	var name;
-	if (results['response'] && results['response']['songs']) {
-		numResults = results['response']['songs'].length;	
-
-		for (var i = 0; i < results['response']['songs'].length; i++) {
-			artist = results['response']['songs'][i]['artist_name'];
-			name = results['response']['songs'][i]['title'];
-			songIdRequests.push(getSongId(artist, name));
-		}
-
-		$.when($, songIdRequests).done(function() {
-	    });		
-    } else {
-    	console.log("error message"); //ERROR MESSAGE HERE
-    }
-
-}
-
-// Search spotify to get song id
-function getSongId(artist, name) {
-	artist = artist.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
-	name = name.replace(/[^a-zA-Z0-9\s\:]/g, ' ');
-	currentPlaylist = '';
-
-	var params = {
-		'artist': artist,
-		'track': name
+function getPlayerString(songs) {
+	var playerString = '';
+	for (var i = 0; i < songs.length; i++) {
+        playerString += songs[i]['songId'] + ',';
 	}
-
-    //Create query string using filters
-    var query = "";
-    for (var key in params) {
-    	if (params[key].length > 0) {
-    		if (params[key].includes(' ')){
-				  params[key] = "\"" + params[key] + "\""; //if multiple words, put in quotes
-			}
-			query += key + ":" + params[key] + " ";
-		}
-	}
-	query = query.substring(0, query.length-1); //strip off last " "
-
-
-  	// artist = artist.replace(/\s/g, '+');
-  	// var query = name + "+artist:" + artist;
-  	return $.ajax ({
-  		'url': 'http://api.spotify.com/v1/search',
-  		'data': {'q':query, 'type': 'track', 'limit' : '1', 'market':'US'},
-  		'cache': true,
-  		success : function(data, textStats, XMLHttpRequest) {
-	        // Check to make sure at least one song was returned
-	        var isValid = data['tracks'] && data['tracks']['items'] && (
-	        	data['tracks']['items'].length > 0);
-	        if (!isValid) {
-	        	numResults--;
-	        } //Valid! push to songIdResults
-	        else {
-	        	songIdResults.push(data['tracks']['items'][0]);
-	        	currentPlaylist += data['tracks']['items'][0].id;
-	        	currentPlaylist += ',';
-	        }
-
-	        // If this is the last callback, display results 
-	    	if (numResults == songIdResults.length) {
-				displayPlaylist(songIdResults);
-        	}
-
-	    },
-	    error: function(jqXHR, textStatus, errorThrown) {
-	        //displayBadParamsError();
-	        console.log("NEED ERROR MESSAGE HERE");
-
-	    }
-	});
+    return playerString;
 }
 
 // Make playbutton with all songs in playlist
 function displayPlaylist(results) {
+	console.log(results);
+	var playlist = {
+	    'name' : 'test-playlist',
+	    'weather' : '68-and-sunny',
+	    'songs' : [],
+	    'playerString' : ''
+	}
+	for (var i = 0; i < results['response']['songs'].length; i++) {
+		if (results['response']['songs'][i]['tracks'][0]) {
+		    console.log(results['response']['songs'][i]['tracks']);
+            playlist['songs'].push( {
+         	'songName' : results['response']['songs'][i]['title'],
+         	'artist' : results['response']['songs'][i]['artist_name'],
+         	'artistId' : results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id'],
+            'songId' : results['response']['songs'][i]['tracks'][0]['foreign_id'].replace('spotify:track:', ''),
+         });	
+		}
+	}
+
+	playlist['playerString'] = getPlayerString(playlist['songs']);
+	playlists.push(playlist);
+	currentPlaylistIndex = playlists.length - 1;
  	$('#playlist-results').empty();
 
 	var playerHtml = '<br><br><iframe src="https://embed.spotify.com/?uri=spotify:trackset:';
@@ -218,7 +177,7 @@ function displayPlaylist(results) {
 
     //adds 20 songs to the playlist 
     //need function that generates playlist based on weather 
-    playerHtml += currentPlaylist;
+    playerHtml += playlists[currentPlaylistIndex]['playerString'];
     playerHtml += '" frameborder="0" width="640px" height="700" align="center" allowtransparency="true"></iframe>';
     playerHtml += '<button type="button" id="open-search-button" class="g-button form-box" onclick="openSearchPopup(); return false;">&#43Add a song</button>';
 
