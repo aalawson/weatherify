@@ -10,11 +10,12 @@
 	var currentPlaylist ='';	//keeps in memory current playlist
 	var numResults = 20;
 
+	// Called on when weatherify button is pressed
 	function makeWeatherPlaylist(results) {
 		var temp = results['main']['temp'];
 		var tempString = temp.toString();
 		document.getElementById('weather-report').innerHTML =
-		"Today in " + results['name'] + " it\'s " + tempString.substring(0, tempString.indexOf('.')) + "&#176F";
+			"Today in " + results['name'] + " it\'s " + tempString.substring(0, tempString.indexOf('.')) + "&#176F";
 		var id = "0";
 		if (results['weather'] && results['weather'][0]['id']) {
 			id = results['weather'][0]['id'].toString();
@@ -30,8 +31,6 @@
 		var artist;
 		var name;
 
-		console.log("^^^^^^^^^^");
-		console.log(results);
 		for (var i = 0; i < results['response']['songs'].length; i++) {
 			artist = results['response']['songs'][i]['artist_name'];
 			name = results['response']['songs'][i]['title'];
@@ -41,17 +40,13 @@
 
 		$.when($, songIdRequests).done(function() {
 			songIdResults = arguments;
-	        //console.log(songIdResults);
-	        //console.log(songIdRequests);
 	        //currentPlaylist = ""; //reset current playlist
 	        displayPlaylist(songIdRequests);
-	        console.log(currentPlaylist);
 	    });
 	}
 
 	function displayPlaylist(results) {
 		for (var i = 0; i < results.length; i++) {
-			console.log(results);
 			currentPlaylist += results[i].id;
 			currentPlaylist += ',';
 		}
@@ -88,27 +83,21 @@
 	  		'data': {'q':query, 'type': 'track', 'limit' : '1', 'market':'US'},
 	  		'cache': true,
 	  		success : function(data, textStats, XMLHttpRequest) {
-	  			console.log(data);
 		        // Check to make sure at least one song was returned
 		        var isValid = data['tracks'] && data['tracks']['items'] && (
 		        	data['tracks']['items'].length > 0);
 		        if (!isValid) {
 		        	numResults--;
-		         console.log(numResults + " not valid");// displayBadParamsError(); // let user know that no results were found
+		         //console.log(numResults + " not valid");// displayBadParamsError(); // let user know that no results were found
 		        } //Valid! push to songIdResults
 		        else {
-		        	console.log("*@@@@@@@@@@@@*");
-		        	console.log(data['tracks']['items'][0]);
 		        	songIdResults.push(data['tracks']['items'][0]);
 		        	currentPlaylist += data['tracks']['items'][0].id;
 		        	currentPlaylist += ',';
-		        	console.log(songIdResults);
 		        }
 
 		    },
 		    error: function(jqXHR, textStatus, errorThrown) {
-		    	console.log(errorThrown);
-		    	console.log(textStatus);
 		        //displayBadParamsError();
 
 		    }
@@ -130,12 +119,11 @@
 
 	    //adds 20 songs to the playlist 
 	    //need function that generates playlist based on weather 
-	    //playerHtml += '6t1VvXUla9YRJ4EV1SPJFZ,4HaRqrk4LRjCiQBqtMc6NE,65wx71brAmEQz66GXXF8gI,7fnnkYFOPqdzVYd339U7TM,07pChN3h9EciKJussyb8Hu';
+	    playerHtml += '6t1VvXUla9YRJ4EV1SPJFZ,4HaRqrk4LRjCiQBqtMc6NE,65wx71brAmEQz66GXXF8gI,7fnnkYFOPqdzVYd339U7TM,07pChN3h9EciKJussyb8Hu';
 	    playerHtml += currentPlaylist;
 	    playerHtml += '" frameborder="0" width="640px" height="700" align="center" allowtransparency="true"></iframe>';
 
 	    $('#playlist-results').append(playerHtml);
-	    console.log(playerHtml);  
 	    return false;
 	}
 

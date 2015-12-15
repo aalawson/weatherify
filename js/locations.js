@@ -35,22 +35,17 @@
       'cache':true,
       success : function(data, textStats, XMLHttpRequest) {
         // Check to make sure at least one song was returned
-        console.log(data['results'][0]);
         var isValid = data['results'][0] && data['results'][0]['formatted_address'];
         if (!isValid) {
-          console.log("hi");
           couldntFindMe(); // let user know that no results were found
         } //Valid! Display first ten results
         else {
-          console.log(data);
           document.getElementById('loc').value = data['results'][0]['formatted_address'];
           document.getElementById('home-intro-error').innerHTML = '';
           return false;
         }
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
-        console.log(textStatus);
         couldntFindMe();
 
         // MAKE-ERROR-MSG!
@@ -75,8 +70,6 @@
 
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
-        console.log(textStatus);
         couldntFindLocation();
         // MAKE-ERROR-MSG!
       }
@@ -94,7 +87,6 @@
         'appid': '670b2cbcd683c42c5e41a0ed424b537b'
       },
       success: function(results) {
-        console.log(results);
         makeWeatherPlaylist(results);
       },
       error: function(results){
@@ -110,12 +102,9 @@
     var lat = results[0]['geometry']['location']['lat'];
     var lng = results[0]['geometry']['location']['lng'];
     var address = results[0]['formatted_address'];
-    console.log(results);
-    console.log("*****************");
     document.getElementById('home-intro-screen').setAttribute('class', 'unselected home-content');
     document.getElementById('home-new-playlist').setAttribute('class', 'selected home-content');
     document.getElementById('options-window').style.display = "none";  
-    console.log(document.getElementById('options-window').style.display); 
     getWeather(lat, lng);
     return false;
   }

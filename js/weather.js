@@ -10,12 +10,9 @@
     var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';  
 
 	function getRating(id) {
-		console.log(id);
 		var category = id.substring(0, 1);
-		console.log(category);
 		var rawSeverity = id.substring(1, id.length);
-		console.log(category);
-		console.log(rawSeverity);
+
 		if (category == '9' && Number(rawSeverity) >= 50) {
 			category = '10';
 		}
@@ -40,7 +37,6 @@
 	function searchMusic(weatherMetrics) {
 		
 		var genreCheckboxes = document.getElementsByName('genre');
-		console.log(genreCheckboxes);
 		var genreSelected = '';
 		for(var i = 0; i < genreCheckboxes.length; i++) {
 			if(genreCheckboxes[i].checked) {
@@ -74,8 +70,6 @@
 			},
 			//callback function needs to be added here 
 			'success': function(results) {
-				console.log('ECHONEST RESULTS');
-				console.log(results);
 				getSongIds(results);
 			}
 		});
