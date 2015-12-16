@@ -388,10 +388,6 @@ function titlecase(str) {
 }
 
 function updatePlaylistTopBar() {
-    console.log(glblIsReWeather);
-    console.log(currentPlaylist['name']);
-    console.log(nameTemp);
-    console.log('');
     if (glblIsReWeather && currentPlaylist['name'] && currentPlaylist['name'].length > 0) {
         console.log("******");
          document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
