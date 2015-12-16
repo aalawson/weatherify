@@ -73,6 +73,7 @@ function getWeatherRating(id, temp) {
 		weatherMetrics = musicChart[weatherParams[0]];
 		console.log("OPPOSITE");
 		console.log(weatherMetrics);
+		$("input[name='danceability']").val(Number(getOppositeDayTemp())/13.0);
 		updatePlaylistTopBar();
 		// Now get seed song to make playlist
 		searchSeedSong(weatherMetrics, '.5', getOppositeDayTemp());
@@ -80,7 +81,10 @@ function getWeatherRating(id, temp) {
 		console.log(weatherMetrics);
 	    // now that we have temp, weather description, & location name,
 	    // update playlist while loading for visibility of system status
+ 		$("input[name='danceability']").val(temp/13.0);
 		updatePlaylistTopBar();
+
+
 
 		// Now get seed song to make playlist
 		console.log(weatherParams[0]);

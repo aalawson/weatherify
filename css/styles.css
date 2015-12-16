@@ -118,6 +118,10 @@ input:focus{
 /* NOTE: basic tab html & css is from basic tab tutorial at:
 http://inspirationalpixels.com/tutorials/creating-tabs-with-html-css-and-jquery#step-html
  Adapted by Anna Lawson */
+#titleLink {
+  text-decoration: none;
+}
+
 .tabs {
 	width: 460px;
 	margin-left: 380px;
