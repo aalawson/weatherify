@@ -10,6 +10,7 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
 var numResults = 100;
+var isOpposite = false;
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -43,10 +44,15 @@ function makeNewPlaylist() {
     return false;
 }
 
+function makeOppositeNewPlaylist() {
+	isOpposite = true;
+	makeNewPlaylist();
+}
+
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp) {
 
-
+	console.log(searchSeedSong);
 	
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
 	var genreSelected = ($('input[name="genre"]:checked').val());
@@ -76,7 +82,6 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 
 		danceability = tempToDance / 130.0;
 	}
-
 	
 
 	var data = {
@@ -103,7 +108,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 	if (endYear != 'all') {
 		data.artist_end_year_before = endYear;		
 	} 
-
+	console.log(data);
 	$.ajax({
 		'url': songSearchURL,
 		'data': data,
@@ -166,7 +171,6 @@ function getPlayerString(songs) {
 }
 
 function getPlaylistName() {
-	console.log(nameTemp);
 	var name = '';
 	if (nameTemp.length > 0 || nameWeather.length > 0 || curLocation.length > 0) {
 		if (nameTemp.length > 0) {
