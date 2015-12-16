@@ -26,6 +26,13 @@ $("#options-form").keypress(function(e) {
 		makeNewPlaylist(isReWeather);
 	}
 });
+
+function makeOppositeNewPlaylist(isReWeather) {
+	isOpposite = true;
+	makeNewPlaylist(isReWeather);
+}
+
+
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist(isReWeather) {
 	console.log(":)");
