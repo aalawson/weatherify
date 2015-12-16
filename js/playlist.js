@@ -16,6 +16,7 @@ var glblCurDanceability;
 var glblCurMaxDanceability;
 var glblCurHappiness;
 var glblCurEnergy;
+var glblIsReWeather = false;
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -38,11 +39,13 @@ $("#options-form").keypress(function(e) {
 function makeOppositeNewPlaylist(isReWeather) {
 	isOpposite = true;
 	makeNewPlaylist(isReWeather);
+	glblIsReWeather = isReWeather;
 }
 
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist(isReWeather) {
+	glblIsReWeather = isReWeather;
 	if (currentPlaylist['isSaved']) {
 		currentPlaylist['isSaved'] = false;
 	}
@@ -59,6 +62,7 @@ function makeNewPlaylist(isReWeather) {
 }
 
 function getDanceability(temp, isReWeather) {
+	glblIsReWeather = isReWeather;
     var tempToDance;
     var danceability;
 
@@ -83,6 +87,7 @@ function getDanceability(temp, isReWeather) {
 }
 
 function getHappiness(weatherMetrics, isReWeather) {
+	glblIsReWeather = isReWeather;
 	var happiness;
 	var maxHappiness;
 	if (isReWeather) {
@@ -103,6 +108,7 @@ function getHappiness(weatherMetrics, isReWeather) {
 }
 
 function getEnergy(weatherMetrics, isReWeather) {
+	glblIsReWeather = isReWeather;
 	var energy;
 	var maxEnergy;
 	if (isReWeather) {
@@ -126,6 +132,7 @@ function getEnergy(weatherMetrics, isReWeather) {
 
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
+	glblIsReWeather = isReWeather;
 
 	console.log(isReWeather);
 	console.log("******************");
