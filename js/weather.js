@@ -12,6 +12,8 @@
 
 
 /* WEATHER SECTION */
+
+//takes in the lat/long and returns the local weather
 function getWeather(lat, lng, isReWeather) {
 	glblIsReWeather = isReWeather;
 	$.ajax({
@@ -50,6 +52,7 @@ function processWeatherData(weatherResults, isReWeather) {
 	getWeatherRating(id, temp, isReWeather);
 }
 
+//takes in the id/temp and sends it to searchSeedSong
 function getWeatherRating(id, temp, isReWeather) {
 	console.log(id);
 
@@ -92,6 +95,7 @@ function getWeatherRating(id, temp, isReWeather) {
 	}
 }
 
+//flips the metrics of the current weather
 function getOppositeDayTemp() {
 	var tempDiff = 50 - Number(nameTemp);
 	var oppositeTemp = 50 + tempDiff;
