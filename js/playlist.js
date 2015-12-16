@@ -16,6 +16,7 @@ var glblCurDanceability;
 var glblCurMaxDanceability;
 var glblCurHappiness;
 var glblCurEnergy;
+var glblCurTempo;
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -96,7 +97,7 @@ function getHappiness(weatherMetrics, isReWeather) {
 	} else {
 		happiness = weatherMetrics['min_valence'];
 		maxHappiness = weatherMetrics['max_valence'];
-		$("input[name='happiness']").val((happiness+maxHappiness)/2);
+		$("input[name='happiness']").val(((happiness+maxHappiness)/2)*10);
 	}
 	console.log("HAPPINESS");
 	console.log(happiness);
@@ -118,7 +119,7 @@ function getEnergy(weatherMetrics, isReWeather) {
 	} else {
 		energy = weatherMetrics['min_energy'];
 		maxEnergy = weatherMetrics['max_energy'];
-		$("input[name='energy']").val((energy+maxEnergy)/2.0);
+		$("input[name='energy']").val(((energy+maxEnergy)/2.0)*10);
 	}
 	console.log("ENERGY");
 	console.log(energy);
@@ -129,6 +130,7 @@ function getEnergy(weatherMetrics, isReWeather) {
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 
+	console.log('MIN HOT = ' + min_hot);
 	console.log(isReWeather);
 	console.log("******************");
 	console.log(weatherMetrics);
@@ -177,12 +179,11 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			'min_energy' : (energy).toString(),
 			'max_energy' : (maxEnergy).toString(),
 			'min_valence' : (happiness).toString(),
-			'min_valence' : (maxHappiness).toString(),
+			'max_valence' : (maxHappiness).toString(),
 			'song_min_hotttnesss' : min_hot,
 			'min_danceability' : (danceability).toString(),
 			'max_danceability' : (maxDanceability).toString(),
 			'results' : '1',
-			//'song_type' : christmasPlaylist,
 		}
 
 	if (genreSelected && (genreSelected != 'all')) {
@@ -208,14 +209,14 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			// No result for seed song
 			if (results['response']['songs'].length == 0) {
 				// Decrement min hot if possible
-				if (min_hot != '0') {
+				if (min_hot <= '0') {
 					searchSeedSong(weatherMetrics, (Number(min_hot) - .1).toString(), temp, isReWeather); // lower min popularity if need be
 				} else {
 					displayNoPlaylistResultsError();
 				}
 			} // Seed song found 
 			else {
-				searchPlaylist(results['response']['songs'][0]['id'], min_hot, danceability, weatherMetrics);
+				searchPlaylist(results['response']['songs'][0]['id'], min_hot);
 			}
 		}
 	});
