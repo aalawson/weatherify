@@ -152,6 +152,9 @@ function switchToSearch() {
     document.getElementById('home').setAttribute('class', 'unselected body-content');
     document.getElementById('view-one').setAttribute('class', 'unselected body-content');
     document.getElementById('view-all').setAttribute('class', 'unselected body-content');
+    document.getElementById('artist').value = '';
+    document.getElementById('song').value = '';
+    document.getElementById('album').value = '';
 }
 
 function checkIfNeedToSave() {

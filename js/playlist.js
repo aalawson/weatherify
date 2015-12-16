@@ -420,11 +420,14 @@ function removeSong(id) {
 		}
 	}
 	refreshAddRemoveTable();
+	currentPlaylist['isNew'] = false; //save w/ existing name
 	savePlaylist();
 }
 
 function addSong(index) {
 	index = index.replace('add-', '');
+	document.getElementById('add-' + index).innerHTML = '&#10003';
+	document.getElementById('add-' + index).setAttribute('class', 'g-button form-box disabled');
 	var song = mostRecentSearchResults['tracks']['items'][index];
 	var name = song.name; 
 	var id = song.id;
@@ -438,6 +441,7 @@ function addSong(index) {
             'artistId' : artistId,
             'songId' : id,
          }); 
+    	currentPlaylist['isNew'] = false; //save w/ existing name
     	savePlaylist();
     }
 
