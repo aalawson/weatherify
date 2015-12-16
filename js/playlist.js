@@ -9,19 +9,26 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var numResults = 100;
-var isOpposite = false;
+var numResults = 100; //how many songs do we expect from echonest?
+var isOpposite = false; //is the playlist 'opposite weather day'?
+// /glblIsReWeather : are we 'reweatherifying' (modifying an existing playlist) or creating a new one?
 var glblIsReWeather = false;
+
+// Variables for current playlist parameter levels
 var glblCurWeatherMetrics;
 var glblCurDanceability;
 var glblCurMaxDanceability;
 var glblCurHappiness;
 var glblCurEnergy;
 var glblCurTempo;
-var isMood;
+
+// Weather Mood variables
+var isMood; //is it a 'mood' weather search (e.g. I'm feeling 'windy')?
 var moodId = '';
 var moodTemp = '';
 
+
+/* Enter Key */
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
 	if (keycode == '13') {
@@ -40,11 +47,48 @@ $("#options-form").keypress(function(e) {
 	}
 });
 
+// Only called if we are making a new playlist, NOT modifying an existing one
+function makeNewPlaylistWrapper(isReWeather) {
+	isOpposite = false;
+	glblIsReWeather = false;
+	if(document.getElementById('loc-rad').checked) {
+		isMood = false;
+	} else {
+		isMood = true;
+	}
+	if(isMood){
+		console.log("in make new mood");
+		makeMoodPlaylist(false);
+	} else{
+		makeNewPlaylist(isReWeather);
+	}
+	
+}
+
+//Makes a playlist based on *weather* (not mood)
+function makeNewPlaylist(isReWeather) {
+	if (currentPlaylist['isSaved']) {
+		currentPlaylist['isSaved'] = false;
+	}
+	document.getElementById('playlist-results').innerHTML = "<p id=\"loading-message\">...Loading...</p>";
+	var location = document.getElementById('loc').value;
+	if (isFineTuneOpen) {
+		toggleFineTune();
+	} if (isAddAndRemoveOpen) {
+		toggleAddAndRemove();
+	}
+	getLocation(location, isReWeather);
+    return false;
+}
+
+// Makes an 'opposite day' playlist
 function makeOppositeNewPlaylist(isReWeather) {
 	isOpposite = true;
 	makeNewPlaylist(isReWeather);
 }
 
+
+// Make a 'mood weather' playlist
 function makeMoodPlaylist() {
 	var mood = $("#mood option:selected").val();
 	isMood = true;
@@ -81,39 +125,7 @@ function makeMoodPlaylist() {
 	switchToCurrentPlaylist();
 }
 
-function makeNewPlaylistWrapper(isReWeather) {
-	isOpposite = false;
-	glblIsReWeather = false;
-	if(document.getElementById('loc-rad').checked) {
-		isMood = false;
-	} else {
-		isMood = true;
-	}
-	if(isMood){
-		console.log("in make new mood");
-		makeMoodPlaylist(false);
-	} else{
-		makeNewPlaylist(isReWeather);
-	}
-	
-}
-
-// Weatherify button calls this -- makes a playlist based on weather
-function makeNewPlaylist(isReWeather) {
-	if (currentPlaylist['isSaved']) {
-		currentPlaylist['isSaved'] = false;
-	}
-	document.getElementById('playlist-results').innerHTML = "<p id=\"loading-message\">...Loading...</p>";
-	var location = document.getElementById('loc').value;
-	if (isFineTuneOpen) {
-		toggleFineTune();
-	} if (isAddAndRemoveOpen) {
-		toggleAddAndRemove();
-	}
-	getLocation(location, isReWeather);
-    return false;
-}
-
+// Get a danceability rating based on weather --hotter --> more danceable
 function getDanceability(temp, isReWeather) {
     var tempToDance;
     var danceability;
@@ -137,6 +149,7 @@ function getDanceability(temp, isReWeather) {
 	return danceability;
 }
 
+// Get happiness rating --warming and calmer --> happier
 function getHappiness(weatherMetrics, isReWeather) {
 	var happiness;
 	var maxHappiness;
@@ -154,6 +167,7 @@ function getHappiness(weatherMetrics, isReWeather) {
 	return [happiness, maxHappiness];
 }
 
+// Get Energy Level : More severe weather --> Higher energy
 function getEnergy(weatherMetrics, isReWeather) {
 	var energy;
 	var maxEnergy;
@@ -171,6 +185,7 @@ function getEnergy(weatherMetrics, isReWeather) {
 	return [energy, maxEnergy];
 }
 
+// Get tempo level based on weather: more severe --> faster
 function getTempo(weatherMetrics, isReWeather) {
 	var tempo;
 	var maxTempo;
@@ -188,6 +203,7 @@ function getTempo(weatherMetrics, isReWeather) {
 	return [tempo, maxTempo];
 }
 
+// Does the user want a christmas playlist?
 function getChristmas(isReWeather) {
 	if (isReWeather) {
 		var christmasPlaylist = $('input[name="christmasify"]:checked').val();
@@ -233,21 +249,18 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 		maxDanceability = 1;
 	}
 
+	// Set energy, happiness, and tempo
 	var energyArr = getEnergy(weatherMetrics, isReWeather);
 	var happyArr = getHappiness(weatherMetrics, isReWeather);
 	var tempoArr = getTempo(weatherMetrics, isReWeather);
-
-
 	var energy = energyArr[0];
 	var maxEnergy = energyArr[1];
-
 	var happiness = happyArr[0];
 	var maxHappiness = happyArr[1];
-
 	var tempo = tempoArr[0];
 	var maxTempo = tempoArr[1];
 
-
+	// Query parameters
 	var data = {
 			'api_key': ECONEST_API_KEY,
 			'format' : 'json',
@@ -268,10 +281,10 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	    data.style = genreSelected;
 	}
 
-
 	if (endYear != 'all') {
 		data.artist_end_year_before = endYear;		
 	} 
+	// Update globals
 	glblCurWeatherMetrics = weatherMetrics;
 	glblCurDanceability = danceability;
 	glblCurMaxDanceability = maxDanceability;
@@ -279,8 +292,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	glblCurHappiness = happyArr;
 	glblCurTempo = tempoArr;
 
-	console.log(data);
-
+	// Send query
 	$.ajax({
 		'url': songSearchURL,
 		'data': data,
@@ -306,9 +318,9 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	return false;
 }
 
-//must error check genre up to 5
 // Get Echonest playlist using seed song
 function searchPlaylist(seed, min_hot) {
+	// Use same params as for seed song, except no hotness
 	if (min_hot >= .5) {
 		min_hot = .5;
 	}
@@ -320,14 +332,13 @@ function searchPlaylist(seed, min_hot) {
 		url += '&song_id=' + seed[i]['id'];
 	}
 
-
 	var energy = glblCurEnergy[0];
 	var maxEnergy = glblCurEnergy[1];
 	var happiness = glblCurHappiness[0];
 	var maxHappiness = glblCurHappiness[1];
 	var tempo = glblCurTempo[0];
 	var maxTempo = glblCurTempo[1];
-
+	//Send request
 	$.ajax({
 		'url': url,
 		'data': {
@@ -363,6 +374,7 @@ function searchPlaylist(seed, min_hot) {
 
 }
 
+// Get string of song ids to get Spotify Play Button
 function getPlayerString(songs) {
 	if (songs) {
 		var playerString = '';
@@ -374,8 +386,10 @@ function getPlayerString(songs) {
 
 }
 
+// Construct the default name of the playlist
+// For weather: 68 deg and Sunny in Manhattan
+// For mood: The Happy Playlist
 function getPlaylistName() {
-
 	var name = '';
 
 	if(isMood) {
@@ -398,6 +412,7 @@ function getPlaylistName() {
 	return 'Untitled';
 }
 
+// Make a playlist object for current playlist
 function createPlaylist(results) {
 
 	currentPlaylistName = getPlaylistName();
@@ -411,7 +426,7 @@ function createPlaylist(results) {
         'isSaved' : false,
         'isNew' : true
     }
-
+    // Construct and add songs
     for (var i = 0; i < results['response']['songs'].length; i++) {
         if (results['response']['songs'][i]['tracks'] && results['response']['songs'][i]['tracks'][0]) {
 
@@ -427,7 +442,7 @@ function createPlaylist(results) {
 		    if (results['response']['songs'][i]['tracks'][0]['foreign_id']) {
 		    	songId = results['response']['songs'][i]['tracks'][0]['foreign_id'].replace('spotify:track:', '');
 		    }
-
+		    // Make and push song
 		    if (songId.length > 0) {
 		        currentPlaylist['songs'].push( {
 	            'songName' : results['response']['songs'][i]['title'],
@@ -444,11 +459,13 @@ function createPlaylist(results) {
         }
     }
     currentPlaylist['playerString'] = getPlayerString(currentPlaylist['songs']);
+    // Reset display
     updatePlaylistTopBar();
     displayPlaylist();
 
 }
 
+// Remove a song from current playlist and refresh
 function removeSong(id) {
 	id = id.replace('delete-', '');
 	for (var i = 0; i < currentPlaylist['songs'].length; i++) {
@@ -461,6 +478,7 @@ function removeSong(id) {
 	savePlaylist();
 }
 
+// Add a song to current playlist
 function addSong(index) {
 	index = index.replace('add-', '');
 	document.getElementById('add-' + index).innerHTML = '&#10003';
@@ -484,6 +502,7 @@ function addSong(index) {
 
 }
 
+// Refresh display of current playlist
 function refreshPlaylist() {
 	refreshAddRemoveTable();
 	currentPlaylist['playerString'] = getPlayerString(currentPlaylist['songs']);
