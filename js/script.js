@@ -265,7 +265,7 @@ function hidePopupDisplay() {
 
 // save current playlist (make new one)
 function saveNewPlaylist() {
-  currentPlaylist['name'] = prompt("Enter a name for the playlists:", currentPlaylist['name']);
+  currentPlaylist['name'] = prompt("Enter a name for the playlist:", currentPlaylist['name']);
   currentPlaylist['isSaved'] = true;
   currentPlaylist['isNew'] = false;
   // if it exists, append number to it
@@ -286,6 +286,9 @@ function saveNewPlaylist() {
     document.getElementById('save-playlist-button').disabled = true;
 
     store.set(currentPlaylist['name'], currentPlaylist);
+    console.log("~~~~~~~~~~~~~~~~");
+    console.log(currentPlaylist['name']);
+    glblIsReWeather = true;
     refreshPlaylist();
 }
 
@@ -301,6 +304,7 @@ function savePlaylist() {
   document.getElementById('save-playlist-button').disabled = true;
 
   store.set(currentPlaylist['name'], currentPlaylist);
+  glblIsReWeather = true;
   refreshPlaylist();
 }
 
@@ -319,6 +323,7 @@ function renamePlaylist(name){
 
   store.set(temp['name'], temp);
   currentPlaylist = temp;
+  console.log(currentPlaylist['name']);
   if (name != temp['name']) {
     store.remove(name);
   }
@@ -430,7 +435,7 @@ function updatePlaylistTopBar() {
         document.getElementById('drawers').style.display = "block";
         document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'
     }
-    else if ((!glblIsReWeather) && nameTemp.length > 0 && nameWeather.length > 0 && curLocation.length > 0) {
+    else if ((!glblIsReWeather) && !isMood && nameTemp.length > 0 && nameWeather.length > 0 && curLocation.length > 0) {
         document.getElementById('playlist-name').innerHTML = getPlaylistName().toUpperCase();
         if (!currentPlaylist['isSaved']) {
         document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
@@ -441,6 +446,20 @@ function updatePlaylistTopBar() {
             document.getElementById('save-playlist-button').disabled = true;
         }
 
+        document.getElementById('save-playlist-button').disabled = false;
+        document.getElementById('drawers').style.display = "block";
+        document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'
+    } else if (!glblIsReWeather && isMood && currentPlaylist['name']){
+        console.log("******");
+         document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
+       if (!currentPlaylist['isSaved']) {
+        document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
+          + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>';       
+        } else {
+            document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
+            + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
+            document.getElementById('save-playlist-button').disabled = true;
+        }
         document.getElementById('save-playlist-button').disabled = false;
         document.getElementById('drawers').style.display = "block";
         document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'

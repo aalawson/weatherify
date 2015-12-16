@@ -62,9 +62,9 @@ function getWeatherRating(id, temp, isReWeather) {
 	}
 
 	var weatherParams 	= categoryChart[category][rawSeverity];
-	console.log(weatherParams);
 	nameWeather			= weatherParams[2];
 	var weatherMetrics 	= musicChart[weatherParams[0]];
+	console.log(weatherMetrics);
 	/*var maxenergy = weatherMetrics['max_energy'];
 	var minenergy = weatherMetrics['max_energy'];	
 	var maxtempo = weatherMetrics['min_tempo'];
@@ -83,7 +83,7 @@ function getWeatherRating(id, temp, isReWeather) {
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, .7, isReWeather);
+		searchSeedSong(weatherMetrics, .7, temp, isReWeather);
 	} else {
 		updatePlaylistTopBar();
 
