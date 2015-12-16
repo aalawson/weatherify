@@ -9,14 +9,13 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var numResults = 40;
+var numResults = 100;
 var isOpposite = false;
 var glblCurWeatherMetrics;
 var glblCurDanceability;
 var glblCurMaxDanceability;
 var glblCurHappiness;
 var glblCurEnergy;
-var glblIsReWeather = false;
 var glblCurTempo;
 
 $("#playlist-type-form").keypress(function(e) {
@@ -40,16 +39,28 @@ $("#options-form").keypress(function(e) {
 function makeOppositeNewPlaylist(isReWeather) {
 	isOpposite = true;
 	makeNewPlaylist(isReWeather);
-	glblIsReWeather = isReWeather;
+}
+
+function makeMoodPlaylist() {
+	var mood = [];
+	mood = $("#mood option:selected").val();
+
+	var id = mood[0];
+	var temp = mood[1];
+
+	console.log(id);
+	console.log(temp);
+
+	getWeatherRating(id, temp, false);
 }
 
 function makeNewPlaylistWrapper(isReWeather) {
 	isOpposite = false;
 	makeNewPlaylist(isReWeather);
 }
+
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist(isReWeather) {
-	glblIsReWeather = isReWeather;
 	if (currentPlaylist['isSaved']) {
 		currentPlaylist['isSaved'] = false;
 	}
@@ -65,14 +76,13 @@ function makeNewPlaylist(isReWeather) {
 }
 
 function getDanceability(temp, isReWeather) {
-	glblIsReWeather = isReWeather;
     var tempToDance;
     var danceability;
 
 	if(isReWeather) {
 		danceability = ($('input[name="danceability"]')[0]['valueAsNumber']/10);
-		if (danceability >= .7) {
-			danceability = .6; //for range .8-1, which is max range
+		if (danceability >= .6) {
+			danceability = .5; //for range .8-1, which is max range
 		}
 		console.log(danceability);
 	}
@@ -83,22 +93,21 @@ function getDanceability(temp, isReWeather) {
 			tempToDance = 0;
 		} else tempToDance = temp;
 
-		danceability = (tempToDance * .6) / 100; // where min danceability is .6, max will be 1
+		danceability = (tempToDance * .5) / 100; // where min danceability is .6, max will be 1
 		$("input[name='danceability']").val((temp + .2)/10.0) // set value of slider
 	}
 	return danceability;
 }
 
 function getHappiness(weatherMetrics, isReWeather) {
-	glblIsReWeather = isReWeather;
 	var happiness;
 	var maxHappiness;
 	if (isReWeather) {
 		happiness = ($('input[name="happiness"]')[0]['valueAsNumber']/10);
-		if (happiness >.6) {
-			happiness = .6; //for range .8-1, which is max range
+		if (happiness > .5) {
+			happiness = .5; //for range .8-1, which is max range
 		}
-		maxHappiness = happiness + 0.4;
+		maxHappiness = happiness + 0.5;
 	} else {
 		happiness = weatherMetrics['min_valence'];
 		maxHappiness = weatherMetrics['max_valence'];
@@ -111,17 +120,14 @@ function getHappiness(weatherMetrics, isReWeather) {
 }
 
 function getEnergy(weatherMetrics, isReWeather) {
-	glblIsReWeather = isReWeather;
 	var energy;
 	var maxEnergy;
 	if (isReWeather) {
 		energy = ($('input[name="energy"]')[0]['valueAsNumber']/10);
-		if (energy >.8) {
-			energy = .8; //for range .8-1, which is max range
+		if (energy >= .5) {
+			energy = .5; //for range .8-1, which is max range
 		}
-		if (energy < 0.6) {
-			maxEnergy = energy + 0.4;
-		} else maxEnergy = 1;
+		maxEnergy = energy + 0.5;
 	} else {
 		energy = weatherMetrics['min_energy'];
 		maxEnergy = weatherMetrics['max_energy'];
@@ -135,7 +141,6 @@ function getEnergy(weatherMetrics, isReWeather) {
 
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
-	glblIsReWeather = isReWeather;
 
 	console.log('MIN HOT = ' + min_hot);
 	console.log(isReWeather);
@@ -158,9 +163,10 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var danceability = getDanceability(temp, isReWeather);
 	console.log(danceability);
 	var maxDanceability = 1;
-	if (danceability < 0.6) {
-		maxDanceability = danceability + 0.4;
+	if (danceability > 0.5) {
+		danceability = .5;
 	}
+	maxDanceability = danceability + 0.5;
 	if (temp > 70) {
 		maxDanceability = 1;
 	}
@@ -188,10 +194,10 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			'min_valence' : (happiness).toString(),
 			'max_valence' : (maxHappiness).toString(),
 			'song_min_hotttnesss' : min_hot,
-			'min_danceability' : (danceability).toString(),
-			'max_danceability' : (maxDanceability).toString(),
+			'min_danceability' : danceability,
+			'max_danceability' : maxDanceability,
 
-			'results' : '3',
+			'results' : '1',
 			//'song_type' : christmasPlaylist,
 		}
 
@@ -216,11 +222,12 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 		//callback function needs to be added here 
 		'success': function(results) {
 			// No result for seed song
-			if (results['response']['songs'].length <= 2) {
+			if (results['response']['songs'].length < 1) {
 				// Decrement min hot if possible
 
-				if (Number(min_hot) >= .1) {
-					searchSeedSong(weatherMetrics, (Number(min_hot) - .1).toString(), temp, isReWeather); // lower min popularity if need be
+				if (min_hot >= .1) {
+						console.log('MIN HOT = ' + min_hot);
+					searchSeedSong(weatherMetrics, (min_hot - .1), temp, isReWeather); // lower min popularity if need be
 				} else {
 					displayNoPlaylistResultsError();
 				}
@@ -269,16 +276,17 @@ function searchPlaylist(seed, min_hot) {
 			'min_valence' : (happiness).toString(),
 			'max_valence' : (maxHappiness).toString(),
 			'song_min_hotttnesss' : min_hot,
-			'min_danceability' : (danceability).toString(),
-			'max_danceability' : (maxDanceability).toString(),
+			'min_danceability' : danceability,
+			'max_danceability' : maxDanceability,
 			'results' : numResults,
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
-			console.log(results);
+			console.log("*****************");
+			console.log(results['response']['songs'].length);
 			// Try to get at least 15 results
-			if (results['response']['songs'].length < 15 && Number(min_hot) >= 0.1) {
-				searchPlaylist(seed, (Number(min_hot) - .1 ).toString())
+			if (results['response']['songs'].length < 15 && min_hot >= 0.1) {
+				searchPlaylist(seed, min_hot - .1);
 			} // If  any results were found, display them
 			else if (results['response']['songs'].length > 0) {
 				createPlaylist(results);
@@ -338,7 +346,6 @@ function createPlaylist(results) {
 
         	// See if there was an artist id
 		    var artistId = '';
-		    console.log()
 		    if (results['response']['songs'][i]['artist_foreign_ids']
 		    	&& results['response']['songs'][i]['artist_foreign_ids'][0]
 		    	&& results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id']) {
@@ -385,7 +392,6 @@ function removeSong(id) {
 function addSong(index) {
 	index = index.replace('add-', '');
 	var song = mostRecentSearchResults['tracks']['items'][index];
-	console.log(song);
 	var name = song.name; 
 	var id = song.id;
     var artist = song['artists'][0].name;
@@ -400,8 +406,6 @@ function addSong(index) {
          }); 
     	savePlaylist();
     }
-    console.log(currentPlaylist['songs'].length);
-    console.log(currentPlaylist['songs']);
 
 }
 

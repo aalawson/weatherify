@@ -51,6 +51,7 @@ function processWeatherData(weatherResults, isReWeather) {
 }
 
 function getWeatherRating(id, temp, isReWeather) {
+
 	glblIsReWeather = isReWeather;
 	var category = id.substring(0, 1);
 	var rawSeverity = id.substring(1, id.length);
@@ -82,12 +83,12 @@ function getWeatherRating(id, temp, isReWeather) {
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.4', isReWeather);
+		searchSeedSong(weatherMetrics, .4, isReWeather);
 	} else {
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.4', temp, isReWeather);
+		searchSeedSong(weatherMetrics, .4, temp, isReWeather);
 	}
 }
 
@@ -233,17 +234,17 @@ var musicChart = {
 	},// Light Rain/ Drizzle --moderately slow sad music
 	'3' : {
 		'max_energy' : '0.5',
-		'min_energy' : '0.1',
-		'min_valence' : '.2',
+		'min_energy' : '0',
+		'min_valence' : '.1',
 		'max_valence' : '.6',
 		'max_tempo' : '140',
 		'min_tempo' : '0',
 	}, // Heavy Rain / Drizzle -- slow sad music
 	'5' : {
 		'max_energy' : '0.5',
-		'min_energy' : '0.1',
+		'min_energy' : '0',
 		'min_valence' : '0',
-		'max_valence' : '.4',
+		'max_valence' : '.5',
 		'max_tempo' : '120',
 		'min_tempo' : '0',
 	}, // Snow -- Not anything too fast, low energy, some acousticness
@@ -284,7 +285,7 @@ var musicChart = {
 		'max_energy' : '0.5',
 		'min_energy' : '0',
 		'min_valence' : '0',
-		'max_valence' : '.3',
+		'max_valence' : '.5',
 		'max_tempo' : '500',
 		'min_tempo' : '0',
 	}
