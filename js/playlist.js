@@ -40,9 +40,6 @@ function makeOppositeNewPlaylist(isReWeather) {
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist(isReWeather) {
-	console.log(":)");
-	console.log("hallooooO" + isReWeather);
-
 	if (currentPlaylist['isSaved']) {
 		currentPlaylist['isSaved'] = false;
 	}
@@ -63,9 +60,7 @@ function getDanceability(temp, isReWeather) {
     var danceability;
 
 	if(isReWeather) {
-		console.log($('input[name="danceability"]'));
 		danceability = ($('input[name="danceability"]')[0]['valueAsNumber']/10);
-		console.log("COOLERRRRRR");
 		if (danceability >.8) {
 			danceability = .8; //for range .8-1, which is max range
 		}
@@ -84,14 +79,10 @@ function getDanceability(temp, isReWeather) {
 }
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
-
-	console.log(isReWeather);
-	
-	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
+	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
+	//Get user search parameters
 	var genreSelected = ($('input[name="genre"]:checked').val());
 	var endYear = $("#decade :selected").val();
-
-	// Is christmas
 	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
 	if (!christmasPlaylist) {
 		songSearchURL +='christmas:false';
@@ -99,7 +90,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 		songSearchURL += christmasPlaylist;
 	}
 
-	//uses current temp to map to danceability of a song <<---- this should be used by the home page button
+	//uses current temp to map to danceability of a song
 	var danceability = getDanceability(temp, isReWeather);
 	var maxDanceability = 1;
 	if (danceability < 0.6) {
@@ -157,6 +148,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 //must error check genre up to 5
 // Get Echonest playlist using seed song
 function searchPlaylist(seed, min_hot) {
+	console.log(nameTemp);
 	var weatherMetrics = glblCurWeatherMetrics;
 	var danceability = glblCurDanceability;
 	var maxDanceability = 1;
@@ -186,7 +178,7 @@ function searchPlaylist(seed, min_hot) {
 			console.log(results);
 			// Try to get at least 15 results
 			if (results['response']['songs'].length < 15 && Number(min_hot) >= 0.2) {
-				searchPlaylist(seed, (Number(min_hot) - .2 ).toString())
+				searchPlaylist(seed, (Number(min_hot) - .1 ).toString())
 			} // If  any results were found, display them
 			else if (results['response']['songs'].length > 0) {
 				createPlaylist(results);
@@ -208,6 +200,7 @@ function getPlayerString(songs) {
 }
 
 function getPlaylistName() {
+	console.log(isOpposite);
 	console.log(nameTemp);
 	var name = '';
 	if (nameTemp.length > 0 || nameWeather.length > 0 || curLocation.length > 0) {
@@ -224,6 +217,7 @@ function getPlaylistName() {
 }
 
 function createPlaylist(results) {
+	console.log(nameTemp);
 	currentPlaylistName = getPlaylistName();
     
     currentPlaylist = {

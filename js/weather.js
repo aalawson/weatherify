@@ -75,22 +75,18 @@ function getWeatherRating(id, temp, isReWeather) {
 		weatherMetrics = musicChart[weatherParams[0]];
 		console.log("OPPOSITE");
 		console.log(weatherMetrics);
-		$("input[name='danceability']").val(Number(getOppositeDayTemp())/13.0);
+		getOppositeDayTemp();
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.5', getOppositeDayTemp());
+		searchSeedSong(weatherMetrics, '.4', nameTemp);
 	} else {
 	    // now that we have temp, weather description, & location name,
 	    // update playlist while loading for visibility of system status
-		if(!isReWeather) {
-			$("input[name='danceability']").val(temp/13.0);
-			console.log('COOOOOOL');
-		}
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.5', temp, isReWeather);
+		searchSeedSong(weatherMetrics, '.4', temp, isReWeather);
 	}
 }
 
@@ -98,6 +94,7 @@ function getOppositeDayTemp() {
 	var tempDiff = 50 - Number(nameTemp);
 	var oppositeTemp = 50 + tempDiff;
 	nameTemp = oppositeTemp.toString();
+	console.log("setting name temp");
 	return oppositeTemp.toString();
 }
 
