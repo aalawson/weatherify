@@ -168,6 +168,23 @@ function getEnergy(weatherMetrics, isReWeather) {
 	return [energy, maxEnergy];
 }
 
+function getTempo(weatherMetrics, isReWeather) {
+	var tempo;
+	var maxTempo;
+	if (isReWeather) {
+		tempo = ($('input[name="tempo"]')[0]['valueAsNumber']);
+		if (tempo >= 200) {
+			tempo = 200; //for range .8-1, which is max range
+		}
+		maxTempo = tempo + 50;
+	} else {
+		tempo = weatherMetrics['min_tempo'];
+		maxTempo = weatherMetrics['max_tempo'];
+		$("input[name='tempo']").val((tempo+maxTempo)/2.0);
+	}
+	return [tempo, maxTempo];
+}
+
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
@@ -189,6 +206,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 		songSearchURL += christmasPlaylist;
 	}
 
+
 	//uses current temp to map to danceability of a song
 	var danceability = getDanceability(temp, isReWeather);
 	var maxDanceability = 1;
@@ -203,6 +221,8 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 
 	var energyArr = getEnergy(weatherMetrics, isReWeather);
 	var happyArr = getHappiness(weatherMetrics, isReWeather);
+	var tempoArr = getTempo(weatherMetrics, isReWeather);
+
 
 	var energy = energyArr[0];
 	var maxEnergy = energyArr[1];
@@ -210,14 +230,16 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var happiness = happyArr[0];
 	var maxHappiness = happyArr[1];
 
+	var tempo = tempoArr[0];
+	var maxTempo = tempoArr[1];
 
 
 	var data = {
 			'api_key': ECONEST_API_KEY,
 			'format' : 'json',
 			'bucket' : 'id:spotify',
-			'max_tempo' : weatherMetrics['max_tempo'],
-			'min_tempo' : weatherMetrics['min_tempo'],
+			'max_tempo' : maxTempo,
+			'min_tempo' : tempo,
 			'min_energy' : (energy),
 			'max_energy' : (maxEnergy),
 			'min_valence' : (happiness),
@@ -243,6 +265,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	glblCurMaxDanceability = maxDanceability;
 	glblCurEnergy = energyArr;
 	glblCurHappiness = happyArr;
+	glblCurTempo = tempoArr;
 
 	$.ajax({
 		'url': songSearchURL,
@@ -288,6 +311,8 @@ function searchPlaylist(seed, min_hot) {
 	var maxEnergy = glblCurEnergy[1];
 	var happiness = glblCurHappiness[0];
 	var maxHappiness = glblCurHappiness[1];
+	var tempo = glblCurTempo[0];
+	var maxTempo = glblCurTempo[1];
 
 	$.ajax({
 		'url': url,
@@ -297,8 +322,8 @@ function searchPlaylist(seed, min_hot) {
 			//'song_min_hotttnesss' : min_hot,
 			'max_energy' : (maxEnergy).toString(),
 			'min_energy' : (energy).toString(),
-			'max_tempo' : weatherMetrics['max_tempo'],
-			'min_tempo' : weatherMetrics['min_tempo'],
+			'max_tempo' : maxTempo,
+			'min_tempo' : tempo,
 			'min_valence' : (happiness),
 			'max_valence' : (maxHappiness),
 			//'song_min_hotttnesss' : min_hot,
