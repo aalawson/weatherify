@@ -70,8 +70,6 @@ function getResults() {
 
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
-        console.log(textStatus);
         displayBadParamsError();
 
       }
@@ -114,10 +112,10 @@ function displayTen(trackData) {
             'artistId' : results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id'],
             'songId' : results['response']['songs'][i]['tracks'][0]['foreign_id'].replace('spotify:track:', ''),
          });  */
+  
   //Add Spotify PlayButtons for ten songs, starting at startIndex of track list
   //If fewer than ten songs exist starting from startIndex, then display however
   //many are left. When index is out of range, just clears the results.
-  console.log(trackData);
   var numberOfTracks = trackData['tracks']['items'].length;
   mostRecentSearchResults = trackData;
   var allPlayButtonsHTML = "<h2 id=\"results-header\">Results</h2><table>";

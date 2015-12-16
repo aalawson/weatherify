@@ -57,7 +57,6 @@ function makeNewPlaylistWrapper(isReWeather) {
 		isMood = true;
 	}
 	if(isMood){
-		console.log("in make new mood");
 		makeMoodPlaylist(false);
 	} else{
 		makeNewPlaylist(isReWeather);
@@ -118,7 +117,6 @@ function makeMoodPlaylist() {
 
 	nameTemp = moodTemp.toString();
 	nameWeather = mood.toString();
-	console.log(moodTemp);
 	curLocation = '';
 
 	getWeatherRating(moodId.toString(), moodTemp.toString(), glblIsReWeather);
@@ -222,8 +220,6 @@ function getChristmas(isReWeather) {
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
 	var genreSelected;
-	console.log(isReWeather);
-	console.log(weatherMetrics);
 
 	songSearchURL += getChristmas(isReWeather);
 
@@ -303,7 +299,6 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 				// Decrement min hot if possible
 
 				if (min_hot >= .1) {
-						console.log('MIN HOT = ' + min_hot);
 					searchSeedSong(weatherMetrics, (min_hot - .1), temp, isReWeather); // lower min popularity if need be
 				} else {
 					displayNoPlaylistResultsError();
@@ -356,9 +351,6 @@ function searchPlaylist(seed, min_hot) {
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
-			console.log("*****************");
-			console.log(results['response']['songs'].length);
-			console.log(results);
 			// Try to get at least 15 results
 			if (results['response']['songs'].length < 30 && min_hot >= 0.1) {
 				searchPlaylist(seed, min_hot - .1);

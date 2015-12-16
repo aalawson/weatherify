@@ -54,7 +54,6 @@ function processWeatherData(weatherResults, isReWeather) {
 
 //takes in the id/temp and sends it to searchSeedSong
 function getWeatherRating(id, temp, isReWeather) {
-	console.log(id);
 
 	glblIsReWeather = isReWeather;
 	var category = id.substring(0, 1);
@@ -67,7 +66,6 @@ function getWeatherRating(id, temp, isReWeather) {
 	var weatherParams 	= categoryChart[category][rawSeverity];
 	nameWeather			= weatherParams[2];
 	var weatherMetrics 	= musicChart[weatherParams[0]];
-	console.log(weatherMetrics);
 	/*var maxenergy = weatherMetrics['max_energy'];
 	var minenergy = weatherMetrics['max_energy'];	
 	var maxtempo = weatherMetrics['min_tempo'];
@@ -78,10 +76,7 @@ function getWeatherRating(id, temp, isReWeather) {
 	if (isOpposite) {
 		weatherParams = getOppositeDayMetrics(weatherParams);
 		nameWeather = weatherParams[2];
-		console.log(weatherParams[0]);
 		weatherMetrics = musicChart[weatherParams[0]];
-		console.log("OPPOSITE");
-		console.log(weatherMetrics);
 		getOppositeDayTemp();
 		updatePlaylistTopBar();
 
@@ -100,7 +95,6 @@ function getOppositeDayTemp() {
 	var tempDiff = 50 - Number(nameTemp);
 	var oppositeTemp = 50 + tempDiff;
 	nameTemp = oppositeTemp.toString();
-	console.log("setting name temp");
 	return oppositeTemp.toString();
 }
 
@@ -124,10 +118,7 @@ function bufferSeverity(category) {
 		}
 	}
 	
-	// console.log(weatherMetrics);
 	return weatherMetrics;
-
-
 }
 
 /* VARIABLES FOR INFORMATION */
