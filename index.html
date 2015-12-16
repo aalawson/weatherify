@@ -48,7 +48,7 @@
                 <div id="loc-form-div">
                   <input type="text" id="loc" class="form-box" value="" placeholder="Default location"/>
                 </div>
-                  <div id="make-loc-buttons-div"><button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(false); return false;">Make me a playlist</button>
+                  <div id="make-loc-buttons-div"><button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylistWrapper(false); return false;">Make me a playlist</button>
                   <button type="button" id="opposite-weatherify-loc" class="g-button form-box" onclick="makeOppositeNewPlaylist(false); return false;">Opposite Weather Day!</button> 
                 </div>
               </div>
@@ -67,6 +67,7 @@
                 </select>
               </label>
               <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeMoodPlaylist(); return false;">Make me a playlist</button>
+
             </fieldset>
           </form>
         </div>
