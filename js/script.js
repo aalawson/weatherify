@@ -121,6 +121,17 @@ function switchToCurrentPlaylist() {
     document.getElementById('view-all').setAttribute('class', 'unselected body-content');
     closeFineTune();
     closeAddAndRemove();
+        //If current playlist exists
+    if (currentPlaylist['name']) {
+        document.getElementById('drawers').style.display = "block";
+        displayPlaylist();
+    } // Else display error
+    else {
+        document.getElementById('drawers').style.display = "none";
+        console.log("hi");
+        $('#playlist-results').empty();
+        $('#playlist-results').append("<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist, or \"Home\" to make a new playlist </p>");
+    }
 } 
 
 // Switch Tab to Playlist
@@ -231,7 +242,8 @@ function saveNewPlaylist() {
 // save current playlist (update one)
 function savePlaylist() {
   currentPlaylist['isSaved'] = true;
-  document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
+  document.getElementById('save-button-div').innerHTML 
+      = '<button type="button" id="save-playlist-button" class="g-button disabled'
       + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
   document.getElementById('save-playlist-button').disabled = true;
 
@@ -239,9 +251,31 @@ function savePlaylist() {
   refreshPlaylist();
 }
 
-// delete current playlist
-function deletePlaylist() {
-  store.remove(currentPlaylist['name']);
+// rename chosen playlist
+function renamePlaylist(name){
+  var temp = store.get(name);
+  var new_name = prompt("Please enter new playlist name.", temp['name']);
+  if (!new_name) {
+    //console error here
+    console.log("NO NAME ENTERED");
+  }
+  else{
+    temp['name'] = new_name;
+    console.log(temp['name']);
+  }
+
+  store.set(temp['name'], temp);
+  if (name != temp['name']) {
+    store.remove(name);
+  }
+  showAllPlaylists();
+}
+
+// delete chosen playlist
+function deletePlaylist(name) {
+  confirm("Are you sure you want to delete this playlist, " + name + "?");
+  store.remove(name);
+  showAllPlaylists();
 }
 
 // given the name of the Playlist, a new one is loaded
@@ -260,7 +294,6 @@ function choosePlaylist(name) {
 function deleteAllPlaylists() {
   // GIVE CONFIRMATION HERE!!
   confirm("Are you sure you want to delete all playlists?");
-  confirm("Sure?");
   confirm("REALLY REALLY sure?");
   store.clear();
 }
@@ -269,17 +302,20 @@ function deleteAllPlaylists() {
 function showAllPlaylists(){
     var viewAllHtml = '<h2> My Playlists </h2>';
     store.forEach(function(key, val){
-        console.log(key);
-        console.log(val);
-        viewAllHtml += '<div class=\"one-of-many-playlist-div\"><a id=\'playlist-' + key + '\' href="#" onclick=\"switchToViewOneWrapper(this.id);return false;\"><span>' + key + '</span></a></div>';
-        // key gives the name of the playlist
-        // val gives the array
+        viewAllHtml 
+          += '<div class=\"one-of-many-playlist-div\">'
+          + '<a href="#" onclick="renamePlaylist(\'' + key + '\');"><small> rename </small></a>' 
+          + '<a href="#" onclick="deletePlaylist(\'' + key + '\');"><small> delete </small></a>'
+          + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+          + '<a id=\'playlist-' + key 
+          + '\' href="#" onclick=\"switchToViewOneWrapper(this.id);return false;\"><span>' + key 
+          + '</span></a>' 
+          + '</div>';
   });
   document.getElementById('view-all').innerHTML = viewAllHtml;
 }
 
 function switchToViewOneWrapper(id) {
-    console.log(id);
     id = id.replace('playlist-', '');
     currentPlaylist = {};
     store.forEach(function(key, val){
@@ -288,12 +324,6 @@ function switchToViewOneWrapper(id) {
         }
     });
     switchToCurrentPlaylist();
-    if (currentPlaylist != {}) {
-        displayPlaylist();
-    } else {
-        $('#playlist-results').empty();
-        $('#playlist-results').append("<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist</p>");
-    }
 }
 
 // taken from http://stackoverflow.com/questions/2970525/
@@ -318,10 +348,11 @@ function updatePlaylistTopBar() {
         document.getElementById('playlist-name').innerHTML = "<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist</p>";
     }
 }
+
 // Make playbutton with all songs in playlist
 function displayPlaylist() {
     updatePlaylistTopBar();
-    console.log(currentPlaylist['isSaved']);
+
     $('#playlist-results').empty();
 
     var playerHtml  = '<iframe '
@@ -356,8 +387,9 @@ function refreshAddRemoveTable() {
         tableHtml += '</table>';
     }
     if (tableHtml == '') {
-        tableHtml = '<p> Oops! There are no songs in this playlist </p>';
+        tableHtml = '<p><b>Oops!</b> There are no songs in this playlist </p>';
     }
+
     document.getElementById('add-and-remove-window').innerHTML = addSongsHtml + tableHtml;
 }
 

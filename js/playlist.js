@@ -48,6 +48,8 @@ function makeNewPlaylist(isReWeather) {
 
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
+
+	console.log(isReWeather);
 	
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
 	var genreSelected = ($('input[name="genre"]:checked').val());
@@ -66,7 +68,10 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var danceability;
 	
 	if(isReWeather) {
+		console.log($('input[name="danceability"]'));
 		danceability = ($('input[name="danceability"]')[0]['valueAsNumber']/10);
+		console.log("COOLERRRRRR");
+		console.log(danceability);
 	}
 	else {
 		if (temp > 100) {
@@ -142,6 +147,7 @@ function searchPlaylist(seed, min_hot, danceability, weatherMetrics) {
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
+			console.log(results);
 			// Try to get at least 15 results
 			if (results['response']['songs'].length < 15 && Number(min_hot) >= 0.2) {
 				searchPlaylist(seed, (Number(min_hot) - .2 ).toString())
@@ -166,6 +172,7 @@ function getPlayerString(songs) {
 }
 
 function getPlaylistName() {
+	console.log(nameTemp);
 	var name = '';
 	if (nameTemp.length > 0 || nameWeather.length > 0 || curLocation.length > 0) {
 		if (nameTemp.length > 0) {
@@ -197,6 +204,7 @@ function createPlaylist(results) {
 
         	// See if there was an artist id
 		    var artistId = '';
+		    console.log()
 		    if (results['response']['songs'][i]['artist_foreign_ids']
 		    	&& results['response']['songs'][i]['artist_foreign_ids'][0]
 		    	&& results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id']) {
@@ -243,6 +251,7 @@ function removeSong(id) {
 function addSong(index) {
 	index = index.replace('add-', '');
 	var song = mostRecentSearchResults['tracks']['items'][index];
+	console.log(song);
 	var name = song.name; 
 	var id = song.id;
     var artist = song['artists'][0].name;
@@ -257,6 +266,9 @@ function addSong(index) {
          }); 
     	savePlaylist();
     }
+    console.log(currentPlaylist['songs'].length);
+    console.log(currentPlaylist['songs']);
+
 }
 
 function refreshPlaylist() {

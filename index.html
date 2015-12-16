@@ -43,10 +43,16 @@
             <br/></br>
             <fieldset id='loc-playlist' class='selected type-form'>
               <legend> Location </legend>
-              <input type="text" id="loc" class="form-box" value="" placeholder="Default location"/>
-              <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(false); return false;">Make me a playlist</button>
-              <p id="home-intro-error" class="error-message"></p>
               <p> We've defaulted to your current location, but if you'd rather be somewhere else, feel free to enter it!</p>
+              <div id='loc-enclosing'>
+                <div id="loc-form-div">
+                  <input type="text" id="loc" class="form-box" value="" placeholder="Default location"/>
+                </div>
+                  <div id="make-loc-buttons-div"><button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(false); return false;">Make me a playlist</button>
+                  <button type="button" id="opposite-weatherify-loc" class="g-button form-box" onclick="makeOppositeNewPlaylist(false); return false;">Opposite Weather Day!</button> 
+                </div>
+              </div>
+                <p id="home-intro-error" class="error-message"></p>
             </fieldset>
             <!-- mood-->
             <fieldset id='mood-playlist' class='unselected type-form'>
@@ -67,6 +73,8 @@
       <!-- *************** View one playlist ************ -->
       <div id="view-one" class="unselected body-content">
         <div id="playlist-top-bar">
+          <button type="button" class="g-button no-underline"><a href="index.html" >&#8592start over</a></button>
+          <br/><br/>
           <h2 id="playlist-name"> No Playlist Selected Yet</h2>
           <div id='save-button-div'></div>
           <div id='drawers'>
@@ -136,7 +144,7 @@
             </div>
           </div>
           <div id="playlist-results">
-            <p> Loading </p>
+            <p> Loading... </p>
           </div>
         </div>
 

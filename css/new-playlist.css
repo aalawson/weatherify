@@ -15,6 +15,9 @@
 	width: 640px;
 	margin-bottom: 10px;
 }
+#playlist-top-bar a{
+	text-decoration: none;
+}
 
 #playlist-name {
 	display:inline-block;

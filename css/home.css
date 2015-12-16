@@ -23,10 +23,29 @@
 }
 
 /* Form inputs */
-#loc {
-	width: 580px;
-	height: 18px;
+#loc-form-div {
+	display:inline-block;
+	vertical-align:top;
 }
+#loc {
+	width: 555px;
+	height: 18px;
+	display:inline-block;
+}
+
+#make-loc-buttons-div {
+    display:inline-block;
+}
+
+#weatherify-loc, #opposite-weatherify-loc {
+    display: block;
+}
+
+#weatherify-loc {
+	margin-bottom:5px;
+}
+
+
 
 .type-form {
 	display: none;
