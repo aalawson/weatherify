@@ -121,6 +121,17 @@ function switchToCurrentPlaylist() {
     document.getElementById('view-all').setAttribute('class', 'unselected body-content');
     closeFineTune();
     closeAddAndRemove();
+        //If current playlist exists
+    if (currentPlaylist['name']) {
+        document.getElementById('drawers').style.display = "block";
+        displayPlaylist();
+    } // Else display error
+    else {
+        document.getElementById('drawers').style.display = "none";
+        console.log("hi");
+        $('#playlist-results').empty();
+        $('#playlist-results').append("<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist, or \"Home\" to make a new playlist </p>");
+    }
 } 
 
 // Switch Tab to Playlist
@@ -245,14 +256,18 @@ function renamePlaylist(name){
   var temp = store.get(name);
   var new_name = prompt("Please enter new playlist name.", temp['name']);
   if (!new_name) {
-    new_name = temp['name'];
+    //console error here
+    console.log("NO NAME ENTERED");
   }
   else{
     temp['name'] = new_name;
+    console.log(temp['name']);
   }
 
   store.set(temp['name'], temp);
-  store.remove(name);
+  if (name != temp['name']) {
+    store.remove(name);
+  }
   showAllPlaylists();
 }
 
@@ -289,7 +304,7 @@ function showAllPlaylists(){
     store.forEach(function(key, val){
         viewAllHtml 
           += '<div class=\"one-of-many-playlist-div\">'
-          + '<a href="#" onclick="renamePlaylist(\'' + key + '\');"><small> edit </small></a>' 
+          + '<a href="#" onclick="renamePlaylist(\'' + key + '\');"><small> rename </small></a>' 
           + '<a href="#" onclick="deletePlaylist(\'' + key + '\');"><small> delete </small></a>'
           + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
           + '<a id=\'playlist-' + key 
@@ -309,12 +324,6 @@ function switchToViewOneWrapper(id) {
         }
     });
     switchToCurrentPlaylist();
-    if (currentPlaylist != {}) {
-        displayPlaylist();
-    } else {
-        $('#playlist-results').empty();
-        $('#playlist-results').append("<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist</p>");
-    }
 }
 
 // taken from http://stackoverflow.com/questions/2970525/

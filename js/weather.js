@@ -222,7 +222,7 @@ var categoryChart = {
 }
 
 var musicChart = {
-	// Happy things
+	// Happy things --faster, higher energy
 	'1' : {
 		'max_energy' : '1',
 		'min_energy' : '.6',
@@ -230,35 +230,35 @@ var musicChart = {
 		'min_tempo' : '120',
         'max_acousticness' : '1',
         'min_acouesticness' : '0',
-	},// Light Rain/ Drizzle
+	},// Light Rain/ Drizzle --moderately slow sad music
 	'3' : {
 		'max_energy' : '0.4',
 		'min_energy' : '0.1',
-		'max_tempo' : '500',
+		'max_tempo' : '140',
 		'min_tempo' : '0',
 		'max_acousticness' : '1',
 		'min_acousticness' : '0.5',
-	}, // Heavy Rain / Drizzle
+	}, // Heavy Rain / Drizzle -- slow sad music
 	'5' : {
 		'max_energy' : '0.3',
 		'min_energy' : '0.1',
-		'max_tempo' : '500',
+		'max_tempo' : '120',
 		'min_tempo' : '0',
-		'max_acousticness' : '1',
-		'min_acousticness' : '0.5',
-	}, // Snow
+		'max_acousticness' : '.7',
+		'min_acousticness' : '0.2',
+	}, // Snow -- Not anything too fast, low energy, some acousticness
 	'6' : {
 		'max_energy' : '0.5',
 		'min_energy' : '0.2',
-		'max_tempo' : '500',
+		'max_tempo' : '180',
 		'min_tempo' : '0',
-		'max_acousticness' : '0.7',
-		'min_acousticness' : '0.2',
+		'max_acousticness' : '1',
+		'min_acousticness' : '0.5',
 	}, // Hazy Things
 	'7' : {
 		'max_energy' : '0.4',
 		'min_energy' : '0',
-		'max_tempo' : '500',
+		'max_tempo' : '160',
 		'min_tempo' : '0',
 		'max_acousticness' : '1',
 		'min_acousticness' : '0.5',
@@ -266,7 +266,7 @@ var musicChart = {
 	'8' : {
 		'max_energy' : '0.5',
 		'min_energy' : '0.2',
-		'max_tempo' : '500',
+		'max_tempo' : '150',
 		'min_tempo' : '0',
 		'max_acousticness' : '1',
 		'min_acousticness' : '0.5',
@@ -274,7 +274,7 @@ var musicChart = {
 	'10' : {
 		'max_energy' : '1',
 		'min_energy' : '0.5',
-		'max_tempo' : '500',
+		'max_tempo' : '180',
 		'min_tempo' : '0',
 		'max_acousticness' : '0.5',
 		'min_acousticness' : '0',
@@ -284,7 +284,7 @@ var musicChart = {
 		'max_energy' : '0.5',
 		'min_energy' : '0',
 		'max_tempo' : '500',
-		'min_tempo' : '0',
+		'min_tempo' : '160',
 		'max_acousticness' : '1',
 		'min_acousticness' : '0',
 	}
