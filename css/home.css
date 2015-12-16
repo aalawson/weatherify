@@ -39,10 +39,16 @@
 
 #weatherify-loc, #opposite-weatherify-loc {
     display: block;
+    margin-bottom: 5px;
 }
 
-#weatherify-loc {
-	margin-bottom:5px;
+#mood-loc {
+	display: inline-block;
+}
+
+#mood {
+	width: 200px;
+	display:inline-block;
 }
 
 .type-form {
