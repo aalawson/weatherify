@@ -48,8 +48,8 @@
                 <div id="loc-form-div">
                   <input type="text" id="loc" class="form-box" value="" placeholder="Default location"/>
                 </div>
-                  <div id="make-loc-buttons-div"><button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(); return false;">Make me a playlist</button>
-                  <button type="button" id="opposite-weatherify-loc" class="g-button form-box" onclick="makeOppositeNewPlaylist(); return false;">Opposite Weather Day!</button> 
+                  <div id="make-loc-buttons-div"><button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(false); return false;">Make me a playlist</button>
+                  <button type="button" id="opposite-weatherify-loc" class="g-button form-box" onclick="makeOppositeNewPlaylist(false); return false;">Opposite Weather Day!</button> 
                 </div>
               </div>
                 <p id="home-intro-error" class="error-message"></p>
@@ -65,7 +65,7 @@
                   <option> Happy </option>
                 </select>
               </label>
-              <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(); return false;">Make me a playlist</button>
+              <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(false); return false;">Make me a playlist</button>
             </fieldset>
           </form>
         </div>
@@ -133,13 +133,12 @@
               </label>
                 <br><br>
 
-                <input type="checkbox" name="danceInputCheck" value="true">
                 <b>danceability</b>
-                <input type="range" class="slider" min="0" max="8" name="danceability"><br><br>
+                <input type="range" min="0" max="8" name="danceability"><br><br>
 
                 <input type="checkbox" name="christmasify" value="christmas:true">christmasify<br><br>
 
-                <button type="button" class="g-button" onclick="return makeNewPlaylist();">Weatherify!</button>
+                <button type="button" class="g-button" onclick="return makeNewPlaylist(true); return false;">Weatherify!</button>
 
               </form>
             </div>

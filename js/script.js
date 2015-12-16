@@ -245,7 +245,7 @@ function savePlaylist() {
 // rename chosen playlist
 function renamePlaylist(name){
   var temp = store.get(name);
-  var new_name = prompt("Please enter new group name.", temp['name']);
+  var new_name = prompt("Please enter new playlist name.", temp['name']);
   if (!new_name) {
     //console error here
     console.log("NO NAME ENTERED");
@@ -264,6 +264,7 @@ function renamePlaylist(name){
 
 // delete chosen playlist
 function deletePlaylist(name) {
+  confirm("Are you sure you want to delete this playlist, " + name + "?");
   store.remove(name);
   showAllPlaylists();
 }
@@ -284,7 +285,6 @@ function choosePlaylist(name) {
 function deleteAllPlaylists() {
   // GIVE CONFIRMATION HERE!!
   confirm("Are you sure you want to delete all playlists?");
-  confirm("Sure?");
   confirm("REALLY REALLY sure?");
   store.clear();
 }

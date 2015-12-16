@@ -18,7 +18,8 @@ $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
 	if (keycode == '13') {
 		e.preventDefault();
-		makeNewPlaylist();
+		isReWeather = false;
+		makeNewPlaylist(isReWeather);
 	}
 });
 
@@ -26,11 +27,22 @@ $("#options-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
 	if (keycode == '13') {
 		e.preventDefault();
-		makeNewPlaylist();
+		isReWeather = true;
+		makeNewPlaylist(isReWeather);
 	}
 });
+
+function makeOppositeNewPlaylist(isReWeather) {
+	isOpposite = true;
+	makeNewPlaylist(isReWeather);
+}
+
+
 // Weatherify button calls this -- makes a playlist based on weather
-function makeNewPlaylist() {
+function makeNewPlaylist(isReWeather) {
+	console.log(":)");
+	console.log("hallooooO" + isReWeather);
+
 	if (currentPlaylist['isSaved']) {
 		currentPlaylist['isSaved'] = false;
 	}
@@ -42,38 +54,22 @@ function makeNewPlaylist() {
 	} if (isAddAndRemoveOpen) {
 		toggleAddAndRemove();
 	}
-	getLocation(location);
+	getLocation(location, isReWeather);
     return false;
 }
 
-function makeOppositeNewPlaylist() {
-	isOpposite = true;
-	makeNewPlaylist();
-}
+function getDanceability(temp, isReWeather) {
+    var tempToDance;
+    var danceability;
 
-/* Get seed song to set up echonest playlist */
-function searchSeedSong(weatherMetrics, min_hot, temp) {
-
-	console.log(searchSeedSong);
-	
-	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
-	var genreSelected = ($('input[name="genre"]:checked').val());
-	var endYear = $("#decade :selected").val();
-
-	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
-
-	if (!christmasPlaylist) {
-		songSearchURL +='christmas:false';
-	} else {
-		songSearchURL += christmasPlaylist;
-	}
-
-	//uses current temp to map to danceability of a song <<---- this should be used by the home page button
-	var tempToDance;
-	var danceability;
-	if($('input[name="danceInputCheck"]:checked').val()) {
-		console.log($('input[name="danceability"]') );
-		danceability = ($('input[name="danceability"]')[0]['value']/10);
+	if(isReWeather) {
+		console.log($('input[name="danceability"]'));
+		danceability = ($('input[name="danceability"]')[0]['valueAsNumber']/10);
+		console.log("COOLERRRRRR");
+		if (danceability >.8) {
+			danceability = .8; //for range .8-1, which is max range
+		}
+		console.log(danceability);
 	}
 	else {
 		if (temp > 100) {
@@ -82,7 +78,32 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 			tempToDance = 0;
 		} else tempToDance = temp;
 
-		danceability = tempToDance / 130.0;
+		danceability = (tempToDance * .6) / 100; // where min danceability is .6, max will be 1
+	}
+	return danceability;
+}
+/* Get seed song to set up echonest playlist */
+function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
+
+	console.log(isReWeather);
+	
+	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
+	var genreSelected = ($('input[name="genre"]:checked').val());
+	var endYear = $("#decade :selected").val();
+
+	// Is christmas
+	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
+	if (!christmasPlaylist) {
+		songSearchURL +='christmas:false';
+	} else {
+		songSearchURL += christmasPlaylist;
+	}
+
+	//uses current temp to map to danceability of a song <<---- this should be used by the home page button
+	var danceability = getDanceability(temp, isReWeather);
+	var maxDanceability = 1;
+	if (danceability < 0.6) {
+		maxDanceability = danceability + 0.4;
 	}
 
 	var data = {
@@ -94,8 +115,8 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 			'max_tempo' : weatherMetrics['max_tempo'],
 			'min_tempo' : weatherMetrics['min_tempo'],
 			'song_min_hotttnesss' : min_hot,
-			'min_danceability' : (danceability - 0.2).toString(),
-			'max_danceability' : (danceability + 0.2).toString(),
+			'min_danceability' : (danceability).toString(),
+			'max_danceability' : (maxDanceability).toString(),
 			'results' : '1',
 			//'song_type' : christmasPlaylist,
 		}
@@ -110,6 +131,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 	console.log(data);
 	glblCurWeatherMetrics = weatherMetrics;
 	glblCurDanceability = danceability;
+
 	$.ajax({
 		'url': songSearchURL,
 		'data': data,
@@ -119,13 +141,13 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 			if (results['response']['songs'].length == 0) {
 				// Decrement min hot if possible
 				if (min_hot != '0') {
-					searchSeedSong(weatherMetrics, '0', temp); // lower min popularity if need be
+					searchSeedSong(weatherMetrics, '0', temp, isReWeather); // lower min popularity if need be
 				} else {
 					displayNoPlaylistResultsError();
 				}
 			} // Seed song found 
 			else {
-				searchPlaylist(results['response']['songs'][0]['id'], min_hot);
+				searchPlaylist(results['response']['songs'][0]['id'], min_hot, danceability, weatherMetrics);
 			}
 		}
 	});
@@ -135,9 +157,12 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 //must error check genre up to 5
 // Get Echonest playlist using seed song
 function searchPlaylist(seed, min_hot) {
-	console.log(min_hot)
 	var weatherMetrics = glblCurWeatherMetrics;
 	var danceability = glblCurDanceability;
+	var maxDanceability = 1;
+	if (danceability < 0.6) {
+		maxDanceability = danceability + 0.4;
+	}
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/playlist/static?bucket=id:spotify&bucket=tracks',
 		'data': {
@@ -152,8 +177,8 @@ function searchPlaylist(seed, min_hot) {
 			'min_valence' : weatherMetrics['min_valence'],
 			'max_valence' : weatherMetrics['max_valence'],
 			'song_min_hotttnesss' : min_hot,
-			'min_danceability' : (danceability - 0.2).toString(),
-			'max_danceability' : (danceability + 0.2).toString(),
+			'min_danceability' : (danceability).toString(),
+			'max_danceability' : (maxDanceability).toString(),
 			'results' : numResults,
 		},
 		//callback function needs to be added here 
@@ -183,6 +208,7 @@ function getPlayerString(songs) {
 }
 
 function getPlaylistName() {
+	console.log(nameTemp);
 	var name = '';
 	if (nameTemp.length > 0 || nameWeather.length > 0 || curLocation.length > 0) {
 		if (nameTemp.length > 0) {
