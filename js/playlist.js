@@ -16,7 +16,6 @@ var glblCurDanceability;
 var glblCurMaxDanceability;
 var glblCurHappiness;
 var glblCurEnergy;
-var glblIsReWeather = false;
 var glblCurTempo;
 
 $("#playlist-type-form").keypress(function(e) {
@@ -40,16 +39,30 @@ $("#options-form").keypress(function(e) {
 function makeOppositeNewPlaylist(isReWeather) {
 	isOpposite = true;
 	makeNewPlaylist(isReWeather);
-	glblIsReWeather = isReWeather;
 }
 
+<<<<<<< HEAD
+function makeMoodPlaylist() {
+	var mood = [];
+	mood = $("#mood option:selected").val();
+
+	var id = mood[0];
+	var temp = mood[1];
+
+	console.log(id);
+	console.log(temp);
+
+	getWeatherRating(id, temp, false);
+}
+
+=======
 function makeNewPlaylistWrapper(isReWeather) {
 	isOpposite = false;
 	makeNewPlaylist(isReWeather);
 }
+>>>>>>> 82ec0baaa46a587ebc823e43a6cea16a52330817
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist(isReWeather) {
-	glblIsReWeather = isReWeather;
 	if (currentPlaylist['isSaved']) {
 		currentPlaylist['isSaved'] = false;
 	}
@@ -65,7 +78,6 @@ function makeNewPlaylist(isReWeather) {
 }
 
 function getDanceability(temp, isReWeather) {
-	glblIsReWeather = isReWeather;
     var tempToDance;
     var danceability;
 
@@ -90,7 +102,6 @@ function getDanceability(temp, isReWeather) {
 }
 
 function getHappiness(weatherMetrics, isReWeather) {
-	glblIsReWeather = isReWeather;
 	var happiness;
 	var maxHappiness;
 	if (isReWeather) {
@@ -111,7 +122,6 @@ function getHappiness(weatherMetrics, isReWeather) {
 }
 
 function getEnergy(weatherMetrics, isReWeather) {
-	glblIsReWeather = isReWeather;
 	var energy;
 	var maxEnergy;
 	if (isReWeather) {
@@ -133,7 +143,6 @@ function getEnergy(weatherMetrics, isReWeather) {
 
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
-	glblIsReWeather = isReWeather;
 
 	console.log('MIN HOT = ' + min_hot);
 	console.log(isReWeather);
