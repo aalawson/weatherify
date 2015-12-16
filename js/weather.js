@@ -100,8 +100,8 @@ function getOppositeDayTemp() {
 	return oppositeTemp.toString();
 }
 
+//changes the intensity of metrics depending on category
 function bufferSeverity(category) {
-
 
 	//done to remove 0-index
 	cat_val = parseInt(category[1]) + 1;
@@ -112,6 +112,7 @@ function bufferSeverity(category) {
 	//holds weatherMetrics pre-buffering
 	weatherMetrics = musicChart[category[0]];
 
+	//goes through each metric and updates intensity 
 	for(var i in bufferMetrics) {
 
 		if (parseFloat(weatherMetrics[bufferMetrics[i]]) >= .1){
