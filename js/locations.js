@@ -7,16 +7,19 @@
   var GOOGLE_API_KEY = 'AIzaSyAXZufRi7zaaC4YS7MXV8oS9sduuPcgst8';
   var LOCATE_API_KEY = 'AIzaSyDdAeQrbuEWXNgfVmafLqFyGQcJFBulgLo';
 
+// error: can't find user. location automatically set to New York.
 function couldntFindMe() {
   document.getElementById('loc').value = "New York"; 
   document.getElementById('home-intro-error').innerHTML = '';
 }
 
+// error: user enters location that can't be found
 function couldntFindLocation() {
   couldntFindMe();
   document.getElementById('home-intro-error').innerHTML = 'Oops! We couldn\'t find the location you entered';
 }
 
+// takes the user's IP address and returns their lat and long
 function findMe() {
   $.getJSON('http://ip-api.com/json/?callback=?', function(data) {
         // Check to make sure at least one song was returned
@@ -31,6 +34,7 @@ function findMe() {
       });   
 }
 
+// based on lat and long, finds the city & state of the user
 function reverseGeocode(lat, lng) {
   $.ajax ({
     'url': 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=' + GOOGLE_API_KEY,
@@ -64,6 +68,8 @@ function reverseGeocode(lat, lng) {
     }
   });  
 }
+
+// based on address, returns location 
 function getLocation(location, isReWeather) {
   glblIsReWeather = isReWeather;
   $.ajax ({
@@ -74,7 +80,7 @@ function getLocation(location, isReWeather) {
       var isValid = data['results'] && (data['results'].length > 0);
       if (!isValid) {
           couldntFindLocation(); // let user know that no results were found
-      } //Valid! Display first ten results
+      } //Valid!
       else {
         searchLocation(data['results'], isReWeather);
         return false;
@@ -88,6 +94,7 @@ function getLocation(location, isReWeather) {
   });
 }
 
+//based on lat and lng, calls getWeather to get the weather
 function searchLocation(results, isReWeather) {
   glblIsReWeather = isReWeather;
   // In rare case of multiple results, Google Maps geocoder returns
