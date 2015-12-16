@@ -83,12 +83,12 @@ function getWeatherRating(id, temp, isReWeather) {
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, .4, isReWeather);
+		searchSeedSong(weatherMetrics, .7, isReWeather);
 	} else {
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, .4, temp, isReWeather);
+		searchSeedSong(weatherMetrics, .7, temp, isReWeather);
 	}
 }
 
@@ -189,7 +189,7 @@ var categoryChart = {
 
 	'8' : { // Cloudiness
 		'00' : ['1', '0', 'sky is clear'], //move to happy weathers category
-		'01' : ['1', '1', 'few clouds'], //move to happy weathers category
+		'01' : ['8', '1', 'few clouds'], //move to happy weathers category
 		'02' : ['8', '2', 'scattered clouds'],
 		'03' : ['8', '3', 'broken clouds'],
 		'04' : ['8', '4', 'overcast clouds'],
@@ -226,8 +226,8 @@ var musicChart = {
 	// Happy things --faster, higher energy
 	'1' : {
 		'max_energy' : '1',
-		'min_energy' : '.4',
-		'min_valence' : '.4',
+		'min_energy' : '.6',
+		'min_valence' : '.6',
 		'max_valence' : '1',
 		'max_tempo' : '500',
 		'min_tempo' : '100',
@@ -235,8 +235,8 @@ var musicChart = {
 	'3' : {
 		'max_energy' : '0.5',
 		'min_energy' : '0',
-		'min_valence' : '.1',
-		'max_valence' : '.6',
+		'min_valence' : '0',
+		'max_valence' : '.5',
 		'max_tempo' : '140',
 		'min_tempo' : '0',
 	}, // Heavy Rain / Drizzle -- slow sad music
@@ -267,14 +267,14 @@ var musicChart = {
 	'8' : {
 		'max_energy' : '0.5',
 		'min_energy' : '0',
-		'min_valence' : '.1',
-		'max_valence' : '.6',
+		'min_valence' : '0',
+		'max_valence' : '.5',
 		'max_tempo' : '150',
 		'min_tempo' : '0',
 	}, // Calm
 	'10' : {
-		'max_energy' : '1',
-		'min_energy' : '0.5',
+		'max_energy' : '.5',
+		'min_energy' : '0',
 		'min_valence' : '.2',
 		'max_valence' : '.7',
 		'max_tempo' : '180',
@@ -282,8 +282,8 @@ var musicChart = {
 	},
     // Very Severe Things
 	'11' : {
-		'max_energy' : '0.5',
-		'min_energy' : '0',
+		'max_energy' : '1',
+		'min_energy' : '.5',
 		'min_valence' : '0',
 		'max_valence' : '.5',
 		'max_tempo' : '500',

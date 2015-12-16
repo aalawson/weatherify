@@ -23,6 +23,10 @@
 	display:inline-block;
 }
 
+#playlist-rename-delete-div {
+	display: inline-block;
+}
+
 #intro-p {
 	font-size: 14px;
 	margin-top: 40px;

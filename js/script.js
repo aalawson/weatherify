@@ -315,9 +315,11 @@ function renamePlaylist(name){
   }
 
   store.set(temp['name'], temp);
+  currentPlaylist = temp;
   if (name != temp['name']) {
     store.remove(name);
   }
+  refreshPlaylist();
   showAllPlaylists();
 }
 
@@ -379,6 +381,8 @@ function switchToViewOneWrapper(id) {
             currentPlaylist = val;
         }
     });
+    console.log(currentPlaylist);
+    glblIsReWeather = true;
     switchToCurrentPlaylist();
 }
 
@@ -431,7 +435,12 @@ function displayPlaylist() {
     updatePlaylistTopBar();
     if (currentPlaylist['name']){
         $('#playlist-results').empty();
-        var playerHtml  = '<iframe '
+        var playerHtml = '';
+        if (!currentPlaylist['isNew']) {
+            document.getElementById('playlist-rename-delete-div').innerHTML = '<a href="#" onclick="renamePlaylist(\'' + currentPlaylist['name'] + '\');"><small> rename </small></a>' 
+          + '<a href="#" onclick="deletePlaylist(\'' + currentPlaylist['name'] + '\');"><small> delete </small></a>'
+        }
+        playerHtml  += '<iframe '
           + 'src="https://embed.spotify.com/?uri=spotify:trackset:';
 
         // adds songs to the player

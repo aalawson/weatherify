@@ -11,6 +11,7 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 var songIdResults = [];			//array of spotify ids
 var numResults = 100;
 var isOpposite = false;
+var glblIsReWeather = false;
 var glblCurWeatherMetrics;
 var glblCurDanceability;
 var glblCurMaxDanceability;
@@ -268,14 +269,14 @@ function searchPlaylist(seed, min_hot) {
 		'data': {
 			'api_key': ECONEST_API_KEY,
 			'type': 'song-radio',
-			'song_min_hotttnesss' : min_hot,
+			//'song_min_hotttnesss' : min_hot,
 			'max_energy' : (maxEnergy).toString(),
 			'min_energy' : (energy).toString(),
 			'max_tempo' : weatherMetrics['max_tempo'],
 			'min_tempo' : weatherMetrics['min_tempo'],
 			'min_valence' : (happiness).toString(),
 			'max_valence' : (maxHappiness).toString(),
-			'song_min_hotttnesss' : min_hot,
+			//'song_min_hotttnesss' : min_hot,
 			'min_danceability' : danceability,
 			'max_danceability' : maxDanceability,
 			'results' : numResults,
@@ -284,8 +285,9 @@ function searchPlaylist(seed, min_hot) {
 		'success': function(results) {
 			console.log("*****************");
 			console.log(results['response']['songs'].length);
+			console.log(results);
 			// Try to get at least 15 results
-			if (results['response']['songs'].length < 15 && min_hot >= 0.1) {
+			if (results['response']['songs'].length <= 20 && min_hot >= 0.1) {
 				searchPlaylist(seed, min_hot - .1);
 			} // If  any results were found, display them
 			else if (results['response']['songs'].length > 0) {
