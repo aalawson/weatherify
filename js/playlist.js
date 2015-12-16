@@ -82,7 +82,7 @@ function makeMoodPlaylist() {
 
 function makeNewPlaylistWrapper(isReWeather) {
 	isOpposite = false;
-	if(document.getElementById('loc-radio').checked) {
+	if(document.getElementById('loc-rad').checked) {
 		isMood = false;
 	} else {
 		isMood = true;
@@ -218,10 +218,10 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			'bucket' : 'id:spotify',
 			'max_tempo' : weatherMetrics['max_tempo'],
 			'min_tempo' : weatherMetrics['min_tempo'],
-			'min_energy' : (energy).toString(),
-			'max_energy' : (maxEnergy).toString(),
-			'min_valence' : (happiness).toString(),
-			'max_valence' : (maxHappiness).toString(),
+			'min_energy' : (energy),
+			'max_energy' : (maxEnergy),
+			'min_valence' : (happiness),
+			'max_valence' : (maxHappiness),
 			'song_min_hotttnesss' : min_hot,
 			'min_danceability' : danceability,
 			'max_danceability' : maxDanceability,
@@ -299,8 +299,8 @@ function searchPlaylist(seed, min_hot) {
 			'min_energy' : (energy).toString(),
 			'max_tempo' : weatherMetrics['max_tempo'],
 			'min_tempo' : weatherMetrics['min_tempo'],
-			'min_valence' : (happiness).toString(),
-			'max_valence' : (maxHappiness).toString(),
+			'min_valence' : (happiness),
+			'max_valence' : (maxHappiness),
 			//'song_min_hotttnesss' : min_hot,
 			'min_danceability' : danceability,
 			'max_danceability' : maxDanceability,
