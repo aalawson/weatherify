@@ -222,11 +222,11 @@ var musicChart = {
 	// Happy things --faster, higher energy
 	'1' : {
 		'max_energy' : '1',
-		'min_energy' : '.5',
-		'min_valence' : '.6',
+		'min_energy' : '.4',
+		'min_valence' : '.4',
 		'max_valence' : '1',
 		'max_tempo' : '500',
-		'min_tempo' : '110',
+		'min_tempo' : '100',
 	},// Light Rain/ Drizzle --moderately slow sad music
 	'3' : {
 		'max_energy' : '0.5',

@@ -103,6 +103,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 		maxDanceability = 1;
 	}
 
+
 	var data = {
 			'api_key': ECONEST_API_KEY,
 			'format' : 'json',
@@ -139,7 +140,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			if (results['response']['songs'].length == 0) {
 				// Decrement min hot if possible
 				if (min_hot != '0') {
-					searchSeedSong(weatherMetrics, '0', temp, isReWeather); // lower min popularity if need be
+					searchSeedSong(weatherMetrics, (Number(min_hot) - .1).toString(), temp, isReWeather); // lower min popularity if need be
 				} else {
 					displayNoPlaylistResultsError();
 				}
