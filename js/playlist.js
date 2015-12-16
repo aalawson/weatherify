@@ -11,6 +11,8 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 var songIdResults = [];			//array of spotify ids
 var numResults = 100;
 var isOpposite = false;
+var glblCurWeatherMetrics;
+var glblCurDanceability;
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -82,7 +84,6 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 
 		danceability = tempToDance / 130.0;
 	}
-	
 
 	var data = {
 			'api_key': ECONEST_API_KEY,
@@ -92,11 +93,9 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 			'min_energy' : weatherMetrics['min_energy'],
 			'max_tempo' : weatherMetrics['max_tempo'],
 			'min_tempo' : weatherMetrics['min_tempo'],
-			'max_acousticness' : weatherMetrics['max_acousticness'],
-			'min_acousticness' : weatherMetrics['min_acousticness'],
 			'song_min_hotttnesss' : min_hot,
-			'min_danceability' : danceability,
-			'max_danceability' : danceability + 0.2,
+			'min_danceability' : (danceability - 0.2).toString(),
+			'max_danceability' : (danceability + 0.2).toString(),
 			'results' : '1',
 			//'song_type' : christmasPlaylist,
 		}
@@ -109,6 +108,8 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 		data.artist_end_year_before = endYear;		
 	} 
 	console.log(data);
+	glblCurWeatherMetrics = weatherMetrics;
+	glblCurDanceability = danceability;
 	$.ajax({
 		'url': songSearchURL,
 		'data': data,
@@ -134,7 +135,9 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 //must error check genre up to 5
 // Get Echonest playlist using seed song
 function searchPlaylist(seed, min_hot) {
-	
+	console.log(min_hot)
+	var weatherMetrics = glblCurWeatherMetrics;
+	var danceability = glblCurDanceability;
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/playlist/static?bucket=id:spotify&bucket=tracks',
 		'data': {
@@ -142,6 +145,15 @@ function searchPlaylist(seed, min_hot) {
 			'type': 'song-radio',
 			'song_id' : seed,
 			'song_min_hotttnesss' : min_hot,
+			'max_energy' : weatherMetrics['max_energy'],
+			'min_energy' : weatherMetrics['min_energy'],
+			'max_tempo' : weatherMetrics['max_tempo'],
+			'min_tempo' : weatherMetrics['min_tempo'],
+			'min_valence' : weatherMetrics['min_valence'],
+			'max_valence' : weatherMetrics['max_valence'],
+			'song_min_hotttnesss' : min_hot,
+			'min_danceability' : (danceability - 0.2).toString(),
+			'max_danceability' : (danceability + 0.2).toString(),
 			'results' : numResults,
 		},
 		//callback function needs to be added here 

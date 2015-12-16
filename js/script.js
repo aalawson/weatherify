@@ -121,17 +121,8 @@ function switchToCurrentPlaylist() {
     document.getElementById('view-all').setAttribute('class', 'unselected body-content');
     closeFineTune();
     closeAddAndRemove();
-        //If current playlist exists
-    if (currentPlaylist['name']) {
-        document.getElementById('drawers').style.display = "block";
-        displayPlaylist();
-    } // Else display error
-    else {
-        document.getElementById('drawers').style.display = "none";
-        console.log("hi");
-        $('#playlist-results').empty();
-        $('#playlist-results').append("<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist, or \"Home\" to make a new playlist </p>");
-    }
+
+    displayPlaylist();
 } 
 
 // Switch Tab to Playlist
@@ -332,7 +323,7 @@ function titlecase(str) {
 }
 
 function updatePlaylistTopBar() {
-    if (currentPlaylist != {}) {
+    if (nameTemp.length > 0 && nameWeather.length > 0 && curLocation.length > 0) {
         document.getElementById('playlist-name').innerHTML = getPlaylistName().toUpperCase();
         if (!currentPlaylist['isSaved']) {
         document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
@@ -344,26 +335,30 @@ function updatePlaylistTopBar() {
         }
 
         document.getElementById('save-playlist-button').disabled = false;
+        document.getElementById('drawers').style.display = "block";
+        document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'
     } else {
-        document.getElementById('playlist-name').innerHTML = "<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist</p>";
+        document.getElementById('playlist-name').innerHTML = 'No playlist selected yet.';
+        document.getElementById('playlist-results').innerHTML = "<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist, or \"Home\" to make a new playlist.</p>";
+        document.getElementById('drawers').style.display = "none";
     }
 }
 
 // Make playbutton with all songs in playlist
 function displayPlaylist() {
     updatePlaylistTopBar();
+    if (currentPlaylist['name']){
+        $('#playlist-results').empty();
+        var playerHtml  = '<iframe '
+          + 'src="https://embed.spotify.com/?uri=spotify:trackset:';
 
-    $('#playlist-results').empty();
+        // adds songs to the player
+        playerHtml  += currentPlaylist['playerString']
+          + '" frameborder="0" width="640px" height="720"'
+          + 'align="center" allowtransparency="true"></iframe>';
 
-    var playerHtml  = '<iframe '
-      + 'src="https://embed.spotify.com/?uri=spotify:trackset:';
-
-    // adds songs to the player
-    playerHtml  += currentPlaylist['playerString']
-      + '" frameborder="0" width="640px" height="720"'
-      + 'align="center" allowtransparency="true"></iframe>';
-
-    $('#playlist-results').append(playerHtml);
+        $('#playlist-results').append(playerHtml);
+    }
 }
 
 function displayNoPlaylistResultsError() {

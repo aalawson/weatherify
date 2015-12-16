@@ -226,6 +226,8 @@ var musicChart = {
 	'1' : {
 		'max_energy' : '1',
 		'min_energy' : '.6',
+		'min_valence' : '.8',
+		'max_valence' : '1',
 		'max_tempo' : '500',
 		'min_tempo' : '120',
         'max_acousticness' : '1',
@@ -234,6 +236,8 @@ var musicChart = {
 	'3' : {
 		'max_energy' : '0.4',
 		'min_energy' : '0.1',
+		'min_valence' : '.2',
+		'max_valence' : '.6',
 		'max_tempo' : '140',
 		'min_tempo' : '0',
 		'max_acousticness' : '1',
@@ -242,6 +246,8 @@ var musicChart = {
 	'5' : {
 		'max_energy' : '0.3',
 		'min_energy' : '0.1',
+		'min_valence' : '0',
+		'max_valence' : '.4',
 		'max_tempo' : '120',
 		'min_tempo' : '0',
 		'max_acousticness' : '.7',
@@ -250,6 +256,8 @@ var musicChart = {
 	'6' : {
 		'max_energy' : '0.5',
 		'min_energy' : '0.2',
+		'min_valence' : '.2',
+		'max_valence' : '.7', //snow could be more positive than rain
 		'max_tempo' : '180',
 		'min_tempo' : '0',
 		'max_acousticness' : '1',
@@ -258,6 +266,8 @@ var musicChart = {
 	'7' : {
 		'max_energy' : '0.4',
 		'min_energy' : '0',
+		'min_valence' : '0',
+		'max_valence' : '.7',
 		'max_tempo' : '160',
 		'min_tempo' : '0',
 		'max_acousticness' : '1',
@@ -266,6 +276,8 @@ var musicChart = {
 	'8' : {
 		'max_energy' : '0.5',
 		'min_energy' : '0.2',
+		'min_valence' : '.1',
+		'max_valence' : '.6',
 		'max_tempo' : '150',
 		'min_tempo' : '0',
 		'max_acousticness' : '1',
@@ -274,6 +286,8 @@ var musicChart = {
 	'10' : {
 		'max_energy' : '1',
 		'min_energy' : '0.5',
+		'min_valence' : '.2',
+		'max_valence' : '.7',
 		'max_tempo' : '180',
 		'min_tempo' : '0',
 		'max_acousticness' : '0.5',
@@ -283,6 +297,8 @@ var musicChart = {
 	'11' : {
 		'max_energy' : '0.5',
 		'min_energy' : '0',
+		'min_valence' : '0',
+		'max_valence' : '.3',
 		'max_tempo' : '500',
 		'min_tempo' : '160',
 		'max_acousticness' : '1',
