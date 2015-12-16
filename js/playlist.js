@@ -75,10 +75,10 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var danceability;
 	
 	if(isReWeather) {
-		console.log($('input[name="danceability"]'));
 		danceability = ($('input[name="danceability"]')[0]['valueAsNumber']/10);
-		console.log("COOLERRRRRR");
-		console.log(danceability);
+		data.min_energy = ($('input[name="energy"]')[0]['valueAsNumber']/10);
+		data.max_energy = (($('input[name="energy"]')[0]['valueAsNumber']+2)/10)''
+		data.min_tempo = ($('input[name="energy"]')[0]['valueAsNumber']);
 	}
 	else {
 		if (temp > 100) {
