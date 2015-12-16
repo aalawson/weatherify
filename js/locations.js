@@ -98,6 +98,7 @@ function searchLocation(results, isReWeather) {
   } else {
     curLocation = address;
   }
+  document.getElementById('loc').value = curLocation;
   switchToCurrentPlaylist();
   document.getElementById('options-window').style.display = "none";  
   getWeather(lat, lng, isReWeather);
