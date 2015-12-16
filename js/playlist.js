@@ -13,6 +13,7 @@ var numResults = 100;
 var isOpposite = false;
 var glblCurWeatherMetrics;
 var glblCurDanceability;
+var glblCurMaxDanceability;
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -74,6 +75,7 @@ function getDanceability(temp, isReWeather) {
 		} else tempToDance = temp;
 
 		danceability = (tempToDance * .6) / 100; // where min danceability is .6, max will be 1
+		$("input[name='danceability']").val((temp + .2)/10.0) // set value of slider
 	}
 	return danceability;
 }
@@ -92,9 +94,13 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 
 	//uses current temp to map to danceability of a song
 	var danceability = getDanceability(temp, isReWeather);
+	console.log(danceability);
 	var maxDanceability = 1;
 	if (danceability < 0.6) {
 		maxDanceability = danceability + 0.4;
+	}
+	if (temp > 70) {
+		maxDanceability = 1;
 	}
 
 	var data = {
@@ -122,6 +128,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	console.log(data);
 	glblCurWeatherMetrics = weatherMetrics;
 	glblCurDanceability = danceability;
+	glblCurMaxDanceability = maxDanceability;
 
 	$.ajax({
 		'url': songSearchURL,
@@ -151,10 +158,8 @@ function searchPlaylist(seed, min_hot) {
 	console.log(nameTemp);
 	var weatherMetrics = glblCurWeatherMetrics;
 	var danceability = glblCurDanceability;
-	var maxDanceability = 1;
-	if (danceability < 0.6) {
-		maxDanceability = danceability + 0.4;
-	}
+	var maxDanceability = glblCurMaxDanceability;
+
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/playlist/static?bucket=id:spotify&bucket=tracks',
 		'data': {

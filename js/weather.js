@@ -66,6 +66,8 @@ function getWeatherRating(id, temp, isReWeather) {
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
 
+
+
 	if (isOpposite) {
 		weatherParams = getOppositeDayMetrics(weatherParams);
 		nameWeather = weatherParams[2];
@@ -77,10 +79,8 @@ function getWeatherRating(id, temp, isReWeather) {
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.4', nameTemp);
+		searchSeedSong(weatherMetrics, '.4', isReWeather);
 	} else {
-	    // now that we have temp, weather description, & location name,
-	    // update playlist while loading for visibility of system status
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
