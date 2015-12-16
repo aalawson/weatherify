@@ -43,14 +43,16 @@ function makeOppositeNewPlaylist(isReWeather) {
 	glblIsReWeather = isReWeather;
 }
 
-
+function makeNewPlaylistWrapper(isReWeather) {
+	isOpposite = false;
+	makeNewPlaylist(isReWeather);
+}
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist(isReWeather) {
 	glblIsReWeather = isReWeather;
 	if (currentPlaylist['isSaved']) {
 		currentPlaylist['isSaved'] = false;
 	}
-
 	document.getElementById('playlist-results').innerHTML = "<p id=\"loading-message\">...Loading...</p>";
 	var location = document.getElementById('loc').value;
 	if (isFineTuneOpen) {

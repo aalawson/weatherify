@@ -170,6 +170,9 @@ function checkIfNeedToSave() {
                 savePlaylist();
             } else { //if user pressed cancel
                 currentPlaylist = {};
+                nameTemp = '';
+                nameWeather = '';
+                curLocation = '';
             }
         } // if it's an existing playlist, automatically save it
         else {
@@ -388,7 +391,7 @@ function updatePlaylistTopBar() {
     console.log(glblIsReWeather);
     console.log(currentPlaylist['name']);
     console.log(nameTemp);
-    console.log('')
+    console.log('');
     if (glblIsReWeather && currentPlaylist['name'] && currentPlaylist['name'].length > 0) {
         console.log("******");
          document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
