@@ -62,8 +62,7 @@ function getWeatherRating(id, temp) {
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
 
-	document.getElementsByName('danceability').value = temp/100;
-	console.log(document.getElementsByName('danceability').value);
+ 	$("input[name='danceability']").val(temp/13.0);
 
 	console.log(weatherParams);
 	console.log(getOppositeDayMetrics(weatherParams));
