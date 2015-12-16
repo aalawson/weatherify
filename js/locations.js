@@ -65,6 +65,7 @@ function reverseGeocode(lat, lng) {
   });  
 }
 function getLocation(location, isReWeather) {
+  glblIsReWeather = isReWeather;
   $.ajax ({
     'url': 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=' + GOOGLE_API_KEY,
     'cache':true,
@@ -88,6 +89,7 @@ function getLocation(location, isReWeather) {
 }
 
 function searchLocation(results, isReWeather) {
+  glblIsReWeather = isReWeather;
   // In rare case of multiple results, Google Maps geocoder returns
   // most meaningful result first, so I just use index 0.
   var lat = results[0]['geometry']['location']['lat'];

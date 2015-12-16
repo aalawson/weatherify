@@ -162,8 +162,13 @@ function checkIfNeedToSave() {
             var name = prompt("Before you leave this page, would you like to save this playlist?\n" +
                 "Press cancel to lose the playlist, or enter a name to save it", currentPlaylist['name']);
             if (name != null && name != '') {
+                console.log("********");
+                currentPlaylist['name'] = name;
+                currentPlaylist['isNew'] = false;
+                currentPlaylist['isSaved'] = true;
+                checkPlaylistName();
                 savePlaylist();
-            } else {
+            } else { //if user pressed cancel
                 currentPlaylist = {};
             }
         } // if it's an existing playlist, automatically save it
@@ -171,6 +176,28 @@ function checkIfNeedToSave() {
             savePlaylist();
         }
     }
+}
+
+function checkPlaylistName() {
+      // if it exists, append number to it
+  if(store.get(currentPlaylist['name'])){
+    var hasPlaylist = true;
+    var i = 1;
+
+    while(hasPlaylist){
+      currentPlaylist['name'] += "-" + i;
+      if(!store.get(currentPlaylist['name']))
+        break;
+      i++;
+    }
+  }
+    document.getElementById('save-button-div').innerHTML 
+      = '<button type="button" id="save-playlist-button" class="g-button disabled'
+      + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
+    document.getElementById('save-playlist-button').disabled = true;
+
+    store.set(currentPlaylist['name'], currentPlaylist);
+    refreshPlaylist();
 }
 function openSearchPopup() {
     document.getElementById('search').style.display = "block";
@@ -358,7 +385,11 @@ function titlecase(str) {
 }
 
 function updatePlaylistTopBar() {
-    if (currentPlaylist['name'] && currentPlaylist['name'].length > 0) {
+    console.log(glblIsReWeather);
+    console.log(currentPlaylist['name']);
+    console.log(nameTemp);
+    console.log('')
+    if (glblIsReWeather && currentPlaylist['name'] && currentPlaylist['name'].length > 0) {
         console.log("******");
          document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
        if (!currentPlaylist['isSaved']) {
@@ -375,7 +406,7 @@ function updatePlaylistTopBar() {
         document.getElementById('drawers').style.display = "block";
         document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'
     }
-    else if (nameTemp.length > 0 && nameWeather.length > 0 && curLocation.length > 0) {
+    else if ((!glblIsReWeather) && nameTemp.length > 0 && nameWeather.length > 0 && curLocation.length > 0) {
         document.getElementById('playlist-name').innerHTML = getPlaylistName().toUpperCase();
         if (!currentPlaylist['isSaved']) {
         document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'

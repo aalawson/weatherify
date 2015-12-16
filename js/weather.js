@@ -13,6 +13,7 @@
 
 /* WEATHER SECTION */
 function getWeather(lat, lng, isReWeather) {
+	glblIsReWeather = isReWeather;
 	$.ajax({
 	  'url': 'http://api.openweathermap.org/data/2.5/weather',
 	  'data': {
@@ -33,6 +34,7 @@ function getWeather(lat, lng, isReWeather) {
 
 // Takes weather results and converts to a rating for getting music
 function processWeatherData(weatherResults, isReWeather) {
+	glblIsReWeather = isReWeather;
 	var temp 		= weatherResults['main']['temp'];
 	var tempString 	= temp.toString();
 	if (tempString.indexOf('.') >= 0) {
@@ -50,6 +52,7 @@ function processWeatherData(weatherResults, isReWeather) {
 
 function getWeatherRating(id, temp, isReWeather) {
 
+	glblIsReWeather = isReWeather;
 	var category = id.substring(0, 1);
 	var rawSeverity = id.substring(1, id.length);
 

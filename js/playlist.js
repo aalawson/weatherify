@@ -43,7 +43,7 @@ function makeOppositeNewPlaylist(isReWeather) {
 
 function makeMoodPlaylist() {
 	var mood = [];
-	mood =  $("#mood option:selected").val();
+	mood = $("#mood option:selected").val();
 
 	var id = mood[0];
 	var temp = mood[1];
