@@ -13,6 +13,7 @@ var numResults = 100;
 var isOpposite = false;
 var glblCurWeatherMetrics;
 var glblCurDanceability;
+var glblCurMaxDanceability;
 var glblCurHappiness;
 var glblCurEnergy;
 
@@ -42,9 +43,6 @@ function makeOppositeNewPlaylist(isReWeather) {
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist(isReWeather) {
-	console.log(":)");
-	console.log("hallooooO" + isReWeather);
-
 	if (currentPlaylist['isSaved']) {
 		currentPlaylist['isSaved'] = false;
 	}
@@ -65,9 +63,7 @@ function getDanceability(temp, isReWeather) {
     var danceability;
 
 	if(isReWeather) {
-		console.log($('input[name="danceability"]'));
 		danceability = ($('input[name="danceability"]')[0]['valueAsNumber']/10);
-		console.log("COOLERRRRRR");
 		if (danceability >.8) {
 			danceability = .8; //for range .8-1, which is max range
 		}
@@ -81,6 +77,7 @@ function getDanceability(temp, isReWeather) {
 		} else tempToDance = temp;
 
 		danceability = (tempToDance * .6) / 100; // where min danceability is .6, max will be 1
+		$("input[name='danceability']").val((temp + .2)/10.0) // set value of slider
 	}
 	return danceability;
 }
@@ -127,12 +124,12 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	console.log(isReWeather);
 	console.log("******************");
 	console.log(weatherMetrics);
-	
-	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
+
+	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
+
+	//Get user search parameters
 	var genreSelected = ($('input[name="genre"]:checked').val());
 	var endYear = $("#decade :selected").val();
-
-	// Is christmas
 	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
 	if (!christmasPlaylist) {
 		songSearchURL +='christmas:false';
@@ -142,10 +139,15 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 
 	//uses current temp to map to danceability of a song
 	var danceability = getDanceability(temp, isReWeather);
+	console.log(danceability);
 	var maxDanceability = 1;
 	if (danceability < 0.6) {
 		maxDanceability = danceability + 0.4;
 	}
+	if (temp > 70) {
+		maxDanceability = 1;
+	}
+
 
 	var energyArr = getEnergy(weatherMetrics, isReWeather);
 	var happyArr = getHappiness(weatherMetrics, isReWeather);
@@ -186,6 +188,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	console.log(data);
 	glblCurWeatherMetrics = weatherMetrics;
 	glblCurDanceability = danceability;
+	glblCurMaxDanceability = maxDanceability;
 	glblCurEnergy = energyArr;
 	glblCurHappiness = happyArr;
 
@@ -198,7 +201,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			if (results['response']['songs'].length == 0) {
 				// Decrement min hot if possible
 				if (min_hot != '0') {
-					searchSeedSong(weatherMetrics, '0', temp, isReWeather); // lower min popularity if need be
+					searchSeedSong(weatherMetrics, (Number(min_hot) - .1).toString(), temp, isReWeather); // lower min popularity if need be
 				} else {
 					displayNoPlaylistResultsError();
 				}
@@ -214,12 +217,11 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 //must error check genre up to 5
 // Get Echonest playlist using seed song
 function searchPlaylist(seed, min_hot) {
+	console.log(nameTemp);
 	var weatherMetrics = glblCurWeatherMetrics;
 	var danceability = glblCurDanceability;
-	var maxDanceability = 1;
-	if (danceability < 0.6) {
-		maxDanceability = danceability + 0.4;
-	}
+	var maxDanceability = glblCurMaxDanceability;
+
 	var energy = glblCurEnergy[0];
 	var maxEnergy = glblCurEnergy[1];
 	var happiness = glblCurHappiness[0];
@@ -248,7 +250,7 @@ function searchPlaylist(seed, min_hot) {
 			console.log(results);
 			// Try to get at least 15 results
 			if (results['response']['songs'].length < 15 && Number(min_hot) >= 0.2) {
-				searchPlaylist(seed, (Number(min_hot) - .2 ).toString())
+				searchPlaylist(seed, (Number(min_hot) - .1 ).toString())
 			} // If  any results were found, display them
 			else if (results['response']['songs'].length > 0) {
 				createPlaylist(results);
@@ -270,6 +272,7 @@ function getPlayerString(songs) {
 }
 
 function getPlaylistName() {
+	console.log(isOpposite);
 	console.log(nameTemp);
 	var name = '';
 	if (nameTemp.length > 0 || nameWeather.length > 0 || curLocation.length > 0) {
@@ -286,6 +289,7 @@ function getPlaylistName() {
 }
 
 function createPlaylist(results) {
+	console.log(nameTemp);
 	currentPlaylistName = getPlaylistName();
     
     currentPlaylist = {

@@ -75,22 +75,16 @@ function getWeatherRating(id, temp, isReWeather) {
 		weatherMetrics = musicChart[weatherParams[0]];
 		console.log("OPPOSITE");
 		console.log(weatherMetrics);
-		$("input[name='danceability']").val(Number(getOppositeDayTemp())/13.0);
+		getOppositeDayTemp();
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.5', getOppositeDayTemp());
+		searchSeedSong(weatherMetrics, '.4', isReWeather);
 	} else {
-	    // now that we have temp, weather description, & location name,
-	    // update playlist while loading for visibility of system status
-		if(!isReWeather) {
-			$("input[name='danceability']").val(temp/13.0);
-			console.log('COOOOOOL');
-		}
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.5', temp, isReWeather);
+		searchSeedSong(weatherMetrics, '.4', temp, isReWeather);
 	}
 }
 
@@ -98,6 +92,7 @@ function getOppositeDayTemp() {
 	var tempDiff = 50 - Number(nameTemp);
 	var oppositeTemp = 50 + tempDiff;
 	nameTemp = oppositeTemp.toString();
+	console.log("setting name temp");
 	return oppositeTemp.toString();
 }
 
@@ -227,14 +222,14 @@ var musicChart = {
 	// Happy things --faster, higher energy
 	'1' : {
 		'max_energy' : '1',
-		'min_energy' : '.6',
-		'min_valence' : '.8',
+		'min_energy' : '.4',
+		'min_valence' : '.4',
 		'max_valence' : '1',
 		'max_tempo' : '500',
-		'min_tempo' : '120',
+		'min_tempo' : '100',
 	},// Light Rain/ Drizzle --moderately slow sad music
 	'3' : {
-		'max_energy' : '0.4',
+		'max_energy' : '0.5',
 		'min_energy' : '0.1',
 		'min_valence' : '.2',
 		'max_valence' : '.6',
@@ -242,7 +237,7 @@ var musicChart = {
 		'min_tempo' : '0',
 	}, // Heavy Rain / Drizzle -- slow sad music
 	'5' : {
-		'max_energy' : '0.3',
+		'max_energy' : '0.5',
 		'min_energy' : '0.1',
 		'min_valence' : '0',
 		'max_valence' : '.4',
@@ -250,7 +245,7 @@ var musicChart = {
 		'min_tempo' : '0',
 	}, // Snow -- Not anything too fast, low energy, some acousticness
 	'6' : {
-		'max_energy' : '0.5',
+		'max_energy' : '0.6',
 		'min_energy' : '0.2',
 		'min_valence' : '.2',
 		'max_valence' : '.7', //snow could be more positive than rain
@@ -258,7 +253,7 @@ var musicChart = {
 		'min_tempo' : '0',
 	}, // Hazy Things
 	'7' : {
-		'max_energy' : '0.4',
+		'max_energy' : '0.5',
 		'min_energy' : '0',
 		'min_valence' : '0',
 		'max_valence' : '.7',
@@ -267,7 +262,7 @@ var musicChart = {
 	}, // Cloudy
 	'8' : {
 		'max_energy' : '0.5',
-		'min_energy' : '0.2',
+		'min_energy' : '0',
 		'min_valence' : '.1',
 		'max_valence' : '.6',
 		'max_tempo' : '150',
@@ -288,7 +283,7 @@ var musicChart = {
 		'min_valence' : '0',
 		'max_valence' : '.3',
 		'max_tempo' : '500',
-		'min_tempo' : '160',
+		'min_tempo' : '0',
 	}
 }
 
