@@ -17,6 +17,7 @@ var glblCurMaxDanceability;
 var glblCurHappiness;
 var glblCurEnergy;
 var glblIsReWeather = false;
+var glblCurTempo;
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -99,7 +100,7 @@ function getHappiness(weatherMetrics, isReWeather) {
 	} else {
 		happiness = weatherMetrics['min_valence'];
 		maxHappiness = weatherMetrics['max_valence'];
-		$("input[name='happiness']").val((happiness+maxHappiness)/2);
+		$("input[name='happiness']").val(((happiness+maxHappiness)/2)*10);
 	}
 	console.log("HAPPINESS");
 	console.log(happiness);
@@ -122,7 +123,7 @@ function getEnergy(weatherMetrics, isReWeather) {
 	} else {
 		energy = weatherMetrics['min_energy'];
 		maxEnergy = weatherMetrics['max_energy'];
-		$("input[name='energy']").val((energy+maxEnergy)/2.0);
+		$("input[name='energy']").val(((energy+maxEnergy)/2.0)*10);
 	}
 	console.log("ENERGY");
 	console.log(energy);
@@ -134,6 +135,7 @@ function getEnergy(weatherMetrics, isReWeather) {
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	glblIsReWeather = isReWeather;
 
+	console.log('MIN HOT = ' + min_hot);
 	console.log(isReWeather);
 	console.log("******************");
 	console.log(weatherMetrics);
@@ -186,6 +188,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			'song_min_hotttnesss' : min_hot,
 			'min_danceability' : (danceability).toString(),
 			'max_danceability' : (maxDanceability).toString(),
+
 			'results' : '3',
 			//'song_type' : christmasPlaylist,
 		}
@@ -213,6 +216,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			// No result for seed song
 			if (results['response']['songs'].length <= 2) {
 				// Decrement min hot if possible
+
 				if (Number(min_hot) >= .1) {
 					searchSeedSong(weatherMetrics, (Number(min_hot) - .1).toString(), temp, isReWeather); // lower min popularity if need be
 				} else {
@@ -220,6 +224,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 				}
 			} // Seed song found 
 			else {
+
 				searchPlaylist(results['response']['songs'], min_hot, danceability, weatherMetrics);
 			}
 		}
