@@ -48,8 +48,6 @@ function makeOppositeNewPlaylist(isReWeather) {
 function makeMoodPlaylist() {
 	var mood = $("#mood option:selected").val();
 	isMood = true;
-	glblIsReWeather = true;
-
 	// hardcoded values for mood
 	switch(mood){
 		case 'angry':
@@ -76,6 +74,7 @@ function makeMoodPlaylist() {
 
 	nameTemp = moodTemp.toString();
 	nameWeather = mood.toString();
+	console.log(moodTemp);
 	curLocation = '';
 
 	getWeatherRating(moodId.toString(), moodTemp.toString(), glblIsReWeather);
@@ -84,13 +83,15 @@ function makeMoodPlaylist() {
 
 function makeNewPlaylistWrapper(isReWeather) {
 	isOpposite = false;
+	glblIsReWeather = false;
 	if(document.getElementById('loc-rad').checked) {
 		isMood = false;
 	} else {
 		isMood = true;
 	}
 	if(isMood){
-		getWeatherRating(moodId, moodTemp, false);
+		console.log("in make new mood");
+		makeMoodPlaylist(false);
 	} else{
 		makeNewPlaylist(isReWeather);
 	}
@@ -205,6 +206,8 @@ function getChristmas(isReWeather) {
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
 	var genreSelected;
+	console.log(isReWeather);
+	console.log(weatherMetrics);
 
 	songSearchURL += getChristmas(isReWeather);
 
@@ -275,6 +278,8 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	glblCurEnergy = energyArr;
 	glblCurHappiness = happyArr;
 	glblCurTempo = tempoArr;
+
+	console.log(data);
 
 	$.ajax({
 		'url': songSearchURL,

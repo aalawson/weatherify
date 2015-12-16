@@ -62,9 +62,9 @@ function getWeatherRating(id, temp, isReWeather) {
 	}
 
 	var weatherParams 	= categoryChart[category][rawSeverity];
-	console.log(weatherParams);
 	nameWeather			= weatherParams[2];
 	var weatherMetrics 	= musicChart[weatherParams[0]];
+	console.log(weatherMetrics);
 	/*var maxenergy = weatherMetrics['max_energy'];
 	var minenergy = weatherMetrics['max_energy'];	
 	var maxtempo = weatherMetrics['min_tempo'];
@@ -83,7 +83,7 @@ function getWeatherRating(id, temp, isReWeather) {
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, .7, isReWeather);
+		searchSeedSong(weatherMetrics, .7, temp, isReWeather);
 	} else {
 		updatePlaylistTopBar();
 
@@ -100,8 +100,8 @@ function getOppositeDayTemp() {
 	return oppositeTemp.toString();
 }
 
+//changes the intensity of metrics depending on category
 function bufferSeverity(category) {
-
 
 	//done to remove 0-index
 	cat_val = parseInt(category[1]) + 1;
@@ -112,6 +112,7 @@ function bufferSeverity(category) {
 	//holds weatherMetrics pre-buffering
 	weatherMetrics = musicChart[category[0]];
 
+	//goes through each metric and updates intensity 
 	for(var i in bufferMetrics) {
 
 		if (parseFloat(weatherMetrics[bufferMetrics[i]]) >= .1){
