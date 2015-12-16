@@ -326,9 +326,24 @@ function renamePlaylist(name){
 // delete chosen playlist
 function deletePlaylist(name) {
   var answer = confirm("Are you sure you want to delete this playlist, " + name + "?");
+  var isCurrent = false;
   if (answer) {
+    console.log(name);
+    console.log(currentPlaylist['name']);
+    if (store.get(name)['name'] == currentPlaylist['name']) {
+        isCurrent = true;
+        console.log(isCurrent);
+    }
     store.remove(name);
   }
+  if (isCurrent) {
+    console.log("isCurrent");
+      nameTemp = '';
+      nameWeather = '';
+      curLocation = '';
+      currentPlaylist = {};
+  }
+  refreshPlaylist();
   showAllPlaylists();
 }
 
@@ -392,6 +407,9 @@ function titlecase(str) {
 }
 
 function updatePlaylistTopBar() {
+    console.log(glblIsReWeather);
+    console.log(currentPlaylist['name']);
+    console.log(isMood);
     if (glblIsReWeather && currentPlaylist['name'] && currentPlaylist['name'].length > 0) {
         console.log("******");
          document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
@@ -399,12 +417,10 @@ function updatePlaylistTopBar() {
         document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
           + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>';       
         } else {
-            console.log("*********");
             document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
             + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
             document.getElementById('save-playlist-button').disabled = true;
         }
-        console.log("*********");
         document.getElementById('save-playlist-button').disabled = false;
         document.getElementById('drawers').style.display = "block";
         document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'
@@ -427,6 +443,7 @@ function updatePlaylistTopBar() {
         document.getElementById('playlist-name').innerHTML = 'No playlist selected yet.';
         document.getElementById('playlist-results').innerHTML = "<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist, or \"Home\" to make a new playlist.</p>";
         document.getElementById('drawers').style.display = "none";
+        document.getElementById('playlist-rename-delete-div').innerHTML = '';
     }
 }
 

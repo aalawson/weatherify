@@ -60,10 +60,10 @@
               <label>
                 <select id="mood">
                   <option selected> I'm feeling... </option>
-                  <option value=[212, 30]> Angry </option>
-                  <option value=[800, 82] > Happy </option>
-                  <option value=[521, 44]> Sad </option>
-                  <option value=[952, 68]> Calm </option>
+                  <option value="angry"> Angry </option>
+                  <option value="happy" > Happy </option>
+                  <option value="sad"> Sad </option>
+                  <option value="calm"> Calm </option>
                 </select>
               </label>
               <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeMoodPlaylist(); return false;">Make me a playlist</button>
@@ -96,24 +96,30 @@
                 <table style="width:100%">
                   <tr>
                     <td><input type="radio" name="genre" value="a capella">a capella<br></td>
-                    <td><input type="radio" name="genre" value="alternative rock">alternative rock<br></td>
-                    <td><input type="radio" name="genre" value="big band">big band<br></td>
                     <td><input type="radio" name="genre" value="blues">blues<br></td>
-                    <td><input type="radio" name="genre" value="boy band">boy band<br></td>
+                    <td><input type="radio" name="genre" value="country">country<br></td>
+                    <td><input type="radio" name="genre" value="hip hop">hip hop<br></td>
+                    <td><input type="radio" name="genre" value="pop">pop<br></td>
+
+
+
                   </tr>
                   <tr>
-                    <td><input type="radio" name="genre" value="classical">classical<br></td>
-                    <td><input type="radio" name="genre" value="country">country<br></td>
+                    <td><input type="radio" name="genre" value="alternative rock">alternative rock<br></td>
+                    <td><input type="radio" name="genre" value="boy band">boy band<br></td>
                     <td><input type="radio" name="genre" value="disco">disco<br></td>
                     <td><input type="radio" name="genre" value="indie">indie<br></td>
-                    <td><input type="radio" name="genre" value="folk">folk<br></td>
+                    <td><input type="radio" name="genre" value="soul">soul<br></td>
+
+
+
                   </tr>
                   <tr>
-                    <td><input type="radio" name="genre" value="soul">soul<br></td>
-                    <td><input type="radio" name="genre" value="hip hop">hip hop<br></td>
+                    <td><input type="radio" name="genre" value="big band">big band<br></td>
+                    <td><input type="radio" name="genre" value="classical">classical<br></td>
+                    <td><input type="radio" name="genre" value="folk">folk<br></td>
                     <td><input type="radio" name="genre" value="jazz">jazz<br></td>
-                    <td><input type="radio" name="genre" value="pop">pop<br></td>
-                    <td><input type="radio" name="genre" value="">all<br></td>
+                    <td><input type="radio" name="genre" value="" checked="checked">all<br></td>
                   </tr>
                 </table>
                 <br><br>

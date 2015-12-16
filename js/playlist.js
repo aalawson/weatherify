@@ -18,6 +18,9 @@ var glblCurMaxDanceability;
 var glblCurHappiness;
 var glblCurEnergy;
 var glblCurTempo;
+var isMood;
+var moodId = '';
+var moodTemp = '';
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -43,21 +46,53 @@ function makeOppositeNewPlaylist(isReWeather) {
 }
 
 function makeMoodPlaylist() {
-	var mood = [];
-	mood = $("#mood option:selected").val();
+	var mood = $("#mood option:selected").val();
+	isMood = true;
 
-	var id = mood[0];
-	var temp = mood[1];
+	// hardcoded values for mood
+	switch(mood){
+		case 'angry':
+			moodId += 212;
+			moodTemp += 30;
+			break;
+		case 'happy':
+			moodId += 800;
+			moodTemp += 82;
+			break;
+		case 'sad':
+			moodId += 521;
+			moodTemp += 44;
+			break;
+		case 'calm':
+			moodId += 952;
+			moodTemp += 68;
+			break;
+		default:
+			moodId += 500;
+			moodTemp += 50;
+			break;
+	}
 
-	console.log(id);
-	console.log(temp);
+	nameTemp = moodTemp;
+	nameWeather = mood;
 
-	getWeatherRating(id, temp, false);
+	getWeatherRating(moodId, moodTemp);
+	switchToCurrentPlaylist();
 }
 
 function makeNewPlaylistWrapper(isReWeather) {
 	isOpposite = false;
-	makeNewPlaylist(isReWeather);
+	if(document.getElementById('loc-radio').checked) {
+		isMood = false;
+	} else {
+		isMood = true;
+	}
+	if(isMood){
+		getWeatherRating(moodId, moodTemp, false);
+	} else{
+		makeNewPlaylist(isReWeather);
+	}
+	
 }
 
 // Weatherify button calls this -- makes a playlist based on weather
@@ -85,7 +120,6 @@ function getDanceability(temp, isReWeather) {
 		if (danceability >= .6) {
 			danceability = .5; //for range .8-1, which is max range
 		}
-		console.log(danceability);
 	}
 	else {
 		if (temp > 100) {
@@ -114,9 +148,6 @@ function getHappiness(weatherMetrics, isReWeather) {
 		maxHappiness = weatherMetrics['max_valence'];
 		$("input[name='happiness']").val(((happiness+maxHappiness)/2)*10);
 	}
-	console.log("HAPPINESS");
-	console.log(happiness);
-	console.log(maxHappiness);
 	return [happiness, maxHappiness];
 }
 
@@ -134,24 +165,22 @@ function getEnergy(weatherMetrics, isReWeather) {
 		maxEnergy = weatherMetrics['max_energy'];
 		$("input[name='energy']").val(((energy+maxEnergy)/2.0)*10);
 	}
-	console.log("ENERGY");
-	console.log(energy);
-	console.log(maxEnergy);
 	return [energy, maxEnergy];
 }
 
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
-
-	console.log('MIN HOT = ' + min_hot);
-	console.log(isReWeather);
-	console.log("******************");
-	console.log(weatherMetrics);
-
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
+	var genreSelected;
 
 	//Get user search parameters
-	var genreSelected = ($('input[name="genre"]:checked').val());
+	if (isReWeather){
+		genreSelected = ($('input[name="genre"]:checked').val());
+	} else {
+		genreSelected= 'all';
+		$('input[name="genre"]').prop('checked', true);
+		//genreSelected = ($('input[name="genre"]').click('all'));
+	}
 	var endYear = $("#decade :selected").val();
 	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
 	if (!christmasPlaylist) {
@@ -162,7 +191,6 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 
 	//uses current temp to map to danceability of a song
 	var danceability = getDanceability(temp, isReWeather);
-	console.log(danceability);
 	var maxDanceability = 1;
 	if (danceability > 0.5) {
 		danceability = .5;
@@ -210,7 +238,6 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	if (endYear != 'all') {
 		data.artist_end_year_before = endYear;		
 	} 
-	console.log(data);
 	glblCurWeatherMetrics = weatherMetrics;
 	glblCurDanceability = danceability;
 	glblCurMaxDanceability = maxDanceability;
@@ -248,7 +275,6 @@ function searchPlaylist(seed, min_hot) {
 	if (min_hot >= .5) {
 		min_hot = .5;
 	}
-	console.log(nameTemp);
 	var weatherMetrics = glblCurWeatherMetrics;
 	var danceability = glblCurDanceability;
 	var maxDanceability = glblCurMaxDanceability;
@@ -260,7 +286,6 @@ function searchPlaylist(seed, min_hot) {
 
 	var energy = glblCurEnergy[0];
 	var maxEnergy = glblCurEnergy[1];
-	console.log()
 	var happiness = glblCurHappiness[0];
 	var maxHappiness = glblCurHappiness[1];
 
@@ -287,7 +312,7 @@ function searchPlaylist(seed, min_hot) {
 			console.log(results['response']['songs'].length);
 			console.log(results);
 			// Try to get at least 15 results
-			if (results['response']['songs'].length <= 20 && min_hot >= 0.1) {
+			if (results['response']['songs'].length < 30 && min_hot >= 0.1) {
 				searchPlaylist(seed, min_hot - .1);
 			} // If  any results were found, display them
 			else if (results['response']['songs'].length > 0) {
@@ -313,9 +338,16 @@ function getPlayerString(songs) {
 }
 
 function getPlaylistName() {
-	console.log(isOpposite);
-	console.log(nameTemp);
+
 	var name = '';
+
+	if(isMood) {
+		//get dropdown
+		var mood = $("#mood option:selected").val();
+		name += "The " + titlecase(mood) + " Playlist";
+		return name;
+	}
+
 	if (nameTemp.length > 0 || nameWeather.length > 0 || curLocation.length > 0) {
 		if (nameTemp.length > 0) {
             name += nameTemp + "° and ";
@@ -326,11 +358,11 @@ function getPlaylistName() {
 		}
        return name;	
 	}
-	return '';
+	return 'Untitled';
 }
 
 function createPlaylist(results) {
-	console.log(nameTemp);
+
 	currentPlaylistName = getPlaylistName();
     
     currentPlaylist = {
@@ -412,7 +444,6 @@ function addSong(index) {
 }
 
 function refreshPlaylist() {
-	console.log("refreshing");
 	refreshAddRemoveTable();
 	currentPlaylist['playerString'] = getPlayerString(currentPlaylist['songs']);
 	updatePlaylistTopBar();
