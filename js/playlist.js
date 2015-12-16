@@ -176,7 +176,7 @@ function getTempo(weatherMetrics, isReWeather) {
 		if (tempo >= 200) {
 			tempo = 200; //for range .8-1, which is max range
 		}
-		maxTempo = tempo + 50;
+		maxTempo = tempo + 70;
 	} else {
 		tempo = weatherMetrics['min_tempo'];
 		maxTempo = weatherMetrics['max_tempo'];
@@ -185,10 +185,26 @@ function getTempo(weatherMetrics, isReWeather) {
 	return [tempo, maxTempo];
 }
 
+function getChristmas(isReWeather) {
+	if (isReWeather) {
+		var christmasPlaylist = $('input[name="christmasify"]:checked').val();
+		if (!christmasPlaylist) {
+			return 'christmas:false';
+		} else {
+			return christmasPlaylist;
+		}
+	} else {
+		$("input[name='christmasify']").attr('checked', false);
+		return 'christmas:false';
+	}
+}
+
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
 	var genreSelected;
+
+	songSearchURL += getChristmas(isReWeather);
 
 	//Get user search parameters
 	if (isReWeather){
@@ -199,13 +215,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 		//genreSelected = ($('input[name="genre"]').click('all'));
 	}
 	var endYear = $("#decade :selected").val();
-	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
-	if (!christmasPlaylist) {
-		songSearchURL +='christmas:false';
-	} else {
-		songSearchURL += christmasPlaylist;
-	}
-
+	
 
 	//uses current temp to map to danceability of a song
 	var danceability = getDanceability(temp, isReWeather);
@@ -217,7 +227,6 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	if (temp > 70) {
 		maxDanceability = 1;
 	}
-
 
 	var energyArr = getEnergy(weatherMetrics, isReWeather);
 	var happyArr = getHappiness(weatherMetrics, isReWeather);
@@ -247,9 +256,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			'song_min_hotttnesss' : min_hot,
 			'min_danceability' : danceability,
 			'max_danceability' : maxDanceability,
-
 			'results' : '1',
-			//'song_type' : christmasPlaylist,
 		}
 
 	if (genreSelected && (genreSelected != 'all')) {
@@ -319,14 +326,12 @@ function searchPlaylist(seed, min_hot) {
 		'data': {
 			'api_key': ECONEST_API_KEY,
 			'type': 'song-radio',
-			//'song_min_hotttnesss' : min_hot,
 			'max_energy' : (maxEnergy).toString(),
 			'min_energy' : (energy).toString(),
 			'max_tempo' : maxTempo,
 			'min_tempo' : tempo,
 			'min_valence' : (happiness),
 			'max_valence' : (maxHappiness),
-			//'song_min_hotttnesss' : min_hot,
 			'min_danceability' : danceability,
 			'max_danceability' : maxDanceability,
 			'results' : numResults,
