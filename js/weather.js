@@ -40,10 +40,11 @@ function processWeatherData(weatherResults) {
 	if (weatherResults['weather'] && weatherResults['weather'][0]['id']) {
 		id = weatherResults['weather'][0]['id'].toString();
 	}
-	getWeatherRating(id);
+
+	getWeatherRating(id, temp);
 }
 
-function getWeatherRating(id) {
+function getWeatherRating(id, temp) {
 	var category = id.substring(0, 1);
 	var rawSeverity = id.substring(1, id.length);
 
@@ -60,9 +61,10 @@ function getWeatherRating(id) {
 	var mintempo = weatherMetrics['max_tempo'];
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
+
 	console.log(weatherParams);
 	console.log(getOppositeDayMetrics(weatherParams));
-	searchSeedSong(weatherMetrics, '.5');
+	searchSeedSong(weatherMetrics, '.5', temp);
 }
 
 function bufferSeverity(category) {

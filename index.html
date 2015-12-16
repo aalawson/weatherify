@@ -82,7 +82,7 @@
               <h3>options</h3>
               <form id="options-form">
 
-                <b>genre </b><br>
+                <b>genre</b><br>
                 <table style="width:100%">
                   <tr>
                     <td><input type="radio" name="genre" value="a capella">a capella<br></td>
@@ -102,7 +102,7 @@
                     <td><input type="radio" name="genre" value="gospel">gospel<br></td>
                     <td><input type="radio" name="genre" value="hip hop">hip hop<br></td>
                     <td><input type="radio" name="genre" value="jazz">jazz<br></td>
-                    <td><input type="radio" name="genre" value="new wave">new wave<br></td>
+                    <td><input type="radio" name="genre" value="pop">pop<br></td>
                     <td><input type="radio" name="genre" value="">all<br></td>
                   </tr>
                 </table>
@@ -110,6 +110,7 @@
 
 
                 <b>decade</b>
+                <label>
                 <select id="decade">
                   <option value="all"> all </option>
                   <option value="1945">Pre 1940s</option>
@@ -122,11 +123,19 @@
                   <option value="2010">2000s</option>
                   <option value="present">Today</option>
                 </select>
+              </label>
                 <br><br>
 
-                <input type="checkbox" name="christmasify" value="christmas:true">Make it a Christmas playlist!<br>
+                <b>danceability</b>
+                <input type="range" class="slider" min="0" max="9" name="danceability"><br><br>
+
+                <b>tempo</b>
+                <input type="range" class="slider" min="0" max="100" name="tempo"><br><br>
+
+                <input type="checkbox" name="christmasify" value="christmas:true">christmasify<br><br>
 
                 <button type="button" class="g-button" onclick="return makeNewPlaylist();">Weatherify!</button>
+
               </form>
             </div>
           </div>
