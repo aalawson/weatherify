@@ -10,11 +10,17 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
 var numResults = 100;
+var isOpposite = false;
+var glblCurWeatherMetrics;
+var glblCurDanceability;
+var glblCurHappiness;
+var glblCurEnergy;
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
 	if (keycode == '13') {
 		e.preventDefault();
+		isReWeather = false;
 		makeNewPlaylist(isReWeather);
 	}
 });
@@ -23,6 +29,7 @@ $("#options-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
 	if (keycode == '13') {
 		e.preventDefault();
+		isReWeather = true;
 		makeNewPlaylist(isReWeather);
 	}
 });
@@ -53,32 +60,18 @@ function makeNewPlaylist(isReWeather) {
     return false;
 }
 
-/* Get seed song to set up echonest playlist */
-function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
+function getDanceability(temp, isReWeather) {
+    var tempToDance;
+    var danceability;
 
-	console.log(isReWeather);
-	
-	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
-	var genreSelected = ($('input[name="genre"]:checked').val());
-	var endYear = $("#decade :selected").val();
-
-	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
-
-	if (!christmasPlaylist) {
-		songSearchURL +='christmas:false';
-	} else {
-		songSearchURL += christmasPlaylist;
-	}
-
-	//uses current temp to map to danceability of a song <<---- this should be used by the home page button
-	var tempToDance;
-	var danceability;
-	
 	if(isReWeather) {
+		console.log($('input[name="danceability"]'));
 		danceability = ($('input[name="danceability"]')[0]['valueAsNumber']/10);
-		data.min_energy = ($('input[name="energy"]')[0]['valueAsNumber']/10);
-		data.max_energy = (($('input[name="energy"]')[0]['valueAsNumber']+2)/10)''
-		data.min_tempo = ($('input[name="energy"]')[0]['valueAsNumber']);
+		console.log("COOLERRRRRR");
+		if (danceability >.8) {
+			danceability = .8; //for range .8-1, which is max range
+		}
+		console.log(danceability);
 	}
 	else {
 		if (temp > 100) {
@@ -87,25 +80,98 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			tempToDance = 0;
 		} else tempToDance = temp;
 
-		danceability = tempToDance / 130.0;
+		danceability = (tempToDance * .6) / 100; // where min danceability is .6, max will be 1
+	}
+	return danceability;
+}
+
+function getHappiness(weatherMetrics, isReWeather) {
+	var happiness;
+	var maxHappiness;
+	if (isReWeather) {
+		happiness = ($('input[name="happiness"]')[0]['valueAsNumber']/10);
+		if (happiness >.8) {
+			happiness = .8; //for range .8-1, which is max range
+		}
+		if (happiness < 0.6) {
+			maxHappiness = happiness + 0.4;
+		} else maxHappiness = 1;
+	} else {
+		happiness = weatherMetrics['min_valence'];
+		maxHappiness = weatherMetrics['max_valence'];
+	}
+	return [happiness, maxHappiness];
+}
+
+function getEnergy(weatherMetrics, isReWeather) {
+	var energy;
+	var maxEnergy;
+	if (isReWeather) {
+		energy = ($('input[name="energy"]')[0]['valueAsNumber']/10);
+		if (energy >.8) {
+			energy = .8; //for range .8-1, which is max range
+		}
+		if (energy < 0.6) {
+			maxEnergy = energy + 0.4;
+		} else maxEnergy = 1;
+	} else {
+		energy = weatherMetrics['min_energy'];
+		maxEnergy = weatherMetrics['max_energy'];
+	}
+	return [energy, maxEnergy];
+}
+
+/* Get seed song to set up echonest playlist */
+function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
+
+	console.log(isReWeather);
+	console.log("******************");
+	console.log(weatherMetrics);
+	
+	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
+	var genreSelected = ($('input[name="genre"]:checked').val());
+	var endYear = $("#decade :selected").val();
+
+	// Is christmas
+	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
+	if (!christmasPlaylist) {
+		songSearchURL +='christmas:false';
+	} else {
+		songSearchURL += christmasPlaylist;
 	}
 
-	
+	//uses current temp to map to danceability of a song
+	var danceability = getDanceability(temp, isReWeather);
+	var maxDanceability = 1;
+	if (danceability < 0.6) {
+		maxDanceability = danceability + 0.4;
+	}
+
+	var energyArr = getEnergy(weatherMetrics, isReWeather);
+	var happyArr = getHappiness(weatherMetrics, isReWeather);
+
+	var energy = energyArr[0];
+	var maxEnergy = energyArr[1];
+
+	var happiness = happyArr[0];
+	var maxHappiness = happyArr[1];
+
+
 
 	var data = {
 			'api_key': ECONEST_API_KEY,
 			'format' : 'json',
 			'bucket' : 'id:spotify',
-			'max_energy' : weatherMetrics['max_energy'],
-			'min_energy' : weatherMetrics['min_energy'],
 			'max_tempo' : weatherMetrics['max_tempo'],
 			'min_tempo' : weatherMetrics['min_tempo'],
-			'max_acousticness' : weatherMetrics['max_acousticness'],
-			'min_acousticness' : weatherMetrics['min_acousticness'],
+			'min_energy' : (energy).toString(),
+			'max_energy' : (maxEnergy).toString(),
+			'min_valence' : (happiness).toString(),
+			'min_valence' : (maxHappiness).toString(),
 			'song_min_hotttnesss' : min_hot,
-			'min_danceability' : danceability,
-			'max_danceability' : danceability + 0.2,
-			'results' : 1,
+			'min_danceability' : (danceability).toString(),
+			'max_danceability' : (maxDanceability).toString(),
+			'results' : '1',
 			//'song_type' : christmasPlaylist,
 		}
 
@@ -113,9 +179,15 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	    data.style = genreSelected;
 	}
 
+
 	if (endYear != 'all') {
 		data.artist_end_year_before = endYear;		
 	} 
+	console.log(data);
+	glblCurWeatherMetrics = weatherMetrics;
+	glblCurDanceability = danceability;
+	glblCurEnergy = energyArr;
+	glblCurHappiness = happyArr;
 
 	$.ajax({
 		'url': songSearchURL,
@@ -141,8 +213,18 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 
 //must error check genre up to 5
 // Get Echonest playlist using seed song
-function searchPlaylist(seed, min_hot, danceability, weatherMetrics) {
-	
+function searchPlaylist(seed, min_hot) {
+	var weatherMetrics = glblCurWeatherMetrics;
+	var danceability = glblCurDanceability;
+	var maxDanceability = 1;
+	if (danceability < 0.6) {
+		maxDanceability = danceability + 0.4;
+	}
+	var energy = glblCurEnergy[0];
+	var maxEnergy = glblCurEnergy[1];
+	var happiness = glblCurHappiness[0];
+	var maxHappiness = glblCurHappiness[1];
+
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/playlist/static?bucket=id:spotify&bucket=tracks',
 		'data': {
@@ -150,6 +232,15 @@ function searchPlaylist(seed, min_hot, danceability, weatherMetrics) {
 			'type': 'song-radio',
 			'song_id' : seed,
 			'song_min_hotttnesss' : min_hot,
+			'max_energy' : (maxEnergy).toString(),
+			'min_energy' : (energy).toString(),
+			'max_tempo' : weatherMetrics['max_tempo'],
+			'min_tempo' : weatherMetrics['min_tempo'],
+			'min_valence' : (happiness).toString(),
+			'max_valence' : (maxHappiness).toString(),
+			'song_min_hotttnesss' : min_hot,
+			'min_danceability' : (danceability).toString(),
+			'max_danceability' : (maxDanceability).toString(),
 			'results' : numResults,
 		},
 		//callback function needs to be added here 
