@@ -1,13 +1,23 @@
 var searchQuery = "";
 var offset = 0; //index of the first song displayed in the current set of 10 displayed
 var total = 0;
+var currentSearchSongs = [];
+
+$("#search-form").keypress(function(e) {
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if (keycode == '13') {
+    e.preventDefault();
+    searchSpotify();
+  }
+});
 
 // Searches spotify, updates trackData, and displays first 10 songs for user.
-function search() {
+function searchSpotify() {
   // reset info about past searches
   offset = 0;
   total = 0;
   searchQuery = "";
+  currentSearchSongs = [];
 
   // Get new info from form
 	var artist = document.getElementById("artist").value;
@@ -97,9 +107,17 @@ function displayPrevTen() {
 
 //Displays ten songs starting at index
 function displayTen(trackData) {
+       /*   if (results['response']['songs'][i]['tracks'][0]) {
+            currentPlaylist['songs'].push( {
+            'songName' : results['response']['songs'][i]['title'],
+            'artist' : results['response']['songs'][i]['artist_name'],
+            'artistId' : results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id'],
+            'songId' : results['response']['songs'][i]['tracks'][0]['foreign_id'].replace('spotify:track:', ''),
+         });  */
   //Add Spotify PlayButtons for ten songs, starting at startIndex of track list
   //If fewer than ten songs exist starting from startIndex, then display however
   //many are left. When index is out of range, just clears the results.
+  console.log(trackData);
   var numberOfTracks = trackData['tracks']['items'].length;
   var allPlayButtonsHTML = "<h2 id=\"results-header\">Results</h2>";
   for (var i = 0; i < 10 && i < total - offset; i++) {

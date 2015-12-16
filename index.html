@@ -67,13 +67,20 @@
       <!-- *************** View one playlist ************ -->
       <div id="view-one" class="unselected body-content">
         <div id="playlist-top-bar">
-          <h2 id="weather-report"> Today in New York it's 68 and sunny </h2>
-          <a id='options-tab' href="#" onclick="toggleDrawer();return false;"><span id="fine-tune-span">&#9660   Fine tune my playlist</span></a>
+          <h2 id="playlist-name"> No Playlist Selected Yet</h2>
+          <div id='save-button-div'></div>
+          <div id='drawers'>
+            <a id='options-tab' href="#" onclick="toggleFineTune();return false;"><span id="fine-tune-span">&#9660   Fine tune my playlist</span></a>
+            <a id='add-and-remove-tab' href="#" onclick="toggleAddAndRemove();return false;"><span id="add-and-remove-span">&#9660   Add/Remove Songs</span></a>
+          </div>
         </div>
+          <div id="add-and-remove-window">
+            <p> In add and remove </p>
+          </div>
           <div id="options-window">
             <div id="options" class "selected body-content ">
               <h3>options</h3>
-              <form>
+              <form id="options-form">
 
                 <b>genre </b><br>
                 <table style="width:100%">
@@ -142,7 +149,7 @@
         <input type="text" id="artist" class="form-box search-input" value="" placeholder="artist"/>
         <input type="text" id="song" class="form-box search-input" value=""placeholder="song"/>
         <input type="text" id="album" class="form-box search-input"value="" placeholder="album"/>
-        <input type="button" id="search-button" class="form-box" value="Search" onclick="search();"/>
+        <input type="button" id="search-button" class="form-box" value="Search" onclick="searchSpotify();"/>
         </form>
         <h2 id="search-songs-results-header"></h2>
         <div id="search-songs-results-div"></h2>

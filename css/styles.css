@@ -55,6 +55,8 @@ input:focus{
 
 /* General button styling */
 .g-button {
+  cursor: pointer;
+  cursor: hand;
 	border-radius: 10px;
 	border-style: solid;
     border-color: #383838;
@@ -63,6 +65,12 @@ input:focus{
     border-width: 1px;
     font-size: 12px;
     height: 22px;
+}
+
+#save-playlist-button.disabled {
+  color:grey;
+  border:none;
+  font-style: italic;
 }
 
 /* Close button */

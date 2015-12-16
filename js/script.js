@@ -11,33 +11,75 @@
 /* VARIABLES FOR ENTIRE PROGRAM, SAVING OF PROGRAM */
 var nameWeather = '';
 var nameTemp    = '';
+var curLocation = '';
 
-var currentPlaylist = {};       //keeps in memory current playlist
+var currentPlaylist = {}; 
 
 /* VARIABLES FOR SCRIPT.JS */ 
-var isDrawerOpen = false;
+var isFineTuneOpen = false;
+var isAddAndRemoveOpen = false;
 var scrollVertOffset = 0;
 
 function setup() {
     document.getElementById('search').style.display = "none";
+    if (isFineTuneOpen) {
+        closeFineTune();
+    }
+    if (isAddAndRemoveOpen) {
+        closeAddAndRemove();
+    }
     findMe();
 }
 // Toggle "Fine Tune" drawer open and close
-function toggleDrawer() {
-    isDrawerOpen = !isDrawerOpen;
-    if (isDrawerOpen) {
-        openDrawer();
+function toggleFineTune() {
+    isFineTuneOpen = !isFineTuneOpen;
+    console.log(isFineTuneOpen);
+    if (isFineTuneOpen) {
+        openFineTune();
+        if (isAddAndRemoveOpen) {
+            closeAddAndRemove();
+        }
     } else {
-        closeDrawer();
+        closeFineTune();
     }
 }
-function openDrawer() {
+// Toggle "Fine Tune" drawer open and close
+function toggleAddAndRemove() {
+    isAddAndRemoveOpen = !isAddAndRemoveOpen;
+    console.log(isAddAndRemoveOpen);
+    if (isAddAndRemoveOpen) {
+        openAddAndRemove();
+        if (isFineTuneOpen) {
+            closeFineTune();
+        }
+    } else {
+        closeAddAndRemove();
+    }
+}
+
+
+function openFineTune() {
+    isFineTuneOpen = true;
     document.getElementById('options-window').style.display = "block";
     document.getElementById('fine-tune-span').innerHTML = "&#9650 Fine tune my playlist";
 }
-function closeDrawer() {
+
+function openAddAndRemove() {
+    isAddAndRemoveOpen = true;
+    document.getElementById('add-and-remove-window').style.display = "block";
+    document.getElementById('add-and-remove-span').innerHTML = "&#9650 Add/Remove Songs";
+}
+
+function closeFineTune() {
+    isFineTuneOpen = false;
     document.getElementById('options-window').style.display = "none";   
     document.getElementById('fine-tune-span').innerHTML = "&#9660 Fine tune my playlist";
+}
+
+function closeAddAndRemove() {
+    isAddAndRemoveOpen = false;
+    document.getElementById('add-and-remove-window').style.display = "none";
+    document.getElementById('add-and-remove-span').innerHTML = "&#9660 Add/Remove Songs";
 }
 
 // Change to location playlist
@@ -75,7 +117,9 @@ function switchToCurrentPlaylist() {
     document.getElementById('home').setAttribute('class', 'unselected body-content');
     document.getElementById('view-one').setAttribute('class', 'selected body-content');
     document.getElementById('view-all').setAttribute('class', 'unselected body-content');
-}
+    closeFineTune();
+    closeAddAndRemove();
+} 
 
 // Switch Tab to Playlist
 function switchToViewPlaylists() {
@@ -165,6 +209,7 @@ function hidePopupDisplay() {
 // save current playlist (make new one)
 function saveNewPlaylist() {
   
+  currentPlaylist['isSaved'] = true;
   // if it exists, append number to it
   if(store.get(currentPlaylist['name'])){
     var hasPlaylist = true;
@@ -183,6 +228,11 @@ function saveNewPlaylist() {
 
 // save current playlist (update one)
 function savePlaylist() {
+  currentPlaylist['isSaved'] = true;
+  document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
+      + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
+  document.getElementById('save-playlist-button').disabled = true;
+
   store.set(currentPlaylist['name'], currentPlaylist);
 }
 
@@ -248,26 +298,36 @@ function titlecase(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
+function updatePlaylistTopBar() {
+    document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
+    if (!currentPlaylist['isSaved']) {
+    document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
+      + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>';       
+    } else {
+        document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
+        + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
+        document.getElementById('save-playlist-button').disabled = true;
+    }
+
+    document.getElementById('save-playlist-button').disabled = false;
+}
 // Make playbutton with all songs in playlist
 function displayPlaylist() {
-
+    updatePlaylistTopBar();
+    console.log(currentPlaylist['isSaved']);
     $('#playlist-results').empty();
 
-    var playerHtml  = '<br/><h3>' + currentPlaylist['name'].toUpperCase()
-      + '</h3 align="center"><br/><br/><iframe '
+    var playerHtml  = '<iframe '
       + 'src="https://embed.spotify.com/?uri=spotify:trackset:';
 
     // adds songs to the player
     playerHtml  += currentPlaylist['playerString']
-      + '" frameborder="0" width="640px" height="700"'
-      + 'align="center" allowtransparency="true"></iframe>'
-
-      + '<button type="button" id="save-playlist-button" class="g-button'
-      + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>'
-
-      + '<button type="button" id="open-search-button"'
-      + 'class="g-button form-box" onclick="openSearchPopup();'
-      + 'return false;">&#43Add a song</button>';
+      + '" frameborder="0" width="640px" height="720"'
+      + 'align="center" allowtransparency="true"></iframe>';
+            // Add Songs to Playlist Button
+     // + '<button type="button" id="open-search-button"'
+      //+ 'class="g-button form-box" onclick="openSearchPopup();'
+      //+ 'return false;">&#43Add a song</button>';
 
     $('#playlist-results').append(playerHtml);
 }

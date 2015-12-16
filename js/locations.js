@@ -50,6 +50,7 @@ function reverseGeocode(lat, lng) {
         document.getElementById('loc').value 
           = data['results'][0]['address_components'][3]['long_name'] + ", "
           + data['results'][0]['address_components'][4]['long_name'];
+        curLocation = data['results'][0]['address_components'][3]['long_name'];
         document.getElementById('home-intro-error').innerHTML = '';
         return false;
       }

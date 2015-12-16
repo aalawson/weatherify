@@ -11,12 +11,33 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 var songIdResults = [];			//array of spotify ids
 var numResults = 40;
 
+$("#playlist-type-form").keypress(function(e) {
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	if (keycode == '13') {
+		e.preventDefault();
+		makeNewPlaylist();
+	}
+});
+
+$("#options-form").keypress(function(e) {
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	if (keycode == '13') {
+		e.preventDefault();
+		makeNewPlaylist();
+	}
+});
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist() {
+	if (currentPlaylist['isSaved']) {
+		currentPlaylist['isSaved'] = false;
+	}
+
 	document.getElementById('playlist-results').innerHTML = "<p id=\"loading-message\">...Loading...</p>";
 	var location = document.getElementById('loc').value;
-	if (isDrawerOpen) {
-		toggleDrawer();
+	if (isFineTuneOpen) {
+		toggleFineTune();
+	} if (isAddAndRemoveOpen) {
+		toggleAddAndRemove();
 	}
 	getLocation(location);
     return false;
@@ -122,27 +143,53 @@ function getPlayerString(songs) {
 }
 
 function createPlaylist(results) {
-	currentPlaylistName = nameTemp + "° and " + titlecase(nameWeather);
+	currentPlaylistName = nameTemp + "° and " + titlecase(nameWeather) + " in " + curLocation;
     
     currentPlaylist = {
         'name' 		: currentPlaylistName,
         'temp' 		: nameTemp,
         'weather'	: nameWeather,
         'songs' 	: [],
-        'playerString' : ''
+        'playerString' : '',
+        'isSaved' : false
     }
+
     for (var i = 0; i < results['response']['songs'].length; i++) {
-        if (results['response']['songs'][i]['tracks'][0]) {
-            currentPlaylist['songs'].push( {
-            'songName' : results['response']['songs'][i]['title'],
-            'artist' : results['response']['songs'][i]['artist_name'],
-            'artistId' : results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id'],
-            'songId' : results['response']['songs'][i]['tracks'][0]['foreign_id'].replace('spotify:track:', ''),
-         });    
+        if (results['response']['songs'][i]['tracks'] && results['response']['songs'][i]['tracks'][0]) {
+
+        	// See if there was an artist id
+		    var artistId = '';
+		    console.log()
+		    if (results['response']['songs'][i]['artist_foreign_ids']
+		    	&& results['response']['songs'][i]['artist_foreign_ids'][0]
+		    	&& results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id']) {
+		    	artistId = results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id'];
+		    }
+		    // See if there was a song Id
+		    var songId = '';
+		    if (results['response']['songs'][i]['tracks'][0]['foreign_id']) {
+		    	songId = results['response']['songs'][i]['tracks'][0]['foreign_id'].replace('spotify:track:', '');
+		    }
+
+		    if (songId.length > 0) {
+		        currentPlaylist['songs'].push( {
+	            'songName' : results['response']['songs'][i]['title'],
+	            'artist' : results['response']['songs'][i]['artist_name'],
+	            'artistId' : artistId,
+	            'songId' : songId,
+	         });   	
+		    } else {
+		    	displayNoPlaylistResultsError();
+		    }
+ 
+        } else {
+        	displayNoPlaylistResultsError();
         }
     }
     currentPlaylist['playerString'] = getPlayerString(currentPlaylist['songs']);
+    updatePlaylistTopBar();
     displayPlaylist();
+
 }
 
 	
