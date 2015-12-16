@@ -11,12 +11,16 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 var songIdResults = [];			//array of spotify ids
 var numResults = 100;
 var isOpposite = false;
+var glblIsReweather = false;
 var glblCurWeatherMetrics;
 var glblCurDanceability;
 var glblCurMaxDanceability;
 var glblCurHappiness;
 var glblCurEnergy;
 var glblCurTempo;
+var isMood;
+var moodId = '';
+var moodTemp = '';
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -42,25 +46,53 @@ function makeOppositeNewPlaylist(isReWeather) {
 }
 
 function makeMoodPlaylist() {
-	var mood = [];
-	mood = $("#mood option:selected").val();
+	var mood = $("#mood option:selected").val();
+	isMood = true;
 
-	var id = mood[0];
-	var temp = mood[1];
+	// hardcoded values for mood
+	switch(mood){
+		case 'angry':
+			moodId += 212;
+			moodTemp += 30;
+			break;
+		case 'happy':
+			moodId += 800;
+			moodTemp += 82;
+			break;
+		case 'sad':
+			moodId += 521;
+			moodTemp += 44;
+			break;
+		case 'calm':
+			moodId += 952;
+			moodTemp += 68;
+			break;
+		default:
+			moodId += 500;
+			moodTemp += 50;
+			break;
+	}
 
-	console.log(id);
-	console.log(temp);
+	nameTemp = moodTemp;
+	nameWeather = mood;
 
-	getWeatherRating(id, temp, false);
+	getWeatherRating(moodId, moodTemp);
+	switchToCurrentPlaylist();
 }
 
 function makeNewPlaylistWrapper(isReWeather) {
 	isOpposite = false;
-	makeNewPlaylist(isReWeather);
+	if(isMood){
+		getWeatherRating(moodId, moodTemp, false);
+	} else{
+		makeNewPlaylist(isReWeather);
+	}
+	
 }
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist(isReWeather) {
+	isMood = false;
 	if (currentPlaylist['isSaved']) {
 		currentPlaylist['isSaved'] = false;
 	}
@@ -313,7 +345,17 @@ function getPlayerString(songs) {
 function getPlaylistName() {
 	console.log(isOpposite);
 	console.log(nameTemp);
+
 	var name = '';
+
+	if(isMood) {
+		//get dropdown
+		console.log("ismood!!!!!");
+		var mood = $("#mood option:selected").val();
+		name += "The " + titlecase(mood) + " Playlist";
+		return name;
+	}
+
 	if (nameTemp.length > 0 || nameWeather.length > 0 || curLocation.length > 0) {
 		if (nameTemp.length > 0) {
             name += nameTemp + "° and ";
@@ -324,11 +366,14 @@ function getPlaylistName() {
 		}
        return name;	
 	}
-	return '';
+	return 'Untitled';
 }
 
 function createPlaylist(results) {
-	console.log(nameTemp);
+
+	console.log("A playlist is being created");
+	console.log(results);
+
 	currentPlaylistName = getPlaylistName();
     
     currentPlaylist = {
