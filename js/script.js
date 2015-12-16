@@ -98,6 +98,7 @@ function changeToMoodPlaylist() {
 function switchToHome() {
     // Set group tab to selected
     checkIfNeedToSave();
+    console.log("in switch to home");
     document.getElementById('t1').setAttribute('class', 'selected tab');
     document.getElementById('t2').setAttribute('class', 'unselected tab');
     document.getElementById('t3').setAttribute('class', 'unselected tab');
