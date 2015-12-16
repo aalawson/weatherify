@@ -68,6 +68,8 @@ function openAddAndRemove() {
     isAddAndRemoveOpen = true;
     document.getElementById('add-and-remove-window').style.display = "block";
     document.getElementById('add-and-remove-span').innerHTML = "&#9650 Add/Remove Songs";
+    console.log("refreshing table");
+    refreshAddRemoveTable();
 }
 
 function closeFineTune() {
@@ -234,6 +236,7 @@ function savePlaylist() {
   document.getElementById('save-playlist-button').disabled = true;
 
   store.set(currentPlaylist['name'], currentPlaylist);
+  refreshPlaylist();
 }
 
 // delete current playlist
@@ -299,17 +302,21 @@ function titlecase(str) {
 }
 
 function updatePlaylistTopBar() {
-    document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
-    if (!currentPlaylist['isSaved']) {
-    document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
-      + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>';       
-    } else {
-        document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
-        + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
-        document.getElementById('save-playlist-button').disabled = true;
-    }
+    if (currentPlaylist != {}) {
+        document.getElementById('playlist-name').innerHTML = getPlaylistName().toUpperCase();
+        if (!currentPlaylist['isSaved']) {
+        document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
+          + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>';       
+        } else {
+            document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
+            + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
+            document.getElementById('save-playlist-button').disabled = true;
+        }
 
-    document.getElementById('save-playlist-button').disabled = false;
+        document.getElementById('save-playlist-button').disabled = false;
+    } else {
+        document.getElementById('playlist-name').innerHTML = "<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist</p>";
+    }
 }
 // Make playbutton with all songs in playlist
 function displayPlaylist() {
@@ -335,6 +342,24 @@ function displayPlaylist() {
 function displayNoPlaylistResultsError() {
     $('#playlist-results').empty();
     $('#playlist-results').append("<p id=\"error-message\"> Oops! No songs found matching your search parameters. Please try again. </p>");
+}
+
+function refreshAddRemoveTable() {
+    var tableHtml = '';
+    if (currentPlaylist['songs']) {
+        console.log(currentPlaylist['songs']);
+        tableHtml += '<table style=\"width:100%\">';
+        for (var i = 0; i < currentPlaylist['songs'].length; i++) {
+            tableHtml += '<tr><td>' + '<button type="button" id=\"delete-' + currentPlaylist['songs'][i]['songName'] + '\"' +
+                ' class="g-button form-box" onclick="removeSong(this.id); return false;">&#8722</button></td>' +
+                '<td><span class=\"table-song-name\">' + currentPlaylist['songs'][i]['songName'] + '</span><span class=\"table-artist-name\"> by ' + currentPlaylist['songs'][i]['artist'] + '</span></td></tr>';
+        }
+        tableHtml += '</table>';
+    }
+    if (tableHtml == '') {
+        tableHtml = '<p> Oops! There are no songs in this playlist </p>';
+    }
+    document.getElementById('add-and-remove-window').innerHTML = tableHtml;
 }
 
 

@@ -29,6 +29,11 @@
 #drawers {
 	height: 40px;
 }
+
+.table-song-name {
+	font-weight: bold;
+}
+
 #options-tab, #add-and-remove-tab {
 	float: right;
 	margin-top: 30px;
