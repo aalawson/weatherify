@@ -35,7 +35,11 @@ function getWeather(lat, lng) {
 function processWeatherData(weatherResults) {
 	var temp 		= weatherResults['main']['temp'];
 	var tempString 	= temp.toString();
-	nameTemp		= tempString.substring(0, tempString.indexOf('.'));
+	if (tempString.indexOf('.') >= 0) {
+		nameTemp		= tempString.substring(0, tempString.indexOf('.'));		
+	} else {
+		nameTemp = tempString;
+	}
 	var id = "0";
 	if (weatherResults['weather'] && weatherResults['weather'][0]['id']) {
 		id = weatherResults['weather'][0]['id'].toString();
@@ -62,15 +66,33 @@ function getWeatherRating(id, temp) {
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
 
-	console.log(weatherParams);
-	console.log(getOppositeDayMetrics(weatherParams));
+	if (isOpposite) {
+		weatherParams = getOppositeDayMetrics(weatherParams);
+		nameWeather = weatherParams[2];
+		console.log(weatherParams[0]);
+		weatherMetrics = musicChart[weatherParams[0]];
+		console.log("OPPOSITE");
+		console.log(weatherMetrics);
+		updatePlaylistTopBar();
+		// Now get seed song to make playlist
+		searchSeedSong(weatherMetrics, '.5', getOppositeDayTemp());
+	} else {
+		console.log(weatherMetrics);
+	    // now that we have temp, weather description, & location name,
+	    // update playlist while loading for visibility of system status
+		updatePlaylistTopBar();
 
-    // now that we have temp, weather description, & location name,
-    // update playlist while loading for visibility of system status
-	updatePlaylistTopBar();
+		// Now get seed song to make playlist
+		console.log(weatherParams[0]);
+		searchSeedSong(weatherMetrics, '.5', temp);
+	}
+}
 
-	// Now get seed song to make playlist
-	searchSeedSong(weatherMetrics, '.5', temp);
+function getOppositeDayTemp() {
+	var tempDiff = 50 - Number(nameTemp);
+	var oppositeTemp = 50 + tempDiff;
+	nameTemp = oppositeTemp.toString();
+	return oppositeTemp.toString();
 }
 
 function bufferSeverity(category) {
@@ -267,15 +289,12 @@ var musicChart = {
 function getOppositeDayMetrics(weatherMetric) {
 	var category = weatherMetric[0];
 	var severity = weatherMetric[1];
-	var tempDiff = 50 - Number(nameTemp);
-	var oppositeTemp = 50 + tempDiff;
-	console.log(oppositeTemp);
 	// Clear and calm map to violent storm
 	if (category == '1' || category == '10') {
 		return ['11', '9', 'violent storm'];
 	} // Precipitations maps to clear skies
 	else if (category == '3' || category == '5' || category == '6' || category == '7' || category == '8') {
-		return ['8', '0', 'sky is clear'];
+		return ['1', '0', 'sky is clear'];
 	} // Severe weather maps to calm
 	else if (category == '11') {
 	    return ['10', '0', 'calm'];
