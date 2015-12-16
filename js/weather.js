@@ -66,8 +66,6 @@ function getWeatherRating(id, temp, isReWeather) {
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
 
-
-
 	if (isOpposite) {
 		weatherParams = getOppositeDayMetrics(weatherParams);
 		nameWeather = weatherParams[2];
