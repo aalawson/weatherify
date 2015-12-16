@@ -12,7 +12,7 @@
 
 
 /* WEATHER SECTION */
-function getWeather(lat, lng) {
+function getWeather(lat, lng, isReWeather) {
 	$.ajax({
 	  'url': 'http://api.openweathermap.org/data/2.5/weather',
 	  'data': {
@@ -22,7 +22,7 @@ function getWeather(lat, lng) {
 	    'appid': '670b2cbcd683c42c5e41a0ed424b537b'
 	  },
 	  success: function(results) {
-	    processWeatherData(results);
+	    processWeatherData(results, isReWeather);
 	  },
 	  error: function(results){
 	    // MAKE-ERROR-MSG!
@@ -32,7 +32,7 @@ function getWeather(lat, lng) {
 }
 
 // Takes weather results and converts to a rating for getting music
-function processWeatherData(weatherResults) {
+function processWeatherData(weatherResults, isReWeather) {
 	var temp 		= weatherResults['main']['temp'];
 	var tempString 	= temp.toString();
 	nameTemp		= tempString.substring(0, tempString.indexOf('.'));
@@ -41,10 +41,10 @@ function processWeatherData(weatherResults) {
 		id = weatherResults['weather'][0]['id'].toString();
 	}
 
-	getWeatherRating(id, temp);
+	getWeatherRating(id, temp, isReWeather);
 }
 
-function getWeatherRating(id, temp) {
+function getWeatherRating(id, temp, isReWeather) {
 	var category = id.substring(0, 1);
 	var rawSeverity = id.substring(1, id.length);
 
@@ -62,17 +62,16 @@ function getWeatherRating(id, temp) {
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
 
- 	$("input[name='danceability']").val(temp/13.0);
-
-	console.log(weatherParams);
-	console.log(getOppositeDayMetrics(weatherParams));
+ 	if(!isReWeather) {
+ 		$("input[name='danceability']").val(temp/13.0);
+ 	}
 
     // now that we have temp, weather description, & location name,
     // update playlist while loading for visibility of system status
 	updatePlaylistTopBar();
 
 	// Now get seed song to make playlist
-	searchSeedSong(weatherMetrics, '.5', temp);
+	searchSeedSong(weatherMetrics, '.5', temp, isReWeather);
 }
 
 function bufferSeverity(category) {

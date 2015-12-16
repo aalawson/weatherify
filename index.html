@@ -44,7 +44,7 @@
             <fieldset id='loc-playlist' class='selected type-form'>
               <legend> Location </legend>
               <input type="text" id="loc" class="form-box" value="" placeholder="Default location"/>
-              <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(); return false;">Make me a playlist</button>
+              <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(false); return false;">Make me a playlist</button>
               <p id="home-intro-error" class="error-message"></p>
               <p> We've defaulted to your current location, but if you'd rather be somewhere else, feel free to enter it!</p>
             </fieldset>
@@ -59,7 +59,7 @@
                   <option> Happy </option>
                 </select>
               </label>
-              <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(); return false;">Make me a playlist</button>
+              <button type="button" id="weatherify-loc" class="g-button form-box" onclick="makeNewPlaylist(false); return false;">Make me a playlist</button>
             </fieldset>
           </form>
         </div>
@@ -125,13 +125,12 @@
               </label>
                 <br><br>
 
-                <input type="checkbox" name="danceInputCheck" value="true">
                 <b>danceability</b>
-                <input type="range" class="slider" min="0" max="8" name="danceability"><br><br>
+                <input type="range" min="0" max="8" name="danceability"><br><br>
 
                 <input type="checkbox" name="christmasify" value="christmas:true">christmasify<br><br>
 
-                <button type="button" class="g-button" onclick="return makeNewPlaylist();">Weatherify!</button>
+                <button type="button" class="g-button" onclick="return makeNewPlaylist(true); return false;">Weatherify!</button>
 
               </form>
             </div>

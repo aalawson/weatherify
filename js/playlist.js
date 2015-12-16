@@ -15,7 +15,7 @@ $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
 	if (keycode == '13') {
 		e.preventDefault();
-		makeNewPlaylist();
+		makeNewPlaylist(isReWeather);
 	}
 });
 
@@ -23,11 +23,14 @@ $("#options-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
 	if (keycode == '13') {
 		e.preventDefault();
-		makeNewPlaylist();
+		makeNewPlaylist(isReWeather);
 	}
 });
 // Weatherify button calls this -- makes a playlist based on weather
-function makeNewPlaylist() {
+function makeNewPlaylist(isReWeather) {
+	console.log(":)");
+	console.log("hallooooO" + isReWeather);
+
 	if (currentPlaylist['isSaved']) {
 		currentPlaylist['isSaved'] = false;
 	}
@@ -39,14 +42,12 @@ function makeNewPlaylist() {
 	} if (isAddAndRemoveOpen) {
 		toggleAddAndRemove();
 	}
-	getLocation(location);
+	getLocation(location, isReWeather);
     return false;
 }
 
 /* Get seed song to set up echonest playlist */
-function searchSeedSong(weatherMetrics, min_hot, temp) {
-
-
+function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type='
 	var genreSelected = ($('input[name="genre"]:checked').val());
@@ -63,9 +64,9 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 	//uses current temp to map to danceability of a song <<---- this should be used by the home page button
 	var tempToDance;
 	var danceability;
-	if($('input[name="danceInputCheck"]:checked').val()) {
-		console.log($('input[name="danceability"]') );
-		danceability = ($('input[name="danceability"]')[0]['value']/10);
+	
+	if(isReWeather) {
+		danceability = ($('input[name="danceability"]')[0]['valueAsNumber']/10);
 	}
 	else {
 		if (temp > 100) {
@@ -92,7 +93,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 			'song_min_hotttnesss' : min_hot,
 			'min_danceability' : danceability,
 			'max_danceability' : danceability + 0.2,
-			'results' : '1',
+			'results' : 1,
 			//'song_type' : christmasPlaylist,
 		}
 
@@ -113,13 +114,13 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 			if (results['response']['songs'].length == 0) {
 				// Decrement min hot if possible
 				if (min_hot != '0') {
-					searchSeedSong(weatherMetrics, '0', temp); // lower min popularity if need be
+					searchSeedSong(weatherMetrics, '0', temp, isReWeather); // lower min popularity if need be
 				} else {
 					displayNoPlaylistResultsError();
 				}
 			} // Seed song found 
 			else {
-				searchPlaylist(results['response']['songs'][0]['id'], min_hot);
+				searchPlaylist(results['response']['songs'][0]['id'], min_hot, danceability, weatherMetrics);
 			}
 		}
 	});
@@ -128,7 +129,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp) {
 
 //must error check genre up to 5
 // Get Echonest playlist using seed song
-function searchPlaylist(seed, min_hot) {
+function searchPlaylist(seed, min_hot, danceability, weatherMetrics) {
 	
 	$.ajax({
 		'url': 'http://developer.echonest.com/api/v4/playlist/static?bucket=id:spotify&bucket=tracks',
@@ -141,7 +142,6 @@ function searchPlaylist(seed, min_hot) {
 		},
 		//callback function needs to be added here 
 		'success': function(results) {
-			console.log(results);
 			// Try to get at least 15 results
 			if (results['response']['songs'].length < 15 && Number(min_hot) >= 0.2) {
 				searchPlaylist(seed, (Number(min_hot) - .2 ).toString())
@@ -166,7 +166,6 @@ function getPlayerString(songs) {
 }
 
 function getPlaylistName() {
-	console.log(nameTemp);
 	var name = '';
 	if (nameTemp.length > 0 || nameWeather.length > 0 || curLocation.length > 0) {
 		if (nameTemp.length > 0) {
@@ -198,7 +197,6 @@ function createPlaylist(results) {
 
         	// See if there was an artist id
 		    var artistId = '';
-		    console.log()
 		    if (results['response']['songs'][i]['artist_foreign_ids']
 		    	&& results['response']['songs'][i]['artist_foreign_ids'][0]
 		    	&& results['response']['songs'][i]['artist_foreign_ids'][0]['foreign_id']) {
@@ -245,7 +243,6 @@ function removeSong(id) {
 function addSong(index) {
 	index = index.replace('add-', '');
 	var song = mostRecentSearchResults['tracks']['items'][index];
-	console.log(song);
 	var name = song.name; 
 	var id = song.id;
     var artist = song['artists'][0].name;
@@ -260,9 +257,6 @@ function addSong(index) {
          }); 
     	savePlaylist();
     }
-    console.log(currentPlaylist['songs'].length);
-    console.log(currentPlaylist['songs']);
-
 }
 
 function refreshPlaylist() {
