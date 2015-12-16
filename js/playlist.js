@@ -48,47 +48,50 @@ function makeOppositeNewPlaylist(isReWeather) {
 function makeMoodPlaylist() {
 	var mood = $("#mood option:selected").val();
 	isMood = true;
-
 	// hardcoded values for mood
 	switch(mood){
 		case 'angry':
-			moodId += 212;
-			moodTemp += 30;
+			moodId = 212;
+			moodTemp = 30;
 			break;
 		case 'happy':
-			moodId += 800;
-			moodTemp += 82;
+			moodId = 800;
+			moodTemp = 82;
 			break;
 		case 'sad':
-			moodId += 521;
-			moodTemp += 44;
+			moodId = 521;
+			moodTemp = 44;
 			break;
 		case 'calm':
-			moodId += 952;
-			moodTemp += 68;
+			moodId = 952;
+			moodTemp = 68;
 			break;
 		default:
-			moodId += 500;
-			moodTemp += 50;
+			moodId = 500;
+			moodTemp = 50;
 			break;
 	}
 
-	nameTemp = moodTemp;
-	nameWeather = mood;
+	nameTemp = moodTemp.toString();
+	nameWeather = mood.toString();
+	console.log(moodTemp);
+	curLocation = '';
 
-	getWeatherRating(moodId, moodTemp);
+	getWeatherRating(moodId.toString(), moodTemp.toString(), glblIsReWeather);
 	switchToCurrentPlaylist();
 }
 
 function makeNewPlaylistWrapper(isReWeather) {
 	isOpposite = false;
-	if(document.getElementById('loc-radio').checked) {
+	glblIsReWeather = false;
+	if(document.getElementById('loc-rad').checked) {
 		isMood = false;
 	} else {
 		isMood = true;
 	}
 	if(isMood){
-		getWeatherRating(moodId, moodTemp, false);
+		console.log("in make new mood");
+		makeMoodPlaylist(false);
 	} else{
 		makeNewPlaylist(isReWeather);
 	}
@@ -168,10 +171,45 @@ function getEnergy(weatherMetrics, isReWeather) {
 	return [energy, maxEnergy];
 }
 
+function getTempo(weatherMetrics, isReWeather) {
+	var tempo;
+	var maxTempo;
+	if (isReWeather) {
+		tempo = ($('input[name="tempo"]')[0]['valueAsNumber']);
+		if (tempo >= 200) {
+			tempo = 200; //for range .8-1, which is max range
+		}
+		maxTempo = tempo + 70;
+	} else {
+		tempo = weatherMetrics['min_tempo'];
+		maxTempo = weatherMetrics['max_tempo'];
+		$("input[name='tempo']").val((tempo+maxTempo)/2.0);
+	}
+	return [tempo, maxTempo];
+}
+
+function getChristmas(isReWeather) {
+	if (isReWeather) {
+		var christmasPlaylist = $('input[name="christmasify"]:checked').val();
+		if (!christmasPlaylist) {
+			return 'christmas:false';
+		} else {
+			return christmasPlaylist;
+		}
+	} else {
+		$("input[name='christmasify']").attr('checked', false);
+		return 'christmas:false';
+	}
+}
+
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
 	var genreSelected;
+	console.log(isReWeather);
+	console.log(weatherMetrics);
+
+	songSearchURL += getChristmas(isReWeather);
 
 	//Get user search parameters
 	if (isReWeather){
@@ -182,12 +220,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 		//genreSelected = ($('input[name="genre"]').click('all'));
 	}
 	var endYear = $("#decade :selected").val();
-	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
-	if (!christmasPlaylist) {
-		songSearchURL +='christmas:false';
-	} else {
-		songSearchURL += christmasPlaylist;
-	}
+	
 
 	//uses current temp to map to danceability of a song
 	var danceability = getDanceability(temp, isReWeather);
@@ -200,9 +233,10 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 		maxDanceability = 1;
 	}
 
-
 	var energyArr = getEnergy(weatherMetrics, isReWeather);
 	var happyArr = getHappiness(weatherMetrics, isReWeather);
+	var tempoArr = getTempo(weatherMetrics, isReWeather);
+
 
 	var energy = energyArr[0];
 	var maxEnergy = energyArr[1];
@@ -210,24 +244,24 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	var happiness = happyArr[0];
 	var maxHappiness = happyArr[1];
 
+	var tempo = tempoArr[0];
+	var maxTempo = tempoArr[1];
 
 
 	var data = {
 			'api_key': ECONEST_API_KEY,
 			'format' : 'json',
 			'bucket' : 'id:spotify',
-			'max_tempo' : weatherMetrics['max_tempo'],
-			'min_tempo' : weatherMetrics['min_tempo'],
-			'min_energy' : (energy).toString(),
-			'max_energy' : (maxEnergy).toString(),
-			'min_valence' : (happiness).toString(),
-			'max_valence' : (maxHappiness).toString(),
+			'max_tempo' : maxTempo,
+			'min_tempo' : tempo,
+			'min_energy' : (energy),
+			'max_energy' : (maxEnergy),
+			'min_valence' : (happiness),
+			'max_valence' : (maxHappiness),
 			'song_min_hotttnesss' : min_hot,
 			'min_danceability' : danceability,
 			'max_danceability' : maxDanceability,
-
 			'results' : '1',
-			//'song_type' : christmasPlaylist,
 		}
 
 	if (genreSelected && (genreSelected != 'all')) {
@@ -243,6 +277,9 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	glblCurMaxDanceability = maxDanceability;
 	glblCurEnergy = energyArr;
 	glblCurHappiness = happyArr;
+	glblCurTempo = tempoArr;
+
+	console.log(data);
 
 	$.ajax({
 		'url': songSearchURL,
@@ -288,20 +325,20 @@ function searchPlaylist(seed, min_hot) {
 	var maxEnergy = glblCurEnergy[1];
 	var happiness = glblCurHappiness[0];
 	var maxHappiness = glblCurHappiness[1];
+	var tempo = glblCurTempo[0];
+	var maxTempo = glblCurTempo[1];
 
 	$.ajax({
 		'url': url,
 		'data': {
 			'api_key': ECONEST_API_KEY,
 			'type': 'song-radio',
-			//'song_min_hotttnesss' : min_hot,
 			'max_energy' : (maxEnergy).toString(),
 			'min_energy' : (energy).toString(),
-			'max_tempo' : weatherMetrics['max_tempo'],
-			'min_tempo' : weatherMetrics['min_tempo'],
-			'min_valence' : (happiness).toString(),
-			'max_valence' : (maxHappiness).toString(),
-			//'song_min_hotttnesss' : min_hot,
+			'max_tempo' : maxTempo,
+			'min_tempo' : tempo,
+			'min_valence' : (happiness),
+			'max_valence' : (maxHappiness),
 			'min_danceability' : danceability,
 			'max_danceability' : maxDanceability,
 			'results' : numResults,
@@ -420,11 +457,14 @@ function removeSong(id) {
 		}
 	}
 	refreshAddRemoveTable();
+	currentPlaylist['isNew'] = false; //save w/ existing name
 	savePlaylist();
 }
 
 function addSong(index) {
 	index = index.replace('add-', '');
+	document.getElementById('add-' + index).innerHTML = '&#10003';
+	document.getElementById('add-' + index).setAttribute('class', 'g-button form-box disabled');
 	var song = mostRecentSearchResults['tracks']['items'][index];
 	var name = song.name; 
 	var id = song.id;
@@ -438,6 +478,7 @@ function addSong(index) {
             'artistId' : artistId,
             'songId' : id,
          }); 
+    	currentPlaylist['isNew'] = false; //save w/ existing name
     	savePlaylist();
     }
 

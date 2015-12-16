@@ -19,6 +19,11 @@
     margin-left: 10px;
 }
 
+#search-songs-results-div button.disabled {
+    border: none;
+    color:gray;
+}
+
 /************ Next and PRev Buttons for Search Results *************/
 
 #page-control {
