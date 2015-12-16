@@ -358,7 +358,24 @@ function titlecase(str) {
 }
 
 function updatePlaylistTopBar() {
-    if (nameTemp.length > 0 && nameWeather.length > 0 && curLocation.length > 0) {
+    if (currentPlaylist['name'] && currentPlaylist['name'].length > 0) {
+        console.log("******");
+         document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
+       if (!currentPlaylist['isSaved']) {
+        document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
+          + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>';       
+        } else {
+            console.log("*********");
+            document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
+            + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
+            document.getElementById('save-playlist-button').disabled = true;
+        }
+        console.log("*********");
+        document.getElementById('save-playlist-button').disabled = false;
+        document.getElementById('drawers').style.display = "block";
+        document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'
+    }
+    else if (nameTemp.length > 0 && nameWeather.length > 0 && curLocation.length > 0) {
         document.getElementById('playlist-name').innerHTML = getPlaylistName().toUpperCase();
         if (!currentPlaylist['isSaved']) {
         document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
