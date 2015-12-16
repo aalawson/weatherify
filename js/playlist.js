@@ -148,9 +148,18 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	console.log(weatherMetrics);
 
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
+	var genreSelected;
 
 	//Get user search parameters
-	var genreSelected = ($('input[name="genre"]:checked').val());
+	console.log(isReWeather);
+	console.log($('input[name="genre"]:checked'));
+	if (isReWeather){
+		genreSelected = ($('input[name="genre"]:checked').val());
+	} else {
+		genreSelected= 'all';
+		$('input[name="genre"]').prop('checked', true);
+		//genreSelected = ($('input[name="genre"]').click('all'));
+	}
 	var endYear = $("#decade :selected").val();
 	var christmasPlaylist = $('input[name="christmasify"]:checked').val();
 	if (!christmasPlaylist) {
@@ -285,7 +294,7 @@ function searchPlaylist(seed, min_hot) {
 			console.log("*****************");
 			console.log(results['response']['songs'].length);
 			// Try to get at least 15 results
-			if (results['response']['songs'].length < 15 && min_hot >= 0.1) {
+			if (results['response']['songs'].length < 30 && min_hot >= 0.1) {
 				searchPlaylist(seed, min_hot - .1);
 			} // If  any results were found, display them
 			else if (results['response']['songs'].length > 0) {
