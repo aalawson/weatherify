@@ -67,6 +67,12 @@ function getWeatherRating(id, temp) {
 
 	console.log(weatherParams);
 	console.log(getOppositeDayMetrics(weatherParams));
+
+    // now that we have temp, weather description, & location name,
+    // update playlist while loading for visibility of system status
+	updatePlaylistTopBar();
+
+	// Now get seed song to make playlist
 	searchSeedSong(weatherMetrics, '.5', temp);
 }
 

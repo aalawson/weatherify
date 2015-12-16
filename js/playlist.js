@@ -165,8 +165,24 @@ function getPlayerString(songs) {
     return playerString;
 }
 
+function getPlaylistName() {
+	console.log(nameTemp);
+	var name = '';
+	if (nameTemp.length > 0 || nameWeather.length > 0 || curLocation.length > 0) {
+		if (nameTemp.length > 0) {
+            name += nameTemp + "° and ";
+		} if (nameWeather.length > 0) {
+			name += titlecase(nameWeather) + ' in ';
+		} if (curLocation.length > 0) {
+			name += curLocation;
+		}
+       return name;	
+	}
+	return '';
+}
+
 function createPlaylist(results) {
-	currentPlaylistName = nameTemp + "° and " + titlecase(nameWeather) + " in " + curLocation;
+	currentPlaylistName = getPlaylistName();
     
     currentPlaylist = {
         'name' 		: currentPlaylistName,
@@ -213,6 +229,48 @@ function createPlaylist(results) {
     updatePlaylistTopBar();
     displayPlaylist();
 
+}
+
+function removeSong(id) {
+	id = id.replace('delete-', '');
+	for (var i = 0; i < currentPlaylist['songs'].length; i++) {
+		if (currentPlaylist['songs'][i]['songName'] == id) {
+			currentPlaylist['songs'].splice(i, 1);
+		}
+	}
+	refreshAddRemoveTable();
+	savePlaylist();
+}
+
+function addSong(index) {
+	index = index.replace('add-', '');
+	var song = mostRecentSearchResults['tracks']['items'][index];
+	console.log(song);
+	var name = song.name; 
+	var id = song.id;
+    var artist = song['artists'][0].name;
+    var artistId = song['artists'][0].id;
+
+    if (currentPlaylist['songs']) {
+    	currentPlaylist['songs'].push( {
+            'songName' : name,
+            'artist' : artist,
+            'artistId' : artistId,
+            'songId' : id,
+         }); 
+    	savePlaylist();
+    }
+    console.log(currentPlaylist['songs'].length);
+    console.log(currentPlaylist['songs']);
+
+}
+
+function refreshPlaylist() {
+	console.log("refreshing");
+	refreshAddRemoveTable();
+	currentPlaylist['playerString'] = getPlayerString(currentPlaylist['songs']);
+	updatePlaylistTopBar();
+	displayPlaylist();
 }
 
 	
