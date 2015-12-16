@@ -231,7 +231,8 @@ function saveNewPlaylist() {
 // save current playlist (update one)
 function savePlaylist() {
   currentPlaylist['isSaved'] = true;
-  document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
+  document.getElementById('save-button-div').innerHTML 
+      = '<button type="button" id="save-playlist-button" class="g-button disabled'
       + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
   document.getElementById('save-playlist-button').disabled = true;
 
@@ -239,9 +240,26 @@ function savePlaylist() {
   refreshPlaylist();
 }
 
-// delete current playlist
-function deletePlaylist() {
-  store.remove(currentPlaylist['name']);
+// rename chosen playlist
+function renamePlaylist(name){
+  var temp = store.get(name);
+  var new_name = prompt("Please enter new group name.", temp['name']);
+  if (!new_name) {
+    new_name = temp['name'];
+  }
+  else{
+    temp['name'] = new_name;
+  }
+
+  store.set(temp['name'], temp);
+  store.remove(name);
+  showAllPlaylists();
+}
+
+// delete chosen playlist
+function deletePlaylist(name) {
+  store.remove(name);
+  showAllPlaylists();
 }
 
 // given the name of the Playlist, a new one is loaded
@@ -269,17 +287,20 @@ function deleteAllPlaylists() {
 function showAllPlaylists(){
     var viewAllHtml = '<h2> My Playlists </h2>';
     store.forEach(function(key, val){
-        console.log(key);
-        console.log(val);
-        viewAllHtml += '<div class=\"one-of-many-playlist-div\"><a id=\'playlist-' + key + '\' href="#" onclick=\"switchToViewOneWrapper(this.id);return false;\"><span>' + key + '</span></a></div>';
-        // key gives the name of the playlist
-        // val gives the array
+        viewAllHtml 
+          += '<div class=\"one-of-many-playlist-div\">'
+          + '<a href="#" onclick="renamePlaylist(\'' + key + '\');"><small> edit </small></a>' 
+          + '<a href="#" onclick="deletePlaylist(\'' + key + '\');"><small> delete </small></a>'
+          + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+          + '<a id=\'playlist-' + key 
+          + '\' href="#" onclick=\"switchToViewOneWrapper(this.id);return false;\"><span>' + key 
+          + '</span></a>' 
+          + '</div>';
   });
   document.getElementById('view-all').innerHTML = viewAllHtml;
 }
 
 function switchToViewOneWrapper(id) {
-    console.log(id);
     id = id.replace('playlist-', '');
     currentPlaylist = {};
     store.forEach(function(key, val){
@@ -318,10 +339,11 @@ function updatePlaylistTopBar() {
         document.getElementById('playlist-name').innerHTML = "<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist</p>";
     }
 }
+
 // Make playbutton with all songs in playlist
 function displayPlaylist() {
     updatePlaylistTopBar();
-    console.log(currentPlaylist['isSaved']);
+
     $('#playlist-results').empty();
 
     var playerHtml  = '<iframe '
@@ -356,8 +378,9 @@ function refreshAddRemoveTable() {
         tableHtml += '</table>';
     }
     if (tableHtml == '') {
-        tableHtml = '<p> Oops! There are no songs in this playlist </p>';
+        tableHtml = '<p><b>Oops!</b> There are no songs in this playlist </p>';
     }
+
     document.getElementById('add-and-remove-window').innerHTML = addSongsHtml + tableHtml;
 }
 
