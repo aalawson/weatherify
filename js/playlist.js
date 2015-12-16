@@ -9,7 +9,7 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var numResults = 50;
+var numResults = 40;
 var isOpposite = false;
 var glblCurWeatherMetrics;
 var glblCurDanceability;
@@ -179,7 +179,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			'song_min_hotttnesss' : min_hot,
 			'min_danceability' : (danceability).toString(),
 			'max_danceability' : (maxDanceability).toString(),
-			'results' : '5',
+			'results' : '3',
 			//'song_type' : christmasPlaylist,
 		}
 
@@ -278,11 +278,14 @@ function searchPlaylist(seed, min_hot) {
 }
 
 function getPlayerString(songs) {
-	var playerString = '';
-	for (var i = 0; i < songs.length; i++) {
-        playerString += songs[i]['songId'] + ',';
-	}
-    return playerString;
+	if (songs) {
+		var playerString = '';
+		for (var i = 0; i < songs.length; i++) {
+	        playerString += songs[i]['songId'] + ',';
+		}
+	    return playerString;		
+	} return '';
+
 }
 
 function getPlaylistName() {
@@ -312,7 +315,8 @@ function createPlaylist(results) {
         'weather'	: nameWeather,
         'songs' 	: [],
         'playerString' : '',
-        'isSaved' : false
+        'isSaved' : false,
+        'isNew' : true
     }
 
     for (var i = 0; i < results['response']['songs'].length; i++) {
