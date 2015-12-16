@@ -8,11 +8,12 @@
 /* VARIABLES DEALING WITH PLAYLIST */
 	var buffer_val = .01;
 	var bufferMetrics = ['max_energy', 'min_energy', 'max_acousticness', 'min_acousticness'];
-
+	var isOpposite = false;
 
 
 /* WEATHER SECTION */
-function getWeather(lat, lng) {
+function getWeather(lat, lng, isReWeather) {
+	glblIsReWeather = isReWeather;
 	$.ajax({
 	  'url': 'http://api.openweathermap.org/data/2.5/weather',
 	  'data': {
@@ -22,7 +23,7 @@ function getWeather(lat, lng) {
 	    'appid': '670b2cbcd683c42c5e41a0ed424b537b'
 	  },
 	  success: function(results) {
-	    processWeatherData(results);
+	    processWeatherData(results, isReWeather);
 	  },
 	  error: function(results){
 	    // MAKE-ERROR-MSG!
@@ -32,7 +33,8 @@ function getWeather(lat, lng) {
 }
 
 // Takes weather results and converts to a rating for getting music
-function processWeatherData(weatherResults) {
+function processWeatherData(weatherResults, isReWeather) {
+	glblIsReWeather = isReWeather;
 	var temp 		= weatherResults['main']['temp'];
 	var tempString 	= temp.toString();
 	if (tempString.indexOf('.') >= 0) {
@@ -45,10 +47,11 @@ function processWeatherData(weatherResults) {
 		id = weatherResults['weather'][0]['id'].toString();
 	}
 
-	getWeatherRating(id, temp);
+	getWeatherRating(id, temp, isReWeather);
 }
 
-function getWeatherRating(id, temp) {
+function getWeatherRating(id, temp, isReWeather) {
+	glblIsReWeather = isReWeather;
 	var category = id.substring(0, 1);
 	var rawSeverity = id.substring(1, id.length);
 
@@ -66,6 +69,8 @@ function getWeatherRating(id, temp) {
 	var maxaccousticness = weatherMetrics['min_accousticness'];
 	var minaccousticness = weatherMetrics['max_accousticness'];*/
 
+
+
 	if (isOpposite) {
 		weatherParams = getOppositeDayMetrics(weatherParams);
 		nameWeather = weatherParams[2];
@@ -73,22 +78,16 @@ function getWeatherRating(id, temp) {
 		weatherMetrics = musicChart[weatherParams[0]];
 		console.log("OPPOSITE");
 		console.log(weatherMetrics);
-		$("input[name='danceability']").val(Number(getOppositeDayTemp())/13.0);
+		getOppositeDayTemp();
 		updatePlaylistTopBar();
+
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.5', getOppositeDayTemp());
+		searchSeedSong(weatherMetrics, '.4', isReWeather);
 	} else {
-		console.log(weatherMetrics);
-	    // now that we have temp, weather description, & location name,
-	    // update playlist while loading for visibility of system status
- 		$("input[name='danceability']").val(temp/13.0);
 		updatePlaylistTopBar();
 
-
-
 		// Now get seed song to make playlist
-		console.log(weatherParams[0]);
-		searchSeedSong(weatherMetrics, '.5', temp);
+		searchSeedSong(weatherMetrics, '.4', temp, isReWeather);
 	}
 }
 
@@ -96,6 +95,7 @@ function getOppositeDayTemp() {
 	var tempDiff = 50 - Number(nameTemp);
 	var oppositeTemp = 50 + tempDiff;
 	nameTemp = oppositeTemp.toString();
+	console.log("setting name temp");
 	return oppositeTemp.toString();
 }
 
@@ -225,68 +225,68 @@ var musicChart = {
 	// Happy things --faster, higher energy
 	'1' : {
 		'max_energy' : '1',
-		'min_energy' : '.6',
+		'min_energy' : '.4',
+		'min_valence' : '.4',
+		'max_valence' : '1',
 		'max_tempo' : '500',
-		'min_tempo' : '120',
-        'max_acousticness' : '1',
-        'min_acouesticness' : '0',
+		'min_tempo' : '100',
 	},// Light Rain/ Drizzle --moderately slow sad music
 	'3' : {
-		'max_energy' : '0.4',
+		'max_energy' : '0.5',
 		'min_energy' : '0.1',
+		'min_valence' : '.2',
+		'max_valence' : '.6',
 		'max_tempo' : '140',
 		'min_tempo' : '0',
-		'max_acousticness' : '1',
-		'min_acousticness' : '0.5',
 	}, // Heavy Rain / Drizzle -- slow sad music
 	'5' : {
-		'max_energy' : '0.3',
+		'max_energy' : '0.5',
 		'min_energy' : '0.1',
+		'min_valence' : '0',
+		'max_valence' : '.4',
 		'max_tempo' : '120',
 		'min_tempo' : '0',
-		'max_acousticness' : '.7',
-		'min_acousticness' : '0.2',
 	}, // Snow -- Not anything too fast, low energy, some acousticness
 	'6' : {
-		'max_energy' : '0.5',
+		'max_energy' : '0.6',
 		'min_energy' : '0.2',
+		'min_valence' : '.2',
+		'max_valence' : '.7', //snow could be more positive than rain
 		'max_tempo' : '180',
 		'min_tempo' : '0',
-		'max_acousticness' : '1',
-		'min_acousticness' : '0.5',
 	}, // Hazy Things
 	'7' : {
-		'max_energy' : '0.4',
+		'max_energy' : '0.5',
 		'min_energy' : '0',
+		'min_valence' : '0',
+		'max_valence' : '.7',
 		'max_tempo' : '160',
 		'min_tempo' : '0',
-		'max_acousticness' : '1',
-		'min_acousticness' : '0.5',
 	}, // Cloudy
 	'8' : {
 		'max_energy' : '0.5',
-		'min_energy' : '0.2',
+		'min_energy' : '0',
+		'min_valence' : '.1',
+		'max_valence' : '.6',
 		'max_tempo' : '150',
 		'min_tempo' : '0',
-		'max_acousticness' : '1',
-		'min_acousticness' : '0.5',
 	}, // Calm
 	'10' : {
 		'max_energy' : '1',
 		'min_energy' : '0.5',
+		'min_valence' : '.2',
+		'max_valence' : '.7',
 		'max_tempo' : '180',
 		'min_tempo' : '0',
-		'max_acousticness' : '0.5',
-		'min_acousticness' : '0',
 	},
     // Very Severe Things
 	'11' : {
 		'max_energy' : '0.5',
 		'min_energy' : '0',
+		'min_valence' : '0',
+		'max_valence' : '.3',
 		'max_tempo' : '500',
-		'min_tempo' : '160',
-		'max_acousticness' : '1',
-		'min_acousticness' : '0',
+		'min_tempo' : '0',
 	}
 }
 

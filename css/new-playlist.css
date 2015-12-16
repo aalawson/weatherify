@@ -28,47 +28,18 @@
 	margin-top: 40px;
 }
 
-/* Dropdown drawers */
-#drawers {
-	height: 40px;
-}
-
-.table-song-name {
-	font-weight: bold;
-}
-
-#options-tab, #add-and-remove-tab {
-	float: right;
-	margin-top: 30px;
-	margin-bottom: 10px;
-	margin-left: 5px;
-}
-
-#error-message {
-	color: red;
-}
-
-#delete-buttons-div {
-	width: 40px;
-	display:inline-block;
-}
-
-#loading-message {
-	margin-top: 40px;
-	margin-left: 40px;
-}
-
-
 /* Description of weather */
 #weather-report {
 	display:inline-block;
 }
 
-/* Button to search for songs to add to playlist */
-#open-search-button {
-    margin-left: 5px;
+/* Positive system status message */
+#loading-message {
+	margin-top: 40px;
+	margin-left: 40px;
 }
 
+/* Save Features */
 #save-button-div {
 	display: inline-block;
 }
@@ -79,4 +50,50 @@
 
 #saved-message {
 	font-style:italic;
+}
+
+/* Dropdown drawers */
+#drawers {
+	height: 40px;
+}
+
+#options-tab, #add-and-remove-tab {
+	float: right;
+	margin-top: 30px;
+	margin-bottom: 10px;
+	margin-left: 5px;
+}
+
+/* refresh button */
+#weatherify-button {
+	margin-bottom: 15px;
+}
+
+#error-message {
+	color: red;
+}
+
+
+/* Delete Songs features */
+.table-song-name {
+	font-weight: bold;
+}
+#delete-buttons-div {
+	width: 40px;
+	display:inline-block;
+}
+
+/* Button to search for songs to add to playlist */
+#open-search-button {
+    margin-left: 5px;
+}
+
+
+/********************************** View All Playlists **********************/
+.group-name {
+    margin-right: 10px;
+}
+
+.one-of-many-playlist-div small{
+	margin-right: 5px;
 }

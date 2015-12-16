@@ -99,6 +99,7 @@ function changeToMoodPlaylist() {
 // Switch Tab to Manage Groups
 function switchToHome() {
     // Set group tab to selected
+    checkIfNeedToSave();
     document.getElementById('t1').setAttribute('class', 'selected tab');
     document.getElementById('t2').setAttribute('class', 'unselected tab');
     document.getElementById('t3').setAttribute('class', 'unselected tab');
@@ -121,21 +122,13 @@ function switchToCurrentPlaylist() {
     document.getElementById('view-all').setAttribute('class', 'unselected body-content');
     closeFineTune();
     closeAddAndRemove();
-        //If current playlist exists
-    if (currentPlaylist['name']) {
-        document.getElementById('drawers').style.display = "block";
-        displayPlaylist();
-    } // Else display error
-    else {
-        document.getElementById('drawers').style.display = "none";
-        console.log("hi");
-        $('#playlist-results').empty();
-        $('#playlist-results').append("<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist, or \"Home\" to make a new playlist </p>");
-    }
+
+    displayPlaylist();
 } 
 
 // Switch Tab to Playlist
 function switchToViewPlaylists() {
+    checkIfNeedToSave();
     document.getElementById('t1').setAttribute('class', 'unselected tab');
     document.getElementById('t2').setAttribute('class', 'unselected tab');
     document.getElementById('t3').setAttribute('class', 'selected tab');
@@ -161,6 +154,54 @@ function switchToSearch() {
     document.getElementById('view-all').setAttribute('class', 'unselected body-content');
 }
 
+function checkIfNeedToSave() {
+    //If current Playlist exists and is not saved, must decide what to do
+    if (currentPlaylist['songs'] && currentPlaylist['isSaved'] == false) {
+        //if it's a new playlist, ask user if they would like to save
+        if (currentPlaylist['isNew']) {
+            var name = prompt("Before you leave this page, would you like to save this playlist?\n" +
+                "Press cancel to lose the playlist, or enter a name to save it", currentPlaylist['name']);
+            if (name != null && name != '') {
+                console.log("********");
+                currentPlaylist['name'] = name;
+                currentPlaylist['isNew'] = false;
+                currentPlaylist['isSaved'] = true;
+                checkPlaylistName();
+                savePlaylist();
+            } else { //if user pressed cancel
+                currentPlaylist = {};
+                nameTemp = '';
+                nameWeather = '';
+                curLocation = '';
+            }
+        } // if it's an existing playlist, automatically save it
+        else {
+            savePlaylist();
+        }
+    }
+}
+
+function checkPlaylistName() {
+      // if it exists, append number to it
+  if(store.get(currentPlaylist['name'])){
+    var hasPlaylist = true;
+    var i = 1;
+
+    while(hasPlaylist){
+      currentPlaylist['name'] += "-" + i;
+      if(!store.get(currentPlaylist['name']))
+        break;
+      i++;
+    }
+  }
+    document.getElementById('save-button-div').innerHTML 
+      = '<button type="button" id="save-playlist-button" class="g-button disabled'
+      + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
+    document.getElementById('save-playlist-button').disabled = true;
+
+    store.set(currentPlaylist['name'], currentPlaylist);
+    refreshPlaylist();
+}
 function openSearchPopup() {
     document.getElementById('search').style.display = "block";
     document.getElementById('search').style.backgroundColor = "white";
@@ -221,8 +262,9 @@ function hidePopupDisplay() {
 
 // save current playlist (make new one)
 function saveNewPlaylist() {
-  
+  currentPlaylist['name'] = prompt("Enter a name for the playlists:", currentPlaylist['name']);
   currentPlaylist['isSaved'] = true;
+  currentPlaylist['isNew'] = false;
   // if it exists, append number to it
   if(store.get(currentPlaylist['name'])){
     var hasPlaylist = true;
@@ -235,12 +277,20 @@ function saveNewPlaylist() {
       i++;
     }
   }
+    document.getElementById('save-button-div').innerHTML 
+      = '<button type="button" id="save-playlist-button" class="g-button disabled'
+      + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
+    document.getElementById('save-playlist-button').disabled = true;
 
-  savePlaylist();
+    store.set(currentPlaylist['name'], currentPlaylist);
+    refreshPlaylist();
 }
 
 // save current playlist (update one)
 function savePlaylist() {
+  if (currentPlaylist['isNew']) {
+    saveNewPlaylist();
+  }
   currentPlaylist['isSaved'] = true;
   document.getElementById('save-button-div').innerHTML 
       = '<button type="button" id="save-playlist-button" class="g-button disabled'
@@ -273,15 +323,17 @@ function renamePlaylist(name){
 
 // delete chosen playlist
 function deletePlaylist(name) {
-  confirm("Are you sure you want to delete this playlist, " + name + "?");
-  store.remove(name);
+  var answer = confirm("Are you sure you want to delete this playlist, " + name + "?");
+  if (answer) {
+    store.remove(name);
+  }
   showAllPlaylists();
 }
 
 // given the name of the Playlist, a new one is loaded
 function choosePlaylist(name) {
   if(!store.get(name)){
-    // ERROR MESSAGE HERE
+    alert("oops, not a valid playlist");
     return;
   }
   currentPlaylist     = store.get(name);
@@ -300,19 +352,23 @@ function deleteAllPlaylists() {
 
 // get all playlists
 function showAllPlaylists(){
+    console.log("**********");
     var viewAllHtml = '<h2> My Playlists </h2>';
+    var playlistsHtml = '';
     store.forEach(function(key, val){
-        viewAllHtml 
+        playlistsHtml
           += '<div class=\"one-of-many-playlist-div\">'
+          + '<a id=\'playlist-' + key 
+          + '\' class=\"group-name\" href="#" onclick=\"switchToViewOneWrapper(this.id);return false;\"><span>' + key 
+          + '</span></a>' 
           + '<a href="#" onclick="renamePlaylist(\'' + key + '\');"><small> rename </small></a>' 
           + '<a href="#" onclick="deletePlaylist(\'' + key + '\');"><small> delete </small></a>'
-          + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-          + '<a id=\'playlist-' + key 
-          + '\' href="#" onclick=\"switchToViewOneWrapper(this.id);return false;\"><span>' + key 
-          + '</span></a>' 
           + '</div>';
   });
-  document.getElementById('view-all').innerHTML = viewAllHtml;
+    if (playlistsHtml.length == 0) {
+        playlistsHtml += '<p> Oops. You do not have any saved playlists</p>';
+    }
+  document.getElementById('view-all').innerHTML = viewAllHtml += playlistsHtml;
 }
 
 function switchToViewOneWrapper(id) {
@@ -332,7 +388,28 @@ function titlecase(str) {
 }
 
 function updatePlaylistTopBar() {
-    if (currentPlaylist != {}) {
+    console.log(glblIsReWeather);
+    console.log(currentPlaylist['name']);
+    console.log(nameTemp);
+    console.log('');
+    if (glblIsReWeather && currentPlaylist['name'] && currentPlaylist['name'].length > 0) {
+        console.log("******");
+         document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
+       if (!currentPlaylist['isSaved']) {
+        document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
+          + ' form-box" onclick="savePlaylist(); return false;">Save Playlist</button>';       
+        } else {
+            console.log("*********");
+            document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button disabled'
+            + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
+            document.getElementById('save-playlist-button').disabled = true;
+        }
+        console.log("*********");
+        document.getElementById('save-playlist-button').disabled = false;
+        document.getElementById('drawers').style.display = "block";
+        document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'
+    }
+    else if ((!glblIsReWeather) && nameTemp.length > 0 && nameWeather.length > 0 && curLocation.length > 0) {
         document.getElementById('playlist-name').innerHTML = getPlaylistName().toUpperCase();
         if (!currentPlaylist['isSaved']) {
         document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
@@ -344,26 +421,30 @@ function updatePlaylistTopBar() {
         }
 
         document.getElementById('save-playlist-button').disabled = false;
+        document.getElementById('drawers').style.display = "block";
+        document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'
     } else {
-        document.getElementById('playlist-name').innerHTML = "<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist</p>";
+        document.getElementById('playlist-name').innerHTML = 'No playlist selected yet.';
+        document.getElementById('playlist-results').innerHTML = "<p> Oops! No playlist selected. Select the \"My Playlists\" tab above to choose a playlist, or \"Home\" to make a new playlist.</p>";
+        document.getElementById('drawers').style.display = "none";
     }
 }
 
 // Make playbutton with all songs in playlist
 function displayPlaylist() {
     updatePlaylistTopBar();
+    if (currentPlaylist['name']){
+        $('#playlist-results').empty();
+        var playerHtml  = '<iframe '
+          + 'src="https://embed.spotify.com/?uri=spotify:trackset:';
 
-    $('#playlist-results').empty();
+        // adds songs to the player
+        playerHtml  += currentPlaylist['playerString']
+          + '" frameborder="0" width="640px" height="720"'
+          + 'align="center" allowtransparency="true"></iframe>';
 
-    var playerHtml  = '<iframe '
-      + 'src="https://embed.spotify.com/?uri=spotify:trackset:';
-
-    // adds songs to the player
-    playerHtml  += currentPlaylist['playerString']
-      + '" frameborder="0" width="640px" height="720"'
-      + 'align="center" allowtransparency="true"></iframe>';
-
-    $('#playlist-results').append(playerHtml);
+        $('#playlist-results').append(playerHtml);
+    }
 }
 
 function displayNoPlaylistResultsError() {
