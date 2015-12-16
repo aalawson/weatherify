@@ -20,6 +20,7 @@ var isFineTuneOpen = false;
 var isAddAndRemoveOpen = false;
 var scrollVertOffset = 0;
 
+// Initial load of index.html
 function setup() {
     document.getElementById('search').style.display = "none";
     if (isFineTuneOpen) {
@@ -33,7 +34,6 @@ function setup() {
 // Toggle "Fine Tune" drawer open and close
 function toggleFineTune() {
     isFineTuneOpen = !isFineTuneOpen;
-    console.log(isFineTuneOpen);
     if (isFineTuneOpen) {
         openFineTune();
         if (isAddAndRemoveOpen) {
@@ -46,7 +46,6 @@ function toggleFineTune() {
 // Toggle "Fine Tune" drawer open and close
 function toggleAddAndRemove() {
     isAddAndRemoveOpen = !isAddAndRemoveOpen;
-    console.log(isAddAndRemoveOpen);
     if (isAddAndRemoveOpen) {
         openAddAndRemove();
         if (isFineTuneOpen) {
@@ -57,7 +56,7 @@ function toggleAddAndRemove() {
     }
 }
 
-
+/* TABBING AND DRAWER BEHAVIOR FUNCTIONS */
 function openFineTune() {
     isFineTuneOpen = true;
     document.getElementById('options-window').style.display = "block";
@@ -68,7 +67,6 @@ function openAddAndRemove() {
     isAddAndRemoveOpen = true;
     document.getElementById('add-and-remove-window').style.display = "block";
     document.getElementById('add-and-remove-span').innerHTML = "&#9650 Add/Remove Songs";
-    console.log("refreshing table");
     refreshAddRemoveTable();
 }
 
@@ -157,6 +155,7 @@ function switchToSearch() {
     document.getElementById('album').value = '';
 }
 
+// If you exit window without having saved, prompts you to do so
 function checkIfNeedToSave() {
     //If current Playlist exists and is not saved, must decide what to do
     if (currentPlaylist['songs'] && currentPlaylist['isSaved'] == false) {
@@ -165,7 +164,6 @@ function checkIfNeedToSave() {
             var name = prompt("Before you leave this page, would you like to save this playlist?\n" +
                 "Press cancel to lose the playlist, or enter a name to save it", currentPlaylist['name']);
             if (name != null && name != '') {
-                console.log("********");
                 currentPlaylist['name'] = name;
                 currentPlaylist['isNew'] = false;
                 currentPlaylist['isSaved'] = true;
@@ -184,6 +182,8 @@ function checkIfNeedToSave() {
     }
 }
 
+// Checks the playlist name and appends a -1 if the name already exists
+// NOTE: If the existing playlist is Name-1, then the new one becomes Name-1-1
 function checkPlaylistName() {
       // if it exists, append number to it
   if(store.get(currentPlaylist['name'])){
@@ -197,6 +197,7 @@ function checkPlaylistName() {
       i++;
     }
   }
+  // Autopopulate
     document.getElementById('save-button-div').innerHTML 
       = '<button type="button" id="save-playlist-button" class="g-button disabled'
       + ' form-box" onclick="savePlaylist(); return false;">Saved</button>';
@@ -205,6 +206,8 @@ function checkPlaylistName() {
     store.set(currentPlaylist['name'], currentPlaylist);
     refreshPlaylist();
 }
+
+// Toggle search popup functions
 function openSearchPopup() {
     document.getElementById('search').style.display = "block";
     document.getElementById('search').style.backgroundColor = "white";
@@ -215,6 +218,7 @@ function closeSearchPopup() {
     document.getElementById('search').style.display = "none";
     hidePopupDisplay();
 }
+
 // Helper for opening popups. Sets background transparent 'greyed out' mode
 // and hides other tabs by setting them to display none.
 function setPopupDisplay() {
@@ -286,8 +290,6 @@ function saveNewPlaylist() {
     document.getElementById('save-playlist-button').disabled = true;
 
     store.set(currentPlaylist['name'], currentPlaylist);
-    console.log("~~~~~~~~~~~~~~~~");
-    console.log(currentPlaylist['name']);
     glblIsReWeather = true;
     refreshPlaylist();
 }
@@ -313,17 +315,14 @@ function renamePlaylist(name){
   var temp = store.get(name);
   var new_name = prompt("Please enter new playlist name.", temp['name']);
   if (!new_name) {
-    //console error here
-    console.log("NO NAME ENTERED");
+    return;
   }
   else{
     temp['name'] = new_name;
-    console.log(temp['name']);
   }
 
   store.set(temp['name'], temp);
   currentPlaylist = temp;
-  console.log(currentPlaylist['name']);
   if (name != temp['name']) {
     store.remove(name);
   }
@@ -337,16 +336,12 @@ function deletePlaylist(name) {
   var answer = confirm("Are you sure you want to delete this playlist, " + name + "?");
   var isCurrent = false;
   if (answer) {
-    console.log(name);
-    console.log(currentPlaylist['name']);
     if (store.get(name)['name'] == currentPlaylist['name']) {
         isCurrent = true;
-        console.log(isCurrent);
     }
     store.remove(name);
   }
   if (isCurrent) {
-    console.log("isCurrent");
       nameTemp = '';
       nameWeather = '';
       curLocation = '';
@@ -379,7 +374,6 @@ function deleteAllPlaylists() {
 
 // get all playlists
 function showAllPlaylists(){
-    console.log("**********");
     var viewAllHtml = '<h2> My Playlists </h2>';
     var playlistsHtml = '';
     store.forEach(function(key, val){
@@ -406,7 +400,6 @@ function switchToViewOneWrapper(id) {
             currentPlaylist = val;
         }
     });
-    console.log(currentPlaylist);
     glblIsReWeather = true;
     switchToCurrentPlaylist();
 }
@@ -417,11 +410,7 @@ function titlecase(str) {
 }
 
 function updatePlaylistTopBar() {
-    console.log(glblIsReWeather);
-    console.log(currentPlaylist['name']);
-    console.log(isMood);
     if (glblIsReWeather && currentPlaylist['name'] && currentPlaylist['name'].length > 0) {
-        console.log("******");
          document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
        if (!currentPlaylist['isSaved']) {
         document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
@@ -450,7 +439,6 @@ function updatePlaylistTopBar() {
         document.getElementById('drawers').style.display = "block";
         document.getElementById('playlist-results').innerHTML = '<p> ...Loading ...</p>'
     } else if (!glblIsReWeather && isMood && currentPlaylist['name']){
-        console.log("******");
          document.getElementById('playlist-name').innerHTML = currentPlaylist['name'].toUpperCase();
        if (!currentPlaylist['isSaved']) {
         document.getElementById('save-button-div').innerHTML = '<button type="button" id="save-playlist-button" class="g-button'
@@ -504,7 +492,6 @@ function refreshAddRemoveTable() {
       + 'return false;">&#43Add a song</button>';
     var tableHtml = '';
     if (currentPlaylist['songs']) {
-        console.log(currentPlaylist['songs']);
         tableHtml += '<table style=\"width:100%\">';
         for (var i = 0; i < currentPlaylist['songs'].length; i++) {
             tableHtml += '<tr><td>' + '<button type="button" id=\"delete-' + currentPlaylist['songs'][i]['songName'] + '\"' +
