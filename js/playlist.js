@@ -9,11 +9,13 @@ var ECONEST_API_KEY = 'LSQTUBGBNKDAXLM9H';
 
 /* VARIABLES DEALING WITH PLAYLIST */
 var songIdResults = [];			//array of spotify ids
-var numResults = 100;
+var numResults = 50;
 var isOpposite = false;
 var glblCurWeatherMetrics;
 var glblCurDanceability;
 var glblCurMaxDanceability;
+var glblCurHappiness;
+var glblCurEnergy;
 
 $("#playlist-type-form").keypress(function(e) {
 	var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -79,9 +81,58 @@ function getDanceability(temp, isReWeather) {
 	}
 	return danceability;
 }
+
+function getHappiness(weatherMetrics, isReWeather) {
+	var happiness;
+	var maxHappiness;
+	if (isReWeather) {
+		happiness = ($('input[name="happiness"]')[0]['valueAsNumber']/10);
+		if (happiness >.6) {
+			happiness = .6; //for range .8-1, which is max range
+		}
+		maxHappiness = happiness + 0.4;
+	} else {
+		happiness = weatherMetrics['min_valence'];
+		maxHappiness = weatherMetrics['max_valence'];
+		$("input[name='happiness']").val((happiness+maxHappiness)/2);
+	}
+	console.log("HAPPINESS");
+	console.log(happiness);
+	console.log(maxHappiness);
+	return [happiness, maxHappiness];
+}
+
+function getEnergy(weatherMetrics, isReWeather) {
+	var energy;
+	var maxEnergy;
+	if (isReWeather) {
+		energy = ($('input[name="energy"]')[0]['valueAsNumber']/10);
+		if (energy >.8) {
+			energy = .8; //for range .8-1, which is max range
+		}
+		if (energy < 0.6) {
+			maxEnergy = energy + 0.4;
+		} else maxEnergy = 1;
+	} else {
+		energy = weatherMetrics['min_energy'];
+		maxEnergy = weatherMetrics['max_energy'];
+		$("input[name='energy']").val((energy+maxEnergy)/2.0);
+	}
+	console.log("ENERGY");
+	console.log(energy);
+	console.log(maxEnergy);
+	return [energy, maxEnergy];
+}
+
 /* Get seed song to set up echonest playlist */
 function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
+
+	console.log(isReWeather);
+	console.log("******************");
+	console.log(weatherMetrics);
+
 	var songSearchURL = 'http://developer.echonest.com/api/v4/song/search?song_type=';
+
 	//Get user search parameters
 	var genreSelected = ($('input[name="genre"]:checked').val());
 	var endYear = $("#decade :selected").val();
@@ -104,24 +155,38 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	}
 
 
+	var energyArr = getEnergy(weatherMetrics, isReWeather);
+	var happyArr = getHappiness(weatherMetrics, isReWeather);
+
+	var energy = energyArr[0];
+	var maxEnergy = energyArr[1];
+
+	var happiness = happyArr[0];
+	var maxHappiness = happyArr[1];
+
+
+
 	var data = {
 			'api_key': ECONEST_API_KEY,
 			'format' : 'json',
 			'bucket' : 'id:spotify',
-			'max_energy' : weatherMetrics['max_energy'],
-			'min_energy' : weatherMetrics['min_energy'],
 			'max_tempo' : weatherMetrics['max_tempo'],
 			'min_tempo' : weatherMetrics['min_tempo'],
+			'min_energy' : (energy).toString(),
+			'max_energy' : (maxEnergy).toString(),
+			'min_valence' : (happiness).toString(),
+			'max_valence' : (maxHappiness).toString(),
 			'song_min_hotttnesss' : min_hot,
 			'min_danceability' : (danceability).toString(),
 			'max_danceability' : (maxDanceability).toString(),
-			'results' : '3',
+			'results' : '5',
 			//'song_type' : christmasPlaylist,
 		}
 
 	if (genreSelected && (genreSelected != 'all')) {
 	    data.style = genreSelected;
 	}
+
 
 	if (endYear != 'all') {
 		data.artist_end_year_before = endYear;		
@@ -130,6 +195,8 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 	glblCurWeatherMetrics = weatherMetrics;
 	glblCurDanceability = danceability;
 	glblCurMaxDanceability = maxDanceability;
+	glblCurEnergy = energyArr;
+	glblCurHappiness = happyArr;
 
 	$.ajax({
 		'url': songSearchURL,
@@ -139,7 +206,7 @@ function searchSeedSong(weatherMetrics, min_hot, temp, isReWeather) {
 			// No result for seed song
 			if (results['response']['songs'].length <= 2) {
 				// Decrement min hot if possible
-				if (min_hot != '0') {
+				if (Number(min_hot) >= .1) {
 					searchSeedSong(weatherMetrics, (Number(min_hot) - .1).toString(), temp, isReWeather); // lower min popularity if need be
 				} else {
 					displayNoPlaylistResultsError();
@@ -169,18 +236,24 @@ function searchPlaylist(seed, min_hot) {
 	}
 
 
+	var energy = glblCurEnergy[0];
+	var maxEnergy = glblCurEnergy[1];
+	console.log()
+	var happiness = glblCurHappiness[0];
+	var maxHappiness = glblCurHappiness[1];
+
 	$.ajax({
 		'url': url,
 		'data': {
 			'api_key': ECONEST_API_KEY,
 			'type': 'song-radio',
 			'song_min_hotttnesss' : min_hot,
-			'max_energy' : weatherMetrics['max_energy'],
-			'min_energy' : weatherMetrics['min_energy'],
+			'max_energy' : (maxEnergy).toString(),
+			'min_energy' : (energy).toString(),
 			'max_tempo' : weatherMetrics['max_tempo'],
 			'min_tempo' : weatherMetrics['min_tempo'],
-			//'min_valence' : weatherMetrics['min_valence'],
-			//'max_valence' : weatherMetrics['max_valence'],
+			'min_valence' : (happiness).toString(),
+			'max_valence' : (maxHappiness).toString(),
 			'song_min_hotttnesss' : min_hot,
 			'min_danceability' : (danceability).toString(),
 			'max_danceability' : (maxDanceability).toString(),

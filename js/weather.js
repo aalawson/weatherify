@@ -79,12 +79,12 @@ function getWeatherRating(id, temp, isReWeather) {
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.6', isReWeather);
+		searchSeedSong(weatherMetrics, '.4', isReWeather);
 	} else {
 		updatePlaylistTopBar();
 
 		// Now get seed song to make playlist
-		searchSeedSong(weatherMetrics, '.6', temp, isReWeather);
+		searchSeedSong(weatherMetrics, '.4', temp, isReWeather);
 	}
 }
 
