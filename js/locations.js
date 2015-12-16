@@ -93,6 +93,7 @@ function searchLocation(results) {
   var lat = results[0]['geometry']['location']['lat'];
   var lng = results[0]['geometry']['location']['lng'];
   var address = results[0]['formatted_address'];
+  curLocation = address;
   switchToCurrentPlaylist();
   document.getElementById('options-window').style.display = "none";  
   getWeather(lat, lng);
