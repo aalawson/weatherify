@@ -48,40 +48,36 @@ function makeOppositeNewPlaylist(isReWeather) {
 function makeMoodPlaylist() {
 	var mood = $("#mood option:selected").val();
 	isMood = true;
-	console.log(mood);
+	glblIsReWeather = true;
 
 	// hardcoded values for mood
 	switch(mood){
 		case 'angry':
-			moodId = 212;
-			moodTemp = 30;
+			moodId += 212;
+			moodTemp += 30;
 			break;
 		case 'happy':
-			moodId = 800;
-			moodTemp = 82;
+			moodId += 800;
+			moodTemp += 82;
 			break;
 		case 'sad':
-			moodId = 521;
-			moodTemp = 44;
+			moodId += 521;
+			moodTemp += 44;
 			break;
 		case 'calm':
-			moodId = 952;
-			moodTemp = 68;
+			moodId += 952;
+			moodTemp += 68;
 			break;
 		default:
-			moodId = 500;
-			moodTemp = 50;
+			moodId += 500;
+			moodTemp += 50;
 			break;
 	}
 
-	nameTemp = moodTemp.toString();
-	nameWeather = mood.toString();
-	curLocation = ' '; //hack so location str is greater than zero in length
+	nameTemp = moodTemp;
+	nameWeather = mood;
 
-	console.log(moodId);
-	console.log(moodTemp);
-
-	getWeatherRating(moodId.toString(), moodTemp.toString(), glblIsReWeather);
+	getWeatherRating(moodId, moodTemp, glblIsReWeather);
 	switchToCurrentPlaylist();
 }
 
