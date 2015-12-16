@@ -51,6 +51,7 @@ function processWeatherData(weatherResults, isReWeather) {
 }
 
 function getWeatherRating(id, temp, isReWeather) {
+	console.log(id);
 
 	glblIsReWeather = isReWeather;
 	var category = id.substring(0, 1);
@@ -61,6 +62,7 @@ function getWeatherRating(id, temp, isReWeather) {
 	}
 
 	var weatherParams 	= categoryChart[category][rawSeverity];
+	console.log(weatherParams);
 	nameWeather			= weatherParams[2];
 	var weatherMetrics 	= musicChart[weatherParams[0]];
 	/*var maxenergy = weatherMetrics['max_energy'];
