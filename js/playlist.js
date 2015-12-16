@@ -96,7 +96,11 @@ function getHappiness(weatherMetrics, isReWeather) {
 	} else {
 		happiness = weatherMetrics['min_valence'];
 		maxHappiness = weatherMetrics['max_valence'];
+		$("input[name='happiness']").val((happiness+maxHappiness)/2);
 	}
+	console.log("HAPPINESS");
+	console.log(happiness);
+	console.log(maxHappiness);
 	return [happiness, maxHappiness];
 }
 
@@ -114,7 +118,11 @@ function getEnergy(weatherMetrics, isReWeather) {
 	} else {
 		energy = weatherMetrics['min_energy'];
 		maxEnergy = weatherMetrics['max_energy'];
+		$("input[name='energy']").val((energy+maxEnergy)/2.0);
 	}
+	console.log("ENERGY");
+	console.log(energy);
+	console.log(maxEnergy);
 	return [energy, maxEnergy];
 }
 
