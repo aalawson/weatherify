@@ -53,31 +53,32 @@ function makeMoodPlaylist() {
 	// hardcoded values for mood
 	switch(mood){
 		case 'angry':
-			moodId += 212;
-			moodTemp += 30;
+			moodId = 212;
+			moodTemp = 30;
 			break;
 		case 'happy':
-			moodId += 800;
-			moodTemp += 82;
+			moodId = 800;
+			moodTemp = 82;
 			break;
 		case 'sad':
-			moodId += 521;
-			moodTemp += 44;
+			moodId = 521;
+			moodTemp = 44;
 			break;
 		case 'calm':
-			moodId += 952;
-			moodTemp += 68;
+			moodId = 952;
+			moodTemp = 68;
 			break;
 		default:
-			moodId += 500;
-			moodTemp += 50;
+			moodId = 500;
+			moodTemp = 50;
 			break;
 	}
 
-	nameTemp = moodTemp;
-	nameWeather = mood;
+	nameTemp = moodTemp.toString();
+	nameWeather = mood.toString();
+	curLocation = '';
 
-	getWeatherRating(moodId, moodTemp, glblIsReWeather);
+	getWeatherRating(moodId.toString(), moodTemp.toString(), glblIsReWeather);
 	switchToCurrentPlaylist();
 }
 
