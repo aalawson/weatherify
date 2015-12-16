@@ -319,6 +319,7 @@ function renamePlaylist(name){
   if (name != temp['name']) {
     store.remove(name);
   }
+  glblIsReWeather = true;
   refreshPlaylist();
   showAllPlaylists();
 }
@@ -343,6 +344,7 @@ function deletePlaylist(name) {
       curLocation = '';
       currentPlaylist = {};
   }
+  glblIsReWeather = true;
   refreshPlaylist();
   showAllPlaylists();
 }
