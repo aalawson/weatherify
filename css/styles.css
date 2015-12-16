@@ -18,7 +18,7 @@ body {
 	z-index: 0;
 	color: #383838;
 	font-family: 'Raleway', 'Work Sans', 'Source Sans Pro', Verdana, Arial, sans-sarif;
-  padding:30px;
+  padding-top: 15px;
 	max-width: 1400px;
 }
 div#center-div{
@@ -58,14 +58,13 @@ input:focus{
   cursor: pointer;
   cursor: hand;
 	border-radius: 10px;
-  margin:10px;
 	border-style: solid;
-    border-color: #383838;
-    background-color: transparent;
-    color: #383838;
-    border-width: 1px;
-    font-size: 12px;
-    height: 22px;
+  border-color: #383838;
+  background-color: transparent;
+  color: #383838;
+  border-width: 1px;
+  font-size: 12px;
+  height: 22px;
 }
 .no-underline{
   text-decoration: none;
