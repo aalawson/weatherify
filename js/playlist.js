@@ -41,6 +41,18 @@ function makeOppositeNewPlaylist(isReWeather) {
 	makeNewPlaylist(isReWeather);
 }
 
+function makeMoodPlaylist() {
+	var mood = [];
+	mood =  $("#mood option:selected").val();
+
+	var id = mood[0];
+	var temp = mood[1];
+
+	console.log(id);
+	console.log(temp);
+
+	getWeatherRating(id, temp, false);
+}
 
 // Weatherify button calls this -- makes a playlist based on weather
 function makeNewPlaylist(isReWeather) {

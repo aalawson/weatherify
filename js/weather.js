@@ -49,6 +49,7 @@ function processWeatherData(weatherResults, isReWeather) {
 }
 
 function getWeatherRating(id, temp, isReWeather) {
+
 	var category = id.substring(0, 1);
 	var rawSeverity = id.substring(1, id.length);
 
