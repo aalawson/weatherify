@@ -331,10 +331,6 @@ function displayPlaylist() {
     playerHtml  += currentPlaylist['playerString']
       + '" frameborder="0" width="640px" height="720"'
       + 'align="center" allowtransparency="true"></iframe>';
-            // Add Songs to Playlist Button
-     // + '<button type="button" id="open-search-button"'
-      //+ 'class="g-button form-box" onclick="openSearchPopup();'
-      //+ 'return false;">&#43Add a song</button>';
 
     $('#playlist-results').append(playerHtml);
 }
@@ -345,6 +341,9 @@ function displayNoPlaylistResultsError() {
 }
 
 function refreshAddRemoveTable() {
+    var addSongsHtml = '<button type="button" id="open-search-button"'
+      + 'class="g-button form-box" onclick="openSearchPopup();'
+      + 'return false;">&#43Add a song</button>';
     var tableHtml = '';
     if (currentPlaylist['songs']) {
         console.log(currentPlaylist['songs']);
@@ -359,7 +358,7 @@ function refreshAddRemoveTable() {
     if (tableHtml == '') {
         tableHtml = '<p> Oops! There are no songs in this playlist </p>';
     }
-    document.getElementById('add-and-remove-window').innerHTML = tableHtml;
+    document.getElementById('add-and-remove-window').innerHTML = addSongsHtml + tableHtml;
 }
 
 

@@ -1,7 +1,7 @@
 var searchQuery = "";
 var offset = 0; //index of the first song displayed in the current set of 10 displayed
 var total = 0;
-var currentSearchSongs = [];
+var mostRecentSearchResults = {};
 
 $("#search-form").keypress(function(e) {
   var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -17,7 +17,7 @@ function searchSpotify() {
   offset = 0;
   total = 0;
   searchQuery = "";
-  currentSearchSongs = [];
+  mostRecentSearchResults = {};
 
   // Get new info from form
 	var artist = document.getElementById("artist").value;
@@ -119,23 +119,26 @@ function displayTen(trackData) {
   //many are left. When index is out of range, just clears the results.
   console.log(trackData);
   var numberOfTracks = trackData['tracks']['items'].length;
-  var allPlayButtonsHTML = "<h2 id=\"results-header\">Results</h2>";
+  mostRecentSearchResults = trackData;
+  var allPlayButtonsHTML = "<h2 id=\"results-header\">Results</h2><table>";
   for (var i = 0; i < 10 && i < total - offset; i++) {
     var uri = trackData['tracks']['items'][i].uri; 
     var name = trackData['tracks']['items'][i].name; 
     var artist = trackData['tracks']['items'][i]['artists'][0].name;
 
     var playButtonHTML =
-        "<div id=\"frame-div-" + i +"\" class=\"frame-div\">" + 
+        "<tr><td><button type=\"button\" id=\"add-" + i + '\"' +
+                " class=\"g-button form-box\" onclick=\"addSong(this.id); return false;\">&#43</button>" +
+                '</td><td><div id=\"frame-div-" + i +"\" class=\"frame-div\">' + 
           " <div id=\"popup-" + i + "\" class=\"popup\" style=\"display:block;\">\"" + name +
               "\"<br> " + artist +
           "</div>" +
           " <iframe src=\"https://embed.spotify.com/?uri=" + uri + "\" width=\"400\" height=\"80\"" +
             " frameborder=\"0\" allowtransparency=\"true\" title=\"" + name + "\"></iframe>" +
-        " </div>";
+        " </div></td></tr>";
     allPlayButtonsHTML += playButtonHTML;
   }
-  var resultsHTML = allPlayButtonsHTML + " <div id=\'page-control\'>";
+  var resultsHTML = allPlayButtonsHTML + "</table> <div id=\'page-control\'>";
   document.getElementById('search-songs-results-div').innerHTML = resultsHTML;
 
   // Display next and prev page buttons when applicable

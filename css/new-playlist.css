@@ -63,8 +63,6 @@
 
 /* Button to search for songs to add to playlist */
 #open-search-button {
-    position: fixed;
-    bottom: 70px;
     margin-left: 5px;
 }
 
